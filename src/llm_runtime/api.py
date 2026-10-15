@@ -7,7 +7,8 @@ from fastapi.responses import StreamingResponse
 from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor, SimulatedExecutor
 from llm_runtime.protocol import GenerationRequest
-from llm_runtime.scheduler import FCFSScheduler, QueueFullError, RuntimeUnavailableError
+from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
+from llm_runtime.batching import ContinuousBatchScheduler
 
 
 def create_app(
@@ -17,9 +18,9 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        scheduler = FCFSScheduler(
+        scheduler = ContinuousBatchScheduler(
             executor if executor is not None else SimulatedExecutor(config),
-            config.queue_capacity,
+            config,
         )
         app.state.scheduler = scheduler
         await scheduler.start()
@@ -36,8 +37,10 @@ def create_app(
         return {
             "status": "ok" if scheduler.running else "unavailable",
             "queued_requests": scheduler.queue.qsize(),
+            "active_request_ids": [r.request_id for r in scheduler.active],
+            "active_requests": len(scheduler.active),
             "active_request_id": (
-                scheduler.active.request_id if scheduler.active else None
+                scheduler.active[0].request_id if scheduler.active else None
             ),
         }
 
