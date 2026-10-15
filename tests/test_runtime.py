@@ -38,6 +38,14 @@ class GatedExecutor:
         self.release = asyncio.Event()
         self.order = []
 
+    async def execute(self, step):
+        if step.phase == "prefill":
+            return None
+        self.order.append(step.request.prompt)
+        self.started.set()
+        await self.release.wait()
+        return step.request.prompt
+
     async def generate(self, request):
         self.order.append(request.prompt)
         self.started.set()
@@ -165,7 +173,7 @@ async def test_http_validation(body):
 
 async def test_http_overload_returns_503():
     executor = GatedExecutor()
-    app = create_app(RuntimeConfig(queue_capacity=1), executor)
+    app = create_app(RuntimeConfig(queue_capacity=1, max_active_requests=1), executor)
     async with client_for(app) as client:
         scheduler = app.state.scheduler
         scheduler.submit("active", 1)
@@ -180,10 +188,13 @@ async def test_stream_delivers_token_before_generation_finishes():
     # httpx's ASGI transport buffers bodies. Exercise the ASGI send interface
     # directly so this test detects an accidentally buffered implementation.
     class PausingExecutor:
-        async def generate(self, request):
-            yield "first "
+        async def execute(self, step):
+            if step.phase == "prefill":
+                return None
+            if step.offset == 0:
+                return "first "
             await release.wait()
-            yield "second "
+            return "second "
 
     release = asyncio.Event()
     first_chunk = asyncio.Event()

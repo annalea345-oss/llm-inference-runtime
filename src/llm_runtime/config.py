@@ -6,11 +6,15 @@ class RuntimeConfig:
     """Simulation settings; delays are seconds, capacity counts waiting requests."""
 
     queue_capacity: int = 64
+    max_active_requests: int = 8
+    token_budget: int = 32
     prefill_delay: float = 0.05
     token_delay: float = 0.03
 
     def __post_init__(self) -> None:
-        if self.queue_capacity < 1:
-            raise ValueError("queue_capacity must be positive")
+        for name in ("queue_capacity", "max_active_requests", "token_budget"):
+            value = getattr(self, name)
+            if type(value) is not int or value < 1:
+                raise ValueError(f"{name} must be a positive integer")
         if self.prefill_delay < 0 or self.token_delay < 0:
             raise ValueError("simulation delays must be nonnegative")

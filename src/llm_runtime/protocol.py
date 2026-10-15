@@ -17,6 +17,9 @@ class StreamEvent:
     data: dict[str, Any]
 
 
+RequestPhase = Literal["waiting", "prefill", "decode", "finished", "cancelled", "failed"]
+
+
 @dataclass
 class InferenceRequest:
     prompt: str
@@ -26,3 +29,20 @@ class InferenceRequest:
     # A slow reader cannot block the single scheduler worker.
     events: asyncio.Queue[StreamEvent] = field(default_factory=asyncio.Queue)
     abandoned: bool = False
+    phase: RequestPhase = "waiting"
+    prefilled_tokens: int = 0
+    generated_tokens: int = 0
+
+    @property
+    def prompt_token_count(self) -> int:
+        return max(1, len(self.prompt.split()))
+
+
+@dataclass(frozen=True)
+class ExecutionStep:
+    """One request's work in a batch; prefill counts prompt pieces, decode costs 1."""
+
+    request: InferenceRequest
+    phase: Literal["prefill", "decode"]
+    offset: int
+    token_count: int

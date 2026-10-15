@@ -16,7 +16,7 @@ uvicorn llm_runtime.api:app --host 127.0.0.1 --port 8000
 ```
 
 Use one Uvicorn worker: every process owns a separate queue and scheduler. Multiple
-workers would not share FCFS ordering or queue capacity.
+workers would not share admission ordering or queue capacity.
 
 In another terminal:
 
@@ -69,7 +69,7 @@ There is no automatic retry or durable request storage.
 flowchart LR
     Client -->|POST /generate| API[FastAPI handler]
     API -->|submit| Queue[Bounded FIFO waiting queue]
-    Queue --> Worker[One FCFS scheduler worker]
+    Queue --> Worker[Continuous batch scheduler]
     Worker --> Executor[Simulated model executor]
     Executor -->|token pieces| Worker
     Worker --> Output[Per-request output queue]
@@ -80,45 +80,65 @@ flowchart LR
 | --- | --- |
 | `api.py` | Validation, HTTP errors, SSE framing, application lifespan |
 | `protocol.py` | Input schema, internal request state, output events |
-| `scheduler.py` | Admission, FCFS ordering, execution lifecycle, failure isolation |
+| `batching.py` | Bounded admission, round-robin step planning, lifecycle, failure isolation |
+| `scheduler.py` | Retained run-to-completion FCFS baseline and admission errors |
 | `executor.py` | Executor interface and deterministic simulation |
-| `config.py` | Queue capacity and simulation delays |
+| `config.py` | Waiting/active capacities, iteration token budget, simulation delays |
 
 The application factory `create_app(config, executor)` supports isolated tests
 and replacement executors. The scheduler depends on the `ModelExecutor` protocol,
-not FastAPI. The executor yields pieces and knows nothing about HTTP or SSE.
+not FastAPI. The executor executes explicit prefill/decode steps and knows nothing about HTTP or SSE.
 This boundary allows a real executor later without rewriting transport code.
 The scheduler is created and stopped by FastAPI's lifespan, not at import time.
 
 ### Scheduling and concurrency
 
-**FCFS (first come, first served)** means FIFO order at successful queue admission.
-It does not guarantee ordering by client wall-clock send time. One worker dequeues
-a request and runs it to completion before dequeuing another. A long request
-therefore delays every request behind it: **head-of-line blocking**. Streaming
-improves the active client's time to first output, but does not fix this queueing
-problem.
+The API uses **continuous batching**: FIFO admission fills a bounded active set,
+then each iteration selects work from that set. New waiting requests enter at the
+next iteration boundary when a slot is available. Short requests can finish while
+older long requests continue decoding. Admission is FIFO; completion is not.
+The original `FCFSScheduler` remains available as a run-to-completion baseline.
 
-**Asyncio concurrency** means tasks cooperate on a single event loop. Waiting on
-an empty queue, a simulated delay, or HTTP I/O yields control so other tasks can
-run. This does not create parallel model execution. Real CPU-bound or blocking
-GPU calls must not run directly on the event loop without an appropriate
-execution integration. The simulation deliberately uses `asyncio.sleep`.
+Each request transitions through `waiting → prefill → decode → finished`, or
+terminates as `cancelled` or `failed`. Prefill consumes prompt word pieces (at
+least one for whitespace-only prompts); decode consumes one token per selected
+request per iteration. Prefill does not emit tokens. The scheduler tracks offsets
+and generation counts; the simulated executor is stateless between steps.
 
-**Prefill** processes the prompt; **decode** generates subsequent tokens. Here,
-prefill is a fixed 50 ms sleep, followed by a 30 ms sleep for each token. These
-are illustrative delays, independent of prompt length and hardware. Version 1
-does not schedule prefill and decode separately. Its approximate service time
-is `0.05 + 0.03 * max_tokens` seconds, plus overhead; waiting time is additional.
+`RuntimeConfig` controls `queue_capacity=64`, `max_active_requests=8`, and
+`token_budget=32`. The budget is shared by prefill and decode. Long prompts are
+chunked to fit the remaining budget, so even a prompt longer than the budget can
+progress. Each active request gets at most one step per iteration. Selection
+rotates round-robin across iterations, including when the budget is smaller than
+the active set; a large prefill cannot permanently starve existing decodes.
+This is a simple fair policy, without decode priority or latency guarantees.
 
-**Continuous batching**, planned later, admits new requests between decode
-iterations while other requests are still active. That requires changing the
-scheduling unit from an entire request to a model step. It is deliberately not
-part of this first implementation.
+Configure the application programmatically, for example:
+
+```python
+from llm_runtime.api import create_app
+from llm_runtime.config import RuntimeConfig
+
+app = create_app(RuntimeConfig(max_active_requests=4, token_budget=8))
+```
+
+One scheduler task owns all state. Selected simulated steps run concurrently via
+`asyncio.gather`, with a barrier before the next iteration. The prefill delay
+(default 50 ms per prompt) is apportioned across chunks; each decode step sleeps
+for 30 ms. These are illustrative delays, not hardware performance measurements.
+A slow step delays its iteration, but requests no longer monopolize execution
+until completion. Even zero-delay executors yield between iterations for HTTP
+handling and new admissions. A real executor would need a true batched model-step
+interface and appropriate integration for blocking CPU/GPU work.
+
+Replacement executors implement `async execute(ExecutionStep) -> str | None`:
+prefill returns `None`, decode returns one text piece. Exceptions fail only the
+affected request. The legacy `generate` interface is used only by the FCFS
+baseline. No model weights, GPU, KV cache, or real tokenizer are involved.
 
 ### Queueing, ownership, and cleanup
 
-The waiting queue defaults to 64 requests, plus at most one active request.
+The waiting queue defaults to 64 requests, plus at most eight active requests.
 Admission uses `put_nowait`, so overload gets an immediate 503 rather than an
 unbounded accumulation of waiting work. Queue capacity excludes the active
 request. The queue and scheduler belong to one event loop; submission is not
@@ -133,7 +153,8 @@ will need admission budgets and an explicit slow-consumer/backpressure policy.
 Replacement executors must obey the generation limit.
 
 Stream cleanup marks disconnected requests as abandoned. Queued abandoned work
-is skipped; active simulation checks abandonment at token boundaries. This is
+is skipped; active work is removed at iteration boundaries. Results from a step
+that finishes after abandonment are discarded without emitting more events. This is
 cooperative cleanup, with no explicit cancellation endpoint, immediate queue
 removal, or GPU interruption. Abandoned waiting requests retain their queue slot
 until dequeued. Shutdown cancels the worker, balances queue bookkeeping, and
@@ -151,18 +172,21 @@ source .venv/bin/activate
 python -m pytest -q
 ```
 
-Tests cover deterministic generation, FCFS ordering, serialized execution, queue
-saturation, shutdown, skipped abandoned requests, failure recovery, validation,
-health, SSE payloads, and incremental streaming. Synchronization gates control
+Tests cover the retained FCFS baseline, deterministic generation, continuous
+admission, shared budgets, prefill chunking, round-robin fairness, active and
+waiting limits, shutdown/restart, abandonment in both phases, isolated execution
+failures, HTTP disconnects, validation, health, SSE payloads, and incremental
+streaming. Synchronization gates control
 execution rather than relying on sleeps or timing thresholds. HTTPX's in-process
 ASGI transport buffers response bodies, so a separate direct ASGI test verifies
 that the first token is sent while generation is still paused.
 
 For a manual concurrency experiment, run two curl generation requests in separate
-terminals. Give the first 100 tokens and the second 2. The second stream should
-wait until the first finishes. `/health` remains responsive and exposes waiting
-queue size and the active request ID. This illustrates head-of-line blocking;
-it is not a performance benchmark.
+terminals. Give the first 100 tokens and the second 2. The second stream can
+finish while the first is still decoding. `/health` exposes waiting queue size,
+`active_requests`, and `active_request_ids`. The legacy `active_request_id` field
+is retained as a single representative ID; its order can rotate between
+iterations. This experiment is not a performance benchmark.
 
 ## Development roadmap
 
@@ -171,14 +195,18 @@ Work in small milestones, preserving a runnable server and recording results in
 
 | Milestone | Change | Evidence of completion |
 | --- | --- | --- |
-| 1 — FCFS baseline (current) | HTTP, bounded queue, simulated executor, SSE | Ordering, streaming, overload, lifecycle tests pass |
+| 1 — FCFS baseline (retained) | HTTP, bounded queue, simulated executor, SSE | Ordering, streaming, overload, lifecycle tests pass |
 | 2 — Measurement | Request timestamps and benchmark client | Measure queue wait, time to first token, inter-token latency, end-to-end latency, throughput; record concurrency and workload |
-| 3 — Step-based execution | Explicit waiting/active/finished state; separate prefill/decode steps | Preserve FCFS baseline behavior; deterministic state-transition tests |
-| 4 — Continuous batching | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
-| 5 — Prefill/decode scheduling | Token budgets and prefill policy | Compare throughput and tail latency; test starvation and fairness |
+| 3 — Step-based execution (implemented) | Explicit waiting/active/finished state; separate prefill/decode steps | Preserve FCFS baseline behavior; deterministic state-transition tests |
+| 4 — Continuous batching (current) | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
+| 5 — Prefill/decode scheduling | Refine the shared token budget and fair prefill policy | Compare throughput and tail latency; test starvation and fairness |
 | 6 — Simulated KV cache | Capacity accounting, allocation/release, then optional block management | Verify capacity invariants, no leaks, and behavior under exhaustion |
 | 7 — Explicit cancellation | Request lookup, lifecycle transitions, cancellation API | Cancel waiting and active requests; verify cleanup and race handling |
 | 8 — Optional real executor | Integrate a small model behind an evolved executor interface | Correct output/lifecycle and measured hardware behavior |
+
+Continuous batching was prioritized before the measurement milestone at user
+request; no benchmark or throughput improvement is claimed. Shared token budgets
+and the initial fair prefill policy are included in this milestone.
 
 Introduce only the abstractions each milestone needs. In particular, do not add a
 paged allocator before cache capacity and ownership are modeled. Later cancellation

@@ -2,7 +2,7 @@ import asyncio
 import logging
 from typing import Optional
 
-from llm_runtime.executor import ModelExecutor
+from llm_runtime.executor import LegacyModelExecutor
 from llm_runtime.protocol import InferenceRequest, StreamEvent
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class RuntimeUnavailableError(Exception):
 class FCFSScheduler:
     """One worker owns execution; every admitted request runs to completion."""
 
-    def __init__(self, executor: ModelExecutor, queue_capacity: int) -> None:
+    def __init__(self, executor: LegacyModelExecutor, queue_capacity: int) -> None:
         if queue_capacity < 1:
             raise ValueError("queue_capacity must be positive")
         self.executor = executor
