@@ -26,6 +26,8 @@ class ContinuousBatchScheduler:
         self.queue: asyncio.Queue[InferenceRequest] = asyncio.Queue(config.queue_capacity)
         self._active: deque[InferenceRequest] = deque()
         self._worker: asyncio.Task[None] | None = None
+        self._lifecycle_lock = asyncio.Lock()
+        self._stopping = False
 
     @property
     def active(self) -> tuple[InferenceRequest, ...]:
@@ -33,11 +35,12 @@ class ContinuousBatchScheduler:
 
     @property
     def running(self) -> bool:
-        return self._worker is not None and not self._worker.done()
+        return not self._stopping and self._worker is not None and not self._worker.done()
 
     async def start(self) -> None:
-        if not self.running:
-            self._worker = asyncio.create_task(self._run(), name="continuous-batch-worker")
+        async with self._lifecycle_lock:
+            if not self.running:
+                self._worker = asyncio.create_task(self._run(), name="continuous-batch-worker")
 
     def submit(self, prompt: str, max_tokens: int) -> InferenceRequest:
         if not self.running:
@@ -52,15 +55,21 @@ class ContinuousBatchScheduler:
         return request
 
     async def stop(self) -> None:
-        if self._worker is not None:
-            self._worker.cancel()
+        # Keep restart behind both worker termination and shared-state cleanup.
+        async with self._lifecycle_lock:
+            self._stopping = True
             try:
-                await self._worker
-            except asyncio.CancelledError:
-                pass
-            self._worker = None
-        # A task cancelled before its first execution never enters _run.finally.
-        self._drain()
+                if self._worker is not None:
+                    self._worker.cancel()
+                    try:
+                        await self._worker
+                    except asyncio.CancelledError:
+                        pass
+            finally:
+                self._worker = None
+                # A task cancelled before its first execution never enters _run.finally.
+                self._drain()
+                self._stopping = False
 
     def _drain(self) -> None:
         while self._active:

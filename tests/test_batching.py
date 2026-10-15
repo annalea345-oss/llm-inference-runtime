@@ -298,3 +298,202 @@ async def test_http_disconnect_cancels_active_stream_and_health_reports_batch():
             if not task.done():
                 task.cancel()
                 await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_restart_between_worker_exit_and_stop_return_keeps_worker_tracked():
+    config = RuntimeConfig(prefill_delay=0, token_delay=0)
+    scheduler = ContinuousBatchScheduler(SimulatedExecutor(config), config)
+    await scheduler.start()
+    old_worker = scheduler._worker
+    waiting = asyncio.Event()
+    replacements = []
+
+    async def restart_after_exit():
+        # Register this waiter before stop() waits for the same worker. It will
+        # attempt restart after worker exit but before stop() resumes cleanup.
+        waiting.set()
+        try:
+            await old_worker
+        except asyncio.CancelledError:
+            pass
+        await scheduler.start()
+        replacements.append(scheduler._worker)
+
+    restart = asyncio.create_task(restart_after_exit())
+    try:
+        await asyncio.wait_for(waiting.wait(), 2)
+        await asyncio.wait_for(scheduler.stop(), 2)
+        await asyncio.wait_for(restart, 2)
+        replacement = replacements[0]
+        assert replacement is not old_worker
+        assert scheduler._worker is replacement
+        assert scheduler.running
+        await scheduler.start()
+        assert scheduler._worker is replacement
+        request = scheduler.submit('restarted', 2)
+        assert [e.kind for e in await collect(request)] == ['token', 'token', 'done']
+        await asyncio.wait_for(scheduler.queue.join(), 2)
+        assert request.events.empty()
+    finally:
+        await scheduler.stop()
+        # Also clean up an untracked replacement if this regression fails.
+        restart.cancel()
+        for worker in replacements:
+            if worker is not None:
+                worker.cancel()
+        await asyncio.gather(restart, *[w for w in replacements if w is not None],
+                             return_exceptions=True)
+
+
+@pytest.mark.parametrize('operations', [
+    ('start', 'start'),
+    ('stop', 'start', 'start'),
+    ('start', 'stop', 'start'),
+])
+async def test_overlapping_lifecycle_calls_wait_for_shutdown_cleanup(operations):
+    entered = asyncio.Event()
+    cancelling = asyncio.Event()
+    release = asyncio.Event()
+    config = RuntimeConfig(prefill_delay=0, token_delay=0)
+
+    class Executor(SimulatedExecutor):
+        async def execute(self, step):
+            if step.request.prompt == 'old':
+                entered.set()
+                try:
+                    await asyncio.Event().wait()
+                except asyncio.CancelledError:
+                    cancelling.set()
+                    await release.wait()
+                    raise
+            return await super().execute(step)
+
+    class Scheduler(ContinuousBatchScheduler):
+        live_workers = 0
+        peak_workers = 0
+
+        async def _run(self):
+            self.live_workers += 1
+            self.peak_workers = max(self.peak_workers, self.live_workers)
+            try:
+                await super()._run()
+            finally:
+                self.live_workers -= 1
+
+    scheduler = Scheduler(Executor(config), config)
+    await scheduler.start()
+    tasks = []
+    try:
+        old = scheduler.submit('old', 1)
+        await asyncio.wait_for(entered.wait(), 2)
+        queued = scheduler.submit('queued', 1)
+        old_worker = scheduler._worker
+        tasks.append(asyncio.create_task(scheduler.stop()))
+        await asyncio.wait_for(cancelling.wait(), 2)
+        assert not scheduler.running
+        with pytest.raises(RuntimeUnavailableError):
+            scheduler.submit('during shutdown', 1)
+
+        async def call(operation, attempted):
+            attempted.set()
+            await getattr(scheduler, operation)()
+
+        for operation in operations:
+            attempted = asyncio.Event()
+            tasks.append(asyncio.create_task(call(operation, attempted)))
+            await asyncio.wait_for(attempted.wait(), 2)
+        assert scheduler._worker is old_worker
+        assert all(not task.done() for task in tasks)
+        release.set()
+        await asyncio.wait_for(asyncio.gather(*tasks), 2)
+        assert old_worker.done()
+        assert scheduler.running
+        assert scheduler._worker is not old_worker
+        for request in (old, queued):
+            assert [e.kind for e in await collect(request)] == ['error']
+            assert request.events.empty()
+        assert (await collect(scheduler.submit('new', 1)))[-1].kind == 'done'
+        await asyncio.wait_for(scheduler.queue.join(), 2)
+        assert scheduler.live_workers == scheduler.peak_workers == 1
+    finally:
+        release.set()
+        await asyncio.gather(*tasks, return_exceptions=True)
+        await scheduler.stop()
+    assert scheduler.live_workers == 0
+    assert scheduler._worker is None
+
+
+@pytest.mark.parametrize('transport', ['disconnect', 'send-error'])
+async def test_disconnect_before_first_stream_iteration_abandons_request(transport):
+    from llm_runtime.api import create_app
+    from starlette.requests import ClientDisconnect
+
+    entered = asyncio.Event()
+    release = asyncio.Event()
+    headers_started = asyncio.Event()
+    disconnect = asyncio.Event()
+    config = RuntimeConfig(prefill_delay=0, token_delay=0)
+
+    class Executor(SimulatedExecutor):
+        async def execute(self, step):
+            entered.set()
+            await release.wait()
+            return await super().execute(step)
+
+    app = create_app(config, Executor(config))
+    sent = False
+    chunks = []
+
+    async def receive():
+        nonlocal sent
+        if not sent:
+            sent = True
+            return {'type': 'http.request', 'body': b'{"prompt":"cancel","max_tokens":20}'}
+        await disconnect.wait()
+        return {'type': 'http.disconnect'}
+
+    async def send(message):
+        if message['type'] == 'http.response.start':
+            headers_started.set()
+            if transport == 'send-error':
+                await disconnect.wait()
+                raise OSError('connection closed during headers')
+            # The disconnect listener must cancel this send before the response
+            # can enter its body iterator.
+            await asyncio.Event().wait()
+        elif message['type'] == 'http.response.body':
+            chunks.append(message)
+
+    async with app.router.lifespan_context(app):
+        task = asyncio.create_task(app({
+            'type': 'http', 'asgi': {'version': '3.0', 'spec_version':
+                                   '2.4' if transport == 'send-error' else '2.0'},
+            'http_version': '1.1', 'method': 'POST', 'scheme': 'http',
+            'path': '/generate', 'raw_path': b'/generate', 'query_string': b'',
+            'headers': [(b'content-type', b'application/json')],
+            'client': ('127.0.0.1', 1234), 'server': ('test', 80),
+        }, receive, send))
+        try:
+            await asyncio.wait_for(headers_started.wait(), 2)
+            await asyncio.wait_for(entered.wait(), 2)
+            scheduler = app.state.scheduler
+            request = scheduler.active[0]
+            disconnect.set()
+            if transport == 'send-error':
+                with pytest.raises(ClientDisconnect):
+                    await asyncio.wait_for(task, 2)
+            else:
+                await asyncio.wait_for(task, 2)
+            assert request.abandoned
+            release.set()
+            await asyncio.wait_for(scheduler.queue.join(), 2)
+            assert request.phase == 'cancelled'
+            assert request.generated_tokens == 0
+            assert request.events.empty()
+            assert not chunks
+            assert not scheduler.active
+            assert (await collect(scheduler.submit('next', 1)))[-1].kind == 'done'
+        finally:
+            release.set()
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)

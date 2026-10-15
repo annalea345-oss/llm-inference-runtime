@@ -1,14 +1,33 @@
 import json
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
+from starlette.types import Receive, Scope, Send
 
 from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor, SimulatedExecutor
-from llm_runtime.protocol import GenerationRequest
+from llm_runtime.protocol import GenerationRequest, InferenceRequest
 from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
 from llm_runtime.batching import ContinuousBatchScheduler
+
+
+class GenerationResponse(StreamingResponse):
+    def __init__(self, request: InferenceRequest, content: AsyncIterator[str]) -> None:
+        self.request = request
+        super().__init__(
+            content, media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no",
+                     "X-Request-ID": request.request_id},
+        )
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            # Covers header sends and body sends, even before iteration starts.
+            self.request.abandoned = True
 
 
 def create_app(
@@ -52,22 +71,13 @@ def create_app(
             raise HTTPException(status_code=503, detail=str(exc)) from exc
 
         async def stream():
-            try:
-                while True:
-                    event = await request.events.get()
-                    yield f"event: {event.kind}\ndata: {json.dumps(event.data)}\n\n"
-                    if event.kind in ("done", "error"):
-                        return
-            finally:
-                # StreamingResponse cancels this generator on client disconnect.
-                # The worker skips queued abandoned work or stops at a token boundary.
-                request.abandoned = True
+            while True:
+                event = await request.events.get()
+                yield f"event: {event.kind}\ndata: {json.dumps(event.data)}\n\n"
+                if event.kind in ("done", "error"):
+                    return
 
-        return StreamingResponse(
-            stream(), media_type="text/event-stream",
-            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no",
-                     "X-Request-ID": request.request_id},
-        )
+        return GenerationResponse(request, stream())
 
     return app
 
