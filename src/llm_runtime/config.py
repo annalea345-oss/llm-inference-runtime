@@ -10,9 +10,11 @@ class RuntimeConfig:
     token_budget: int = 32
     prefill_delay: float = 0.05
     token_delay: float = 0.03
+    kv_cache_capacity_tokens: int = 8192
 
     def __post_init__(self) -> None:
-        for name in ("queue_capacity", "max_active_requests", "token_budget"):
+        for name in ("queue_capacity", "max_active_requests", "token_budget",
+                     "kv_cache_capacity_tokens"):
             value = getattr(self, name)
             if type(value) is not int or value < 1:
                 raise ValueError(f"{name} must be a positive integer")

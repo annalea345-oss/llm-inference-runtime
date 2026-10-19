@@ -33,6 +33,13 @@ class RecordingScheduler(ContinuousBatchScheduler):
         self.iterations = []
 
     def _plan(self):
+        cache = self.kv_cache
+        assert set(cache.allocations) == {r.request_id for r in self.active}
+        assert 0 <= cache.used_tokens <= cache.reserved_tokens <= cache.capacity_tokens
+        for request in self.active:
+            allocation = cache.allocations[request.request_id]
+            assert allocation.used_tokens == request.prefilled_tokens + request.generated_tokens
+            assert allocation.reserved_tokens == request.prompt_token_count + request.max_tokens
         steps = super()._plan()
         self.iterations.append(steps)
         return steps
@@ -288,6 +295,7 @@ async def test_http_disconnect_cancels_active_stream_and_health_reports_batch():
             await asyncio.wait_for(scheduler.queue.join(), 2)
             assert cancelled.phase == 'cancelled'
             assert cancelled.generated_tokens == 1
+            assert not scheduler.kv_cache.allocations
             assert cancelled.events.empty()
             frames = b''.join(chunks).decode()
             assert frames.count('event: token') == 1
@@ -390,6 +398,8 @@ async def test_overlapping_lifecycle_calls_wait_for_shutdown_cleanup(operations)
         old_worker = scheduler._worker
         tasks.append(asyncio.create_task(scheduler.stop()))
         await asyncio.wait_for(cancelling.wait(), 2)
+        # Shutdown cannot release ownership until the executor settles cancellation.
+        assert scheduler.kv_cache.reserved_tokens == 2
         assert not scheduler.running
         with pytest.raises(RuntimeUnavailableError):
             scheduler.submit('during shutdown', 1)
@@ -407,6 +417,7 @@ async def test_overlapping_lifecycle_calls_wait_for_shutdown_cleanup(operations)
         release.set()
         await asyncio.wait_for(asyncio.gather(*tasks), 2)
         assert old_worker.done()
+        assert not scheduler.kv_cache.allocations
         assert scheduler.running
         assert scheduler._worker is not old_worker
         for request in (old, queued):

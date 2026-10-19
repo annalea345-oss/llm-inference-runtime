@@ -102,3 +102,48 @@ endpoint. Slow steps hold up the current iteration. The shared fair policy has
 no decode priority or latency guarantee. The executor remains a deterministic
 word-piece simulation; KV cache, real model integration, measurements, and
 production backpressure remain future work.
+
+## 2026-10-19 — Simulated KV-cache milestone
+
+### Architecture and behavior
+
+- Added scheduler-owned `SimulatedKVCache` accounting with immutable per-request
+  allocation records and detached snapshots. It models token slots, not tensors
+  or physical memory; the default capacity is 8192 slots.
+- Reserve each admitted request's prompt count plus `max_tokens`. Track actual
+  usage after successful prefill chunks and decode outputs, including the final
+  output before release. Whitespace-only prompts consume one prompt slot.
+- Enforce `used <= reserved <= capacity`. Reservations guarantee space for future
+  growth, avoiding memory deadlock among active requests without preemption.
+- Preserve FIFO admission under memory pressure. A pending queue head retains its
+  waiting slot and unfinished-task ownership, remains visible in health, and
+  prevents smaller requests from bypassing it. Active round-robin planning and
+  token budgets are unchanged.
+- Reject impossible footprints with HTTP 422 before queue insertion. Temporary
+  pressure delays admission; waiting overload still returns HTTP 503.
+- Release usage and reservations on completion, cooperative disconnect, execution
+  failure, invalid decode output, and shutdown. In-flight reservations remain
+  owned until steps settle. Finalization is idempotent, and restart begins empty.
+- Expose capacity, reserved, used, and available-to-reserve token counters through
+  `/health`. Keep the executor interface and retained FCFS baseline unchanged.
+
+### Validation
+
+- `.venv/bin/python -m pytest -q` — **64 passed in 0.24s**.
+- Added atomic accounting and invalid-capacity tests; exact-fit whitespace and
+  oversized HTTP requests; chunked usage and slow-reader release; FIFO pressure,
+  pending-head queue limits and health; abandonment of a blocked head; failure,
+  cancellation, and shutdown at partial prefill and decode; restart and invalid
+  decode cleanup. Existing multi-request budget/fairness tests assert per-request
+  and global memory invariants at every planning boundary.
+- Extended actual ASGI disconnect and overlapping lifecycle tests to check cache
+  release and ownership during delayed executor cancellation.
+- `git diff --check` passed. No live network performance benchmark was run.
+
+### Limits and next work
+
+Reservations are conservative and strict FIFO admission can block smaller work.
+The bound excludes Python objects, prompt strings, and buffered output events.
+There is no paging, eviction, prefix sharing, real cache allocation, or explicit
+cancellation endpoint. The recommended next milestone is request timing and a
+repeatable benchmark before further scheduling changes.

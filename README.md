@@ -57,7 +57,8 @@ words, appending a space to each generated piece. An all-whitespace prompt emits
 `<empty> ` pieces. These pieces are called tokens for the exercise; they are not
 real model tokens. Generation always stops at `max_tokens`; EOS is not modeled.
 
-Invalid input returns HTTP 422. A full waiting queue or unavailable scheduler
+Invalid input or a request whose prompt-plus-output reservation exceeds total
+KV-cache capacity returns HTTP 422. A full waiting queue or unavailable scheduler
 returns HTTP 503 before a stream starts. After HTTP 200 begins, executor failures
 and runtime shutdown are reported as terminal `event: error` frames, containing
 `request_id` and `message`. HTTP status cannot change after headers are sent.
@@ -70,6 +71,7 @@ flowchart LR
     Client -->|POST /generate| API[FastAPI handler]
     API -->|submit| Queue[Bounded FIFO waiting queue]
     Queue --> Worker[Continuous batch scheduler]
+    Worker --> Cache[Simulated KV-cache accounting]
     Worker --> Executor[Simulated model executor]
     Executor -->|token pieces| Worker
     Worker --> Output[Per-request output queue]
@@ -83,7 +85,8 @@ flowchart LR
 | `batching.py` | Bounded admission, round-robin step planning, lifecycle, failure isolation |
 | `scheduler.py` | Retained run-to-completion FCFS baseline and admission errors |
 | `executor.py` | Executor interface and deterministic simulation |
-| `config.py` | Waiting/active capacities, iteration token budget, simulation delays |
+| `config.py` | Waiting/active/cache capacities, iteration token budget, simulation delays |
+| `kv_cache.py` | Per-request token-slot reservations, usage, and release |
 
 The application factory `create_app(config, executor)` supports isolated tests
 and replacement executors. The scheduler depends on the `ModelExecutor` protocol,
@@ -119,7 +122,9 @@ Configure the application programmatically, for example:
 from llm_runtime.api import create_app
 from llm_runtime.config import RuntimeConfig
 
-app = create_app(RuntimeConfig(max_active_requests=4, token_budget=8))
+app = create_app(RuntimeConfig(
+    max_active_requests=4, token_budget=8, kv_cache_capacity_tokens=8192,
+))
 ```
 
 One scheduler task owns all state. Selected simulated steps run concurrently via
@@ -134,12 +139,49 @@ interface and appropriate integration for blocking CPU/GPU work.
 Replacement executors implement `async execute(ExecutionStep) -> str | None`:
 prefill returns `None`, decode returns one text piece. Exceptions fail only the
 affected request. The legacy `generate` interface is used only by the FCFS
-baseline. No model weights, GPU, KV cache, or real tokenizer are involved.
+baseline. No model weights, GPU tensors, or real tokenizer are involved.
+
+### Simulated KV cache
+
+The continuous-batching scheduler owns a `SimulatedKVCache`, with
+`kv_cache_capacity_tokens=8192` by default. Capacity is a positive integer in
+simulated token slots, not bytes or GPU memory. The FCFS baseline is unchanged.
+
+Before admission, each request reserves `prompt_token_count + max_tokens` slots.
+Usage starts at zero and grows by each successfully completed prefill chunk or
+decode token. Whitespace-only prompts count as one prompt token. For example,
+a three-token prompt requesting two outputs reserves five slots: usage progresses
+`0 → 3 → 4 → 5`, then completion releases both usage and reservation. Counting
+all generated outputs, including the final output, is a simulation convention;
+it does not reproduce exact real-model KV timing.
+
+At every boundary, `used ≤ reserved ≤ capacity`. Per-request allocation snapshots
+are available through `scheduler.kv_cache.allocations`. Reservations protect future
+growth, so admitted requests can finish without memory deadlock, assuming executor
+steps return. Unused reservations can reduce concurrency. A request larger than
+total capacity receives HTTP 422 before streaming and never enters the queue.
+Temporary memory pressure keeps feasible requests waiting, with strict FIFO
+admission: a large head request blocks smaller requests behind it. Waiting work
+uses no cache, and the pending FIFO head still counts toward waiting capacity.
+Round-robin execution and the shared token budget continue for active requests.
+
+Completion, executor failure, invalid decode output, abandonment, and shutdown all
+release ownership through scheduler finalization. In-flight work retains its
+reservation until the iteration barrier settles or shutdown cancellation finishes;
+abandoned results consume no additional slots. Release occurs before terminal
+events are consumed, so slow readers do not retain simulated KV memory.
+
+`/health` includes `kv_cache` with `capacity_tokens`, `reserved_tokens`,
+`used_tokens`, and `available_tokens` (capacity minus reservations). This bounds
+only simulated cache slots: Python objects, prompt strings, and output queues
+remain outside the bound. There is no paging, eviction, prefix sharing, actual
+cache tensor allocation, or explicit cancellation endpoint.
 
 ### Queueing, ownership, and cleanup
 
 The waiting queue defaults to 64 requests, plus at most eight active requests.
-Admission uses `put_nowait`, so overload gets an immediate 503 rather than an
+Submission checks total waiting occupancy and uses `put_nowait`, so overload
+gets an immediate 503 rather than an
 unbounded accumulation of waiting work. Queue capacity excludes the active
 request. The queue and scheduler belong to one event loop; submission is not
 thread-safe.
@@ -175,7 +217,8 @@ python -m pytest -q
 Tests cover the retained FCFS baseline, deterministic generation, continuous
 admission, shared budgets, prefill chunking, round-robin fairness, active and
 waiting limits, shutdown/restart, abandonment in both phases, isolated execution
-failures, HTTP disconnects, validation, health, SSE payloads, and incremental
+failures, KV capacity invariants, FIFO memory pressure, partial usage and release,
+HTTP disconnects, validation, health, SSE payloads, and incremental
 streaming. Synchronization gates control
 execution rather than relying on sleeps or timing thresholds. HTTPX's in-process
 ASGI transport buffers response bodies, so a separate direct ASGI test verifies
@@ -198,14 +241,15 @@ Work in small milestones, preserving a runnable server and recording results in
 | 1 — FCFS baseline (retained) | HTTP, bounded queue, simulated executor, SSE | Ordering, streaming, overload, lifecycle tests pass |
 | 2 — Measurement | Request timestamps and benchmark client | Measure queue wait, time to first token, inter-token latency, end-to-end latency, throughput; record concurrency and workload |
 | 3 — Step-based execution (implemented) | Explicit waiting/active/finished state; separate prefill/decode steps | Preserve FCFS baseline behavior; deterministic state-transition tests |
-| 4 — Continuous batching (current) | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
+| 4 — Continuous batching (implemented) | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
 | 5 — Prefill/decode scheduling | Refine the shared token budget and fair prefill policy | Compare throughput and tail latency; test starvation and fairness |
-| 6 — Simulated KV cache | Capacity accounting, allocation/release, then optional block management | Verify capacity invariants, no leaks, and behavior under exhaustion |
+| 6 — Simulated KV cache (implemented) | Token-slot reservations, progressive usage, FIFO memory admission, lifecycle release | Capacity invariants, no leaks, exhaustion, HTTP health and rejection tests |
 | 7 — Explicit cancellation | Request lookup, lifecycle transitions, cancellation API | Cancel waiting and active requests; verify cleanup and race handling |
 | 8 — Optional real executor | Integrate a small model behind an evolved executor interface | Correct output/lifecycle and measured hardware behavior |
 
 Continuous batching was prioritized before the measurement milestone at user
-request; no benchmark or throughput improvement is claimed. Shared token budgets
+request; simulated KV-cache accounting followed. No benchmark or throughput
+improvement is claimed. Shared token budgets
 and the initial fair prefill policy are included in this milestone.
 
 Introduce only the abstractions each milestone needs. In particular, do not add a
@@ -217,4 +261,4 @@ is an event-loop/scheduling experiment, not a GPU performance claim.
 This project borrows the serving concepts of vLLM; it is not compatible with its
 API, scheduler implementation, or performance characteristics. Authentication,
 production observability, distributed scheduling, persistence, real tokenization,
-KV caching, and real model execution are outside version 1.
+real KV tensor caching, and real model execution remain outside the current runtime.

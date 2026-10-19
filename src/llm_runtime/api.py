@@ -8,6 +8,7 @@ from starlette.types import Receive, Scope, Send
 
 from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor, SimulatedExecutor
+from llm_runtime.kv_cache import RequestTooLargeError
 from llm_runtime.protocol import GenerationRequest, InferenceRequest
 from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
 from llm_runtime.batching import ContinuousBatchScheduler
@@ -55,7 +56,13 @@ def create_app(
         scheduler = app.state.scheduler
         return {
             "status": "ok" if scheduler.running else "unavailable",
-            "queued_requests": scheduler.queue.qsize(),
+            "queued_requests": scheduler.queued_requests,
+            "kv_cache": {
+                "capacity_tokens": scheduler.kv_cache.capacity_tokens,
+                "reserved_tokens": scheduler.kv_cache.reserved_tokens,
+                "used_tokens": scheduler.kv_cache.used_tokens,
+                "available_tokens": scheduler.kv_cache.available_tokens,
+            },
             "active_request_ids": [r.request_id for r in scheduler.active],
             "active_requests": len(scheduler.active),
             "active_request_id": (
@@ -69,6 +76,8 @@ def create_app(
             request = app.state.scheduler.submit(body.prompt, body.max_tokens)
         except (QueueFullError, RuntimeUnavailableError) as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except RequestTooLargeError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
 
         async def stream():
             while True:
