@@ -6,6 +6,7 @@ from collections import deque
 
 from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor
+from llm_runtime.kv_cache import RequestTooLargeError, SimulatedKVCache
 from llm_runtime.protocol import ExecutionStep, InferenceRequest, RequestPhase, StreamEvent
 from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
 
@@ -24,10 +25,17 @@ class ContinuousBatchScheduler:
         self.executor = executor
         self.config = config
         self.queue: asyncio.Queue[InferenceRequest] = asyncio.Queue(config.queue_capacity)
+        self.kv_cache = SimulatedKVCache(config.kv_cache_capacity_tokens)
+        # A dequeued FIFO head can wait for memory without losing its queue slot.
+        self._pending: InferenceRequest | None = None
         self._active: deque[InferenceRequest] = deque()
         self._worker: asyncio.Task[None] | None = None
         self._lifecycle_lock = asyncio.Lock()
         self._stopping = False
+
+    @property
+    def queued_requests(self) -> int:
+        return self.queue.qsize() + (self._pending is not None)
 
     @property
     def active(self) -> tuple[InferenceRequest, ...]:
@@ -48,6 +56,10 @@ class ContinuousBatchScheduler:
         if not prompt or type(max_tokens) is not int or not 1 <= max_tokens <= 512:
             raise ValueError("invalid generation request")
         request = InferenceRequest(prompt, max_tokens)
+        if request.prompt_token_count + max_tokens > self.kv_cache.capacity_tokens:
+            raise RequestTooLargeError("request exceeds KV-cache token capacity")
+        if self.queued_requests >= self.config.queue_capacity:
+            raise QueueFullError("waiting queue is full")
         try:
             self.queue.put_nowait(request)
         except asyncio.QueueFull as exc:
@@ -74,10 +86,16 @@ class ContinuousBatchScheduler:
     def _drain(self) -> None:
         while self._active:
             self._finish(self._active.popleft(), "failed", "runtime is shutting down")
+        if self._pending is not None:
+            self._finish(self._pending, "failed", "runtime is shutting down")
+            self._pending = None
         while not self.queue.empty():
             self._finish(self.queue.get_nowait(), "failed", "runtime is shutting down")
 
     def _finish(self, request: InferenceRequest, phase: RequestPhase, message: str = "") -> None:
+        if request.phase in ("finished", "cancelled", "failed"):
+            return
+        self.kv_cache.release(request.request_id)
         request.phase = phase
         if not request.abandoned:
             if phase == "finished":
@@ -93,12 +111,17 @@ class ContinuousBatchScheduler:
             request.events.put_nowait(event)
         self.queue.task_done()
 
-    def _admit(self, request: InferenceRequest) -> None:
+    def _admit(self, request: InferenceRequest) -> bool:
         if request.abandoned:
             self._finish(request, "cancelled")
         else:
+            if not self.kv_cache.reserve(
+                request.request_id, request.prompt_token_count + request.max_tokens,
+            ):
+                return False
             request.phase = "prefill"
             self._active.append(request)
+        return True
 
     def _plan(self) -> list[ExecutionStep]:
         budget = self.config.token_budget
@@ -124,10 +147,16 @@ class ContinuousBatchScheduler:
                     if request.abandoned:
                         self._active.remove(request)
                         self._finish(request, "cancelled")
-                if not self._active and self.queue.empty():
-                    self._admit(await self.queue.get())
-                while len(self._active) < self.config.max_active_requests and not self.queue.empty():
-                    self._admit(self.queue.get_nowait())
+                if not self._active and not self.queued_requests:
+                    self._pending = await self.queue.get()
+                while len(self._active) < self.config.max_active_requests:
+                    if self._pending is None:
+                        if self.queue.empty():
+                            break
+                        self._pending = self.queue.get_nowait()
+                    if not self._admit(self._pending):
+                        break
+                    self._pending = None
                 steps = self._plan()
                 results = await asyncio.gather(
                     *(self.executor.execute(step) for step in steps), return_exceptions=True,
@@ -143,10 +172,12 @@ class ContinuousBatchScheduler:
                         self._active.remove(request)
                         self._finish(request, "failed", "model execution failed")
                     elif step.phase == "prefill":
+                        self.kv_cache.consume(request.request_id, step.token_count)
                         request.prefilled_tokens += step.token_count
                         if request.prefilled_tokens == request.prompt_token_count:
                             request.phase = "decode"
                     elif isinstance(result, str):
+                        self.kv_cache.consume(request.request_id, 1)
                         request.events.put_nowait(StreamEvent("token", {
                             "request_id": request.request_id,
                             "index": request.generated_tokens, "text": result,
