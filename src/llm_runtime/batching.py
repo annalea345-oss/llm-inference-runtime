@@ -95,6 +95,7 @@ class ContinuousBatchScheduler:
     def _finish(self, request: InferenceRequest, phase: RequestPhase, message: str = "") -> None:
         if request.phase in ("finished", "cancelled", "failed"):
             return
+        request.timings.finish()
         self.kv_cache.release(request.request_id)
         request.phase = phase
         if not request.abandoned:
@@ -103,6 +104,7 @@ class ContinuousBatchScheduler:
                     "request_id": request.request_id,
                     "generated_tokens": request.generated_tokens,
                     "finish_reason": "length",
+                    "timings": request.timings.snapshot(),
                 })
             else:
                 event = StreamEvent("error", {
@@ -119,6 +121,7 @@ class ContinuousBatchScheduler:
                 request.request_id, request.prompt_token_count + request.max_tokens,
             ):
                 return False
+            request.timings.admit()
             request.phase = "prefill"
             self._active.append(request)
         return True
@@ -177,6 +180,7 @@ class ContinuousBatchScheduler:
                         if request.prefilled_tokens == request.prompt_token_count:
                             request.phase = "decode"
                     elif isinstance(result, str):
+                        request.timings.token()
                         self.kv_cache.consume(request.request_id, 1)
                         request.events.put_nowait(StreamEvent("token", {
                             "request_id": request.request_id,

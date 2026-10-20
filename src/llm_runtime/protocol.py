@@ -5,6 +5,8 @@ from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
+from llm_runtime.metrics import RequestTimings
+
 
 class GenerationRequest(BaseModel):
     prompt: str = Field(min_length=1, max_length=8192)
@@ -32,6 +34,7 @@ class InferenceRequest:
     phase: RequestPhase = "waiting"
     prefilled_tokens: int = 0
     generated_tokens: int = 0
+    timings: RequestTimings = field(default_factory=RequestTimings)
 
     @property
     def prompt_token_count(self) -> int:
