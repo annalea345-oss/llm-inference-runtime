@@ -60,6 +60,7 @@ class FCFSScheduler:
 
     @staticmethod
     def _emit_error(request: InferenceRequest, message: str) -> None:
+        request.timings.finish()
         request.events.put_nowait(StreamEvent("error", {
             "request_id": request.request_id, "message": message,
         }))
@@ -71,20 +72,24 @@ class FCFSScheduler:
             try:
                 if request.abandoned:
                     continue
+                request.timings.admit()
                 count = 0
                 async for token in self.executor.generate(request):
                     if request.abandoned:
                         break
+                    request.timings.token()
                     request.events.put_nowait(StreamEvent("token", {
                         "request_id": request.request_id,
                         "index": count,
                         "text": token,
                     }))
                     count += 1
+                request.timings.finish()
                 request.events.put_nowait(StreamEvent("done", {
                     "request_id": request.request_id,
                     "generated_tokens": count,
                     "finish_reason": "length",
+                    "timings": request.timings.snapshot(),
                 }))
             except asyncio.CancelledError:
                 self._emit_error(request, "runtime is shutting down")
@@ -93,5 +98,6 @@ class FCFSScheduler:
                 logger.exception("Execution failed for %s", request.request_id)
                 self._emit_error(request, "model execution failed")
             finally:
+                request.timings.finish()
                 self.active = None
                 self.queue.task_done()

@@ -147,3 +147,46 @@ The bound excludes Python objects, prompt strings, and buffered output events.
 There is no paging, eviction, prefix sharing, real cache allocation, or explicit
 cancellation endpoint. The recommended next milestone is request timing and a
 repeatable benchmark before further scheduling changes.
+
+## 2026-10-20 — Measurement and benchmark milestone
+
+### Architecture and behavior
+
+- Added request-owned monotonic submission, admission, token-emission, and terminal
+  timestamps to both continuous batching and the FCFS baseline. No global request
+  history or extra runtime dependency is introduced.
+- Derive queue wait, time to first token, inter-token gaps, and end-to-end duration
+  in milliseconds. Missing lifecycle boundaries remain null, and terminal timing
+  is idempotent. Successful SSE done payloads include additive timing data.
+- Added `python -m llm_runtime.benchmark`: fixed-concurrency closed-loop clients,
+  deterministic prompt/output lengths, warmup exclusion, per-request deadlines,
+  raw samples, nearest-rank percentiles, and completed request/token throughput.
+- Reports include runtime configuration and Python/platform metadata; failures are
+  counted separately and excluded from successful latency distributions. CLI
+  failures return nonzero. Shutdown cleans up timed-out work cooperatively.
+- Kept the scope explicit: benchmark clients submit directly to schedulers and
+  consume internal events; HTTP delivery and real model performance are excluded.
+
+### Validation and recorded experiment
+
+- `.venv/bin/python -m pytest -q` — **79 passed in 0.37s**.
+- Clock-controlled tests verify exact durations in both schedulers; failure,
+  waiting cancellation, immediate/active shutdown, SSE serialization, percentile
+  calculations, warmup exclusion, rejection accounting, timeout cleanup, and CLI
+  failure exit codes.
+- Recorded identical FCFS/continuous workloads at client concurrency 1 and 4 in
+  `benchmarks/simulated-c1.json` and `benchmarks/simulated-c4.json`; reproduction
+  commands and interpretation are in `benchmarks/README.md`.
+- Twelve measured requests per run, eight prompt pieces, alternating 2/16 output
+  pieces, 10ms prefill and 5ms decode delays: all runs completed successfully.
+  Concurrency 1: 144.15 FCFS vs 140.24 continuous simulated tokens/s. Concurrency 4:
+  144.39 vs 427.77. These are single-run simulator observations, not GPU claims.
+
+### Limits and next work
+
+Scheduler timestamps measure event emission after barriers, not HTTP client
+receipt. The workload is closed loop rather than an arrival-rate load test; long
+outputs contribute more samples to pooled inter-token statistics. No confidence
+intervals or production latency claims are made. Next: use the recorded benchmark
+when evaluating prefill/decode policy changes, or implement explicit cancellation
+with request lookup and KV cleanup. External HTTP benchmarking remains future work.

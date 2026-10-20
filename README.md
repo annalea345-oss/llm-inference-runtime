@@ -87,6 +87,8 @@ flowchart LR
 | `executor.py` | Executor interface and deterministic simulation |
 | `config.py` | Waiting/active/cache capacities, iteration token budget, simulation delays |
 | `kv_cache.py` | Per-request token-slot reservations, usage, and release |
+| `metrics.py` | Monotonic request timestamps and derived durations |
+| `benchmark.py` | Closed-loop in-process workload client and JSON comparison reports |
 
 The application factory `create_app(config, executor)` supports isolated tests
 and replacement executors. The scheduler depends on the `ModelExecutor` protocol,
@@ -231,6 +233,59 @@ finish while the first is still decoding. `/health` exposes waiting queue size,
 is retained as a single representative ID; its order can rotate between
 iterations. This experiment is not a performance benchmark.
 
+## Measurements and repeatable benchmark
+
+Both schedulers record monotonic timestamps per request. Successful SSE `done`
+events include an additive `timings` object (all durations in milliseconds):
+
+| Field | Definition |
+| --- | --- |
+| `queue_wait_ms` | Submission to active admission, including waiting for KV capacity |
+| `time_to_first_token_ms` | Submission to first scheduler token emission, including queue wait |
+| `inter_token_ms` | List of gaps between consecutive scheduler token emissions |
+| `end_to_end_ms` | Submission to scheduler finalization |
+
+These measure scheduler events, not client receipt or SSE transmission. Batch
+results are processed after the iteration barrier, so emission times include
+barrier delays. Raw monotonic timestamps stay internal: their origin is not a
+wall-clock time. Timings are available on `request.timings` for failures and
+cancellation, too; an unreached admission, first token, or finalization is `null`,
+and fewer than two tokens produce an empty gap list. No global request history is
+retained. Rejected submissions never acquire request metrics.
+
+Run the deterministic benchmark without starting Uvicorn:
+
+```bash
+python -m llm_runtime.benchmark --scheduler both --requests 12 --concurrency 4 \
+  --warmup 2 --prefill-delay 0.01 --token-delay 0.005
+```
+
+The benchmark clients call scheduler submission and consume internal output queues
+in process. It excludes HTTP, networking, real tokenization, and GPU execution.
+It supports FCFS, continuous batching, or both sequentially; each mode gets a
+fresh scheduler and the same workload/configuration. FCFS still has no KV-memory
+enforcement. A fixed number of client workers each submit their next request
+when the previous one terminates (closed loop), with no automatic retries.
+`--output-tokens 2 16` repeats short/long output lengths in submission order;
+`--prompt-words 8` fixes every prompt to eight simulated words. Use `--help` for
+queue, active, token-budget, cache-capacity, delays, and deadline controls.
+
+JSON reports contain configuration, Python/platform details, raw per-request
+samples, elapsed measurement time, completion/rejection/error/timeout counts,
+completed requests/s and tokens/s, and mean/p50/p95/p99 latency statistics.
+Percentiles use nearest rank; empty populations return `null`. Inter-token
+statistics pool all token gaps, so longer outputs contribute more samples.
+Latency distributions include completed requests only, and throughput counts
+only their outputs over the full measured interval. Warmup is excluded; a failed
+warmup aborts the run. Measured failures remain visible and cause CLI exit code 1.
+A per-request timeout marks the request abandoned; its snapshot may have no
+finalization time because cleanup is cooperative. Stop always drains the runtime.
+
+Recorded examples are in [benchmarks/README.md](benchmarks/README.md). They are
+single-run simulator observations, not performance guarantees. Repeat runs and
+compare equivalent workloads before choosing a scheduling change. An external
+HTTP streaming benchmark remains future work.
+
 ## Development roadmap
 
 Work in small milestones, preserving a runnable server and recording results in
@@ -239,7 +294,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | Milestone | Change | Evidence of completion |
 | --- | --- | --- |
 | 1 — FCFS baseline (retained) | HTTP, bounded queue, simulated executor, SSE | Ordering, streaming, overload, lifecycle tests pass |
-| 2 — Measurement | Request timestamps and benchmark client | Measure queue wait, time to first token, inter-token latency, end-to-end latency, throughput; record concurrency and workload |
+| 2 — Measurement (implemented) | Request timestamps and in-process benchmark client | Clock-controlled timing tests; recorded FCFS/continuous runs at concurrency 1 and 4 |
 | 3 — Step-based execution (implemented) | Explicit waiting/active/finished state; separate prefill/decode steps | Preserve FCFS baseline behavior; deterministic state-transition tests |
 | 4 — Continuous batching (implemented) | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
 | 5 — Prefill/decode scheduling | Refine the shared token budget and fair prefill policy | Compare throughput and tail latency; test starvation and fairness |
@@ -248,9 +303,9 @@ Work in small milestones, preserving a runnable server and recording results in
 | 8 — Optional real executor | Integrate a small model behind an evolved executor interface | Correct output/lifecycle and measured hardware behavior |
 
 Continuous batching was prioritized before the measurement milestone at user
-request; simulated KV-cache accounting followed. No benchmark or throughput
-improvement is claimed. Shared token budgets
-and the initial fair prefill policy are included in this milestone.
+request; simulated KV-cache accounting and measurements followed. Recorded
+simulator comparisons are available above; no GPU performance improvement is
+claimed. Shared token budgets and the initial fair prefill policy are implemented.
 
 Introduce only the abstractions each milestone needs. In particular, do not add a
 paged allocator before cache capacity and ownership are modeled. Later cancellation
