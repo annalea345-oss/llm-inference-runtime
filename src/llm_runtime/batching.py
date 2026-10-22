@@ -3,6 +3,7 @@
 import asyncio
 import logging
 from collections import deque
+from typing import Literal
 
 from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor
@@ -32,6 +33,7 @@ class ContinuousBatchScheduler:
         self._worker: asyncio.Task[None] | None = None
         self._lifecycle_lock = asyncio.Lock()
         self._stopping = False
+        self._prefer_prefill = False
 
     @property
     def queued_requests(self) -> int:
@@ -48,6 +50,7 @@ class ContinuousBatchScheduler:
     async def start(self) -> None:
         async with self._lifecycle_lock:
             if not self.running:
+                self._prefer_prefill = False
                 self._worker = asyncio.create_task(self._run(), name="continuous-batch-worker")
 
     def submit(self, prompt: str, max_tokens: int) -> InferenceRequest:
@@ -127,6 +130,8 @@ class ContinuousBatchScheduler:
         return True
 
     def _plan(self) -> list[ExecutionStep]:
+        if self.config.scheduling_policy == "decode_first":
+            return self._plan_decode_first()
         budget = self.config.token_budget
         steps = []
         for _ in range(len(self._active)):
@@ -141,6 +146,47 @@ class ContinuousBatchScheduler:
                 step = ExecutionStep(request, "decode", request.generated_tokens, 1)
             budget -= step.token_count
             steps.append(step)
+        return steps
+
+    def _plan_decode_first(self) -> list[ExecutionStep]:
+        """Prioritize decode, cap prefill, and guarantee turns to both phases.
+
+        Selected requests move to the tail so each phase retains round-robin
+        order. With a one-token budget mixed phases alternate across iterations.
+        Otherwise one token is protected for prefill while decode runs first.
+        """
+        budget = self.config.token_budget
+        has_prefill = any(r.phase == "prefill" for r in self._active)
+        has_decode = any(r.phase == "decode" for r in self._active)
+        steps: list[ExecutionStep] = []
+
+        def select(phase: Literal["prefill", "decode"], allowance: int) -> int:
+            consumed = 0
+            for request in tuple(self._active):
+                if allowance == 0:
+                    break
+                if request.phase != phase:
+                    continue
+                count = (min(request.prompt_token_count - request.prefilled_tokens, allowance)
+                         if phase == "prefill" else 1)
+                steps.append(ExecutionStep(
+                    request, phase,
+                    request.prefilled_tokens if phase == "prefill" else request.generated_tokens,
+                    count,
+                ))
+                self._active.remove(request)
+                self._active.append(request)
+                consumed += count
+                allowance -= count
+            return consumed
+
+        if budget == 1 and has_prefill and has_decode:
+            select("prefill" if self._prefer_prefill else "decode", 1)
+            self._prefer_prefill = not self._prefer_prefill
+            return steps
+        decode_budget = budget - (1 if has_prefill and has_decode else 0)
+        budget -= select("decode", decode_budget)
+        select("prefill", min(budget, self.config.prefill_token_budget))
         return steps
 
     async def _run(self) -> None:

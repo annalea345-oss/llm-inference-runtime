@@ -82,7 +82,7 @@ flowchart LR
 | --- | --- |
 | `api.py` | Validation, HTTP errors, SSE framing, application lifespan |
 | `protocol.py` | Input schema, internal request state, output events |
-| `batching.py` | Bounded admission, round-robin step planning, lifecycle, failure isolation |
+| `batching.py` | Bounded admission, configurable step planning, lifecycle, failure isolation |
 | `scheduler.py` | Retained run-to-completion FCFS baseline and admission errors |
 | `executor.py` | Executor interface and deterministic simulation |
 | `config.py` | Waiting/active/cache capacities, iteration token budget, simulation delays |
@@ -116,7 +116,8 @@ chunked to fit the remaining budget, so even a prompt longer than the budget can
 progress. Each active request gets at most one step per iteration. Selection
 rotates round-robin across iterations, including when the budget is smaller than
 the active set; a large prefill cannot permanently starve existing decodes.
-This is a simple fair policy, without decode priority or latency guarantees.
+This default `scheduling_policy="round_robin"` remains a simple fair policy
+without latency guarantees. An optional `decode_first` policy is described below.
 
 Configure the application programmatically, for example:
 
@@ -143,6 +144,30 @@ prefill returns `None`, decode returns one text piece. Exceptions fail only the
 affected request. The legacy `generate` interface is used only by the FCFS
 baseline. No model weights, GPU tensors, or real tokenizer are involved.
 
+### Prefill/decode policy
+
+Set `RuntimeConfig(scheduling_policy="decode_first", prefill_token_budget=8)` to
+prioritize existing output streams and limit total prefill tokens per iteration.
+The default remains `round_robin`, which ignores the prefill cap.
+
+Decode-first selects decode work first. If both phases are active and the shared
+budget is at least two, it protects one token for prefill, then uses the remainder
+for decodes. Prefill receives the leftover shared budget up to its configured cap.
+With a budget of one, mixed phases alternate starting with decode. Each phase
+rotates its selected requests to the back, so resident requests get turns even
+when more requests arrive. Each request still receives at most one step per
+iteration, and total work stays within `token_budget`.
+
+The prefill cap applies even when only prefills are active; unused budget can
+remain intentionally. Caps above the shared budget are allowed and clamped during
+planning. Both phases make progress, assuming selected executor steps return;
+this is an iteration fairness rule, not a wall-clock latency guarantee. The
+iteration barrier, FIFO memory admission, and KV ownership rules are unchanged.
+
+Three recorded mixed-workload comparisons show shorter output-token gaps with
+this policy, at the cost of lower throughput and higher first-token latency.
+See [the policy experiment](benchmarks/scheduling-policy.md) before selecting it.
+
 ### Simulated KV cache
 
 The continuous-batching scheduler owns a `SimulatedKVCache`, with
@@ -165,7 +190,7 @@ total capacity receives HTTP 422 before streaming and never enters the queue.
 Temporary memory pressure keeps feasible requests waiting, with strict FIFO
 admission: a large head request blocks smaller requests behind it. Waiting work
 uses no cache, and the pending FIFO head still counts toward waiting capacity.
-Round-robin execution and the shared token budget continue for active requests.
+The configured scheduling policy and shared token budget continue for active requests.
 
 Completion, executor failure, invalid decode output, abandonment, and shutdown all
 release ownership through scheduler finalization. In-flight work retains its
@@ -267,7 +292,11 @@ fresh scheduler and the same workload/configuration. FCFS still has no KV-memory
 enforcement. A fixed number of client workers each submit their next request
 when the previous one terminates (closed loop), with no automatic retries.
 `--output-tokens 2 16` repeats short/long output lengths in submission order;
-`--prompt-words 8` fixes every prompt to eight simulated words. Use `--help` for
+`--prompt-words 8` fixes every prompt to eight simulated words, while
+`--prompt-words 2 64` alternates short and long prompts. Both patterns repeat by
+submission index independently. `--scheduler policies` compares round-robin and
+decode-first continuous batching with per-run configurations. JSON schema version
+2 records prompt token counts in every request row. Use `--help` for
 queue, active, token-budget, cache-capacity, delays, and deadline controls.
 
 JSON reports contain configuration, Python/platform details, raw per-request
@@ -297,7 +326,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 2 — Measurement (implemented) | Request timestamps and in-process benchmark client | Clock-controlled timing tests; recorded FCFS/continuous runs at concurrency 1 and 4 |
 | 3 — Step-based execution (implemented) | Explicit waiting/active/finished state; separate prefill/decode steps | Preserve FCFS baseline behavior; deterministic state-transition tests |
 | 4 — Continuous batching (implemented) | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
-| 5 — Prefill/decode scheduling | Refine the shared token budget and fair prefill policy | Compare throughput and tail latency; test starvation and fairness |
+| 5 — Prefill/decode scheduling (implemented) | Optional decode-first policy with capped prefill and phase fairness | Starvation/lifecycle tests and three mixed-workload comparisons |
 | 6 — Simulated KV cache (implemented) | Token-slot reservations, progressive usage, FIFO memory admission, lifecycle release | Capacity invariants, no leaks, exhaustion, HTTP health and rejection tests |
 | 7 — Explicit cancellation | Request lookup, lifecycle transitions, cancellation API | Cancel waiting and active requests; verify cleanup and race handling |
 | 8 — Optional real executor | Integrate a small model behind an evolved executor interface | Correct output/lifecycle and measured hardware behavior |
