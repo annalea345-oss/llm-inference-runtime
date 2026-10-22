@@ -29,3 +29,6 @@ simulated waits in continuous batching and serialized work in FCFS. This is one
 small observation per setting, with no confidence intervals. Async sleeps,
 iteration barriers, machine load, and event-loop overhead determine these
 numbers. They are not GPU throughput or production serving measurements.
+
+The later [prefill/decode policy experiment](scheduling-policy.md) compares two
+continuous-batching policies with mixed prompt lengths over three repetitions.

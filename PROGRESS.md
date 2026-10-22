@@ -190,3 +190,52 @@ outputs contribute more samples to pooled inter-token statistics. No confidence
 intervals or production latency claims are made. Next: use the recorded benchmark
 when evaluating prefill/decode policy changes, or implement explicit cancellation
 with request lookup and KV cleanup. External HTTP benchmarking remains future work.
+
+## 2026-10-22 — Prefill/decode scheduling milestone
+
+### Architecture and behavior
+
+- Retained `round_robin` as the default; added optional `decode_first` scheduling
+  with `prefill_token_budget=8`. The cap is validated as a positive integer and
+  affects only the new policy; values above the shared budget are clamped.
+- Decode-first schedules decodes before prefills, protects one prefill token in
+  mixed batches with budget >= 2, and alternates phases when the budget is one.
+  Selected requests rotate within their phase, preserving resident progress under
+  newly arriving work. Each request gets at most one step per iteration.
+- Cap total prefill work even in prefill-only batches, intentionally allowing
+  unused shared budget. Keep iteration barriers, FIFO memory admission, execution
+  interfaces, output content, and KV ownership unchanged.
+- Extended the benchmark with repeating prompt-length patterns and a `policies`
+  mode that compares both continuous-batching policies. JSON schema 2 includes
+  per-run configurations and prompt counts for every request sample.
+
+### Validation and experiments
+
+- `.venv/bin/python -m pytest -q` — **113 passed in 0.55s**.
+- Tests verify priorities, total/prefill budgets, default preservation, phase
+  fairness under arrivals, one-token alternation across phase disappearance,
+  exact output and memory invariants, cancellation/failure/shutdown/restart, mixed
+  benchmark workloads, invalid configuration, and comparison CLI metadata.
+- Independent read-only review found no blocking issues; an additional ad hoc
+  check covered 4,410 planner phase/budget/cap combinations.
+- Three repeated mixed-workload comparisons are recorded in
+  `benchmarks/policies-mixed-{1,2,3}.json`; reproduction and interpretation are in
+  `benchmarks/scheduling-policy.md`. All 16 requests completed for both policies
+  in every comparison, without rejection, timeout, or failure.
+- On this workload, output-gap p95 changed from 8.48–8.86ms round-robin to
+  2.51–2.74ms decode-first; throughput fell from 187.06–189.19 to 166.82–171.82
+  simulated tokens/s, and first-token p95 rose from 288.17–290.60ms to
+  388.76–393.29ms. This tradeoff supports keeping the new policy optional.
+- `git diff --check` passed.
+
+### Limits and next work
+
+Progress is guaranteed in scheduling turns for resident work, assuming executor
+steps return; there is no wall-clock latency guarantee. Capped prefill can leave
+budget unused. The simulator has fixed total prefill sleep per prompt and an
+iteration barrier; these observations do not predict GPU behavior. The closed-loop
+benchmark preserves workload content/order, not identical arrival times.
+
+Next: explicit request cancellation with request lookup, API lifecycle handling,
+and existing KV cleanup, followed by real-model integration when the simulated
+runtime behavior is stable. External HTTP benchmarking remains future work.
