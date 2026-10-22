@@ -2,7 +2,8 @@
 
 A miniature inference serving system inspired by vLLM, built to make scheduling
 and concurrency understandable. Version 0.1 uses Python, FastAPI, asyncio, and a
-**simulated executor**. It does not load model weights or perform real inference.
+**simulated executor** by default. An optional CPU backend now runs a small real
+model; see [local model setup](LOCAL_MODEL.md).
 
 ## Run it
 
@@ -55,8 +56,9 @@ chunks. Network chunks do not necessarily correspond to complete SSE events.
 defaulting to 16. The simulator splits the prompt on whitespace and cycles its
 words, appending a space to each generated piece. An all-whitespace prompt emits
 `<empty> ` pieces. These pieces are called tokens for the exercise; they are not
-real model tokens. Generation normally stops at `max_tokens`; explicit cancellation can stop it earlier.
-EOS is not modeled.
+real model tokens. The optional local backend uses real model tokens instead.
+Generation normally stops at `max_tokens`; explicit cancellation can stop it earlier.
+The simulator does not model EOS; the optional local backend does.
 
 Invalid input or a request whose prompt-plus-output reservation exceeds total
 KV-cache capacity returns HTTP 422. A full waiting queue or unavailable scheduler
@@ -86,6 +88,9 @@ flowchart LR
 | `batching.py` | Bounded admission, configurable step planning, lifecycle, failure isolation |
 | `scheduler.py` | Retained run-to-completion FCFS baseline and admission errors |
 | `executor.py` | Executor interface and deterministic simulation |
+| `local_executor.py` | Optional CPU tokenizer, cached greedy inference, per-request model state |
+| `worker.py` | Serialized off-loop model work with cancellation settlement |
+| `local.py`, `download_model.py` | Opt-in local server factory and pinned model download |
 | `config.py` | Waiting/active/cache capacities, iteration token budget, simulation delays |
 | `kv_cache.py` | Per-request token-slot reservations, usage, and release |
 | `metrics.py` | Monotonic request timestamps and derived durations |
@@ -94,7 +99,7 @@ flowchart LR
 The application factory `create_app(config, executor)` supports isolated tests
 and replacement executors. The scheduler depends on the `ModelExecutor` protocol,
 not FastAPI. The executor executes explicit prefill/decode steps and knows nothing about HTTP or SSE.
-This boundary allows a real executor later without rewriting transport code.
+This boundary supports the optional real executor without rewriting transport code.
 The scheduler is created and stopped by FastAPI's lifespan, not at import time.
 
 ### Scheduling and concurrency
@@ -138,13 +143,21 @@ mutate it synchronously; one worker plans and executes iterations. Selected simu
 for 30 ms. These are illustrative delays, not hardware performance measurements.
 A slow step delays its iteration, but requests no longer monopolize execution
 until completion. Even zero-delay executors yield between iterations for HTTP
-handling and new admissions. A real executor would need a true batched model-step
-interface and appropriate integration for blocking CPU/GPU work.
+handling and new admissions. The optional local executor serializes its model forwards on a dedicated worker
+thread, so these scheduled steps are not a fused model batch. Blocking inference
+leaves the HTTP event loop free; shutdown waits for submitted model work to settle.
 
-Replacement executors implement `async execute(ExecutionStep) -> str | None`:
-prefill returns `None`, decode returns one text piece. Exceptions fail only the
-affected request. The legacy `generate` interface is used only by the FCFS
-baseline. No model weights, GPU tensors, or real tokenizer are involved.
+Replacement executors implement
+`async execute(ExecutionStep) -> str | DecodeResult | None`: prefill returns
+`None`, simulated decode returns text, and real decode returns text plus a model
+token ID and optional EOS reason. Exceptions fail only the affected request.
+Stateful executors may provide `tokenize(prompt)`, `context_limit`, synchronous
+`release_request(id)`, async `aclose()`, and `info` metadata. The scheduler uses
+model token IDs for prompt budgets and reservations when tokenization is supplied,
+and calls release only after execution settles. The API lifespan closes executors
+after scheduler shutdown, including startup failure. Async `executor_loader` avoids
+loading weights at module import. Existing stateless executors still work.
+The legacy `generate` interface remains only for the simulated FCFS baseline.
 
 ### Prefill/decode policy
 
@@ -174,7 +187,9 @@ See [the policy experiment](benchmarks/scheduling-policy.md) before selecting it
 
 The continuous-batching scheduler owns a `SimulatedKVCache`, with
 `kv_cache_capacity_tokens=8192` by default. Capacity is a positive integer in
-simulated token slots, not bytes or GPU memory. The FCFS baseline is unchanged.
+logical token slots, not bytes or GPU memory. In real mode the counts use model
+tokens including the chat template; actual KV tensors are owned by the executor
+and reported separately. The FCFS baseline is unchanged.
 
 Before admission, each request reserves `prompt_token_count + max_tokens` slots.
 Usage starts at zero and grows by each successfully completed prefill chunk or
@@ -203,8 +218,8 @@ events are consumed, so slow readers do not retain simulated KV memory.
 `/health` includes `kv_cache` with `capacity_tokens`, `reserved_tokens`,
 `used_tokens`, and `available_tokens` (capacity minus reservations). This bounds
 only simulated cache slots: Python objects, prompt strings, and output queues
-remain outside the bound. There is no paging, eviction, prefix sharing, actual
-cache tensor allocation.
+remain outside the bound. There is no paging, eviction, or prefix sharing. The optional real executor holds ordinary per-request
+KV tensors; the logical cache manager does not allocate or bound physical RAM.
 
 ### Queueing, ownership, and cleanup
 
@@ -378,7 +393,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 5 — Prefill/decode scheduling (implemented) | Optional decode-first policy with capped prefill and phase fairness | Starvation/lifecycle tests and three mixed-workload comparisons |
 | 6 — Simulated KV cache (implemented) | Token-slot reservations, progressive usage, FIFO memory admission, lifecycle release | Capacity invariants, no leaks, exhaustion, HTTP health and rejection tests |
 | 7 — Explicit cancellation (implemented) | Live request lookup, cancellation endpoint, terminal lifecycle | Immediate waiting-slot release, active boundary cleanup, race and SSE tests |
-| 8 — Optional real executor | Integrate a small model behind an evolved executor interface | Correct output/lifecycle and measured hardware behavior |
+| 8 — Optional real executor (CPU implemented) | SmolLM2 local tokens, greedy cached steps, serialized worker | Offline reference tests, real checkpoint smoke, live SSE and cancellation checks |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded
@@ -393,5 +408,5 @@ is an event-loop/scheduling experiment, not a GPU performance claim.
 
 This project borrows the serving concepts of vLLM; it is not compatible with its
 API, scheduler implementation, or performance characteristics. Authentication,
-production observability, distributed scheduling, persistence, real tokenization,
-real KV tensor caching, and real model execution remain outside the current runtime.
+production observability, distributed scheduling, persistence, fused model batches,
+paged KV tensors, and GPU execution remain outside the current runtime.

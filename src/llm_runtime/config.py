@@ -4,7 +4,7 @@ from typing import Literal
 
 @dataclass(frozen=True)
 class RuntimeConfig:
-    """Simulation settings; delays are seconds, capacity counts waiting requests."""
+    """Runtime limits and simulation-only delays (seconds); KV capacity is tokens."""
 
     queue_capacity: int = 64
     max_active_requests: int = 8

@@ -32,3 +32,6 @@ numbers. They are not GPU throughput or production serving measurements.
 
 The later [prefill/decode policy experiment](scheduling-policy.md) compares two
 continuous-batching policies with mixed prompt lengths over three repetitions.
+
+The [optional local-model smoke check](local-model.md) records real CPU model
+correctness, lifecycle, and memory snapshots separately from simulator results.

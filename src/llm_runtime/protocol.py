@@ -36,15 +36,28 @@ class InferenceRequest:
     prefilled_tokens: int = 0
     generated_tokens: int = 0
     timings: RequestTimings = field(default_factory=RequestTimings)
+    prompt_token_ids: tuple[int, ...] | None = None
+    finish_reason: Literal["length", "eos"] = "length"
 
     @property
     def prompt_token_count(self) -> int:
+        if self.prompt_token_ids is not None:
+            return len(self.prompt_token_ids)
         return max(1, len(self.prompt.split()))
 
 
 @dataclass(frozen=True)
+class DecodeResult:
+    """A real model token; text may be empty for partial bytes or EOS."""
+
+    text: str
+    token_id: int
+    finish_reason: Literal["eos"] | None = None
+
+
+@dataclass(frozen=True)
 class ExecutionStep:
-    """One request's work in a batch; prefill counts prompt pieces, decode costs 1."""
+    """One request's work in an iteration; prefill counts tokens, decode costs 1."""
 
     request: InferenceRequest
     phase: Literal["prefill", "decode"]

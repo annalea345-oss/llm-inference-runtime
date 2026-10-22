@@ -1,5 +1,5 @@
 import json
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -33,21 +33,30 @@ class GenerationResponse(StreamingResponse):
 
 def create_app(
     config: RuntimeConfig | None = None, executor: ModelExecutor | None = None,
+    *, executor_loader: Callable[[], Awaitable[ModelExecutor]] | None = None,
 ) -> FastAPI:
+    if executor is not None and executor_loader is not None:
+        raise ValueError("provide executor or executor_loader, not both")
     config = config if config is not None else RuntimeConfig()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        scheduler = ContinuousBatchScheduler(
-            executor if executor is not None else SimulatedExecutor(config),
-            config,
-        )
-        app.state.scheduler = scheduler
-        await scheduler.start()
+        selected = (await executor_loader() if executor_loader is not None else
+                    executor if executor is not None else SimulatedExecutor(config))
+        scheduler = None
         try:
+            scheduler = ContinuousBatchScheduler(selected, config)
+            app.state.scheduler = scheduler
+            await scheduler.start()
             yield
         finally:
-            await scheduler.stop()
+            try:
+                if scheduler is not None:
+                    await scheduler.stop()
+            finally:
+                close = getattr(selected, "aclose", None)
+                if callable(close):
+                    await close()
 
     app = FastAPI(title="LLM Inference Runtime", lifespan=lifespan)
 
@@ -57,6 +66,7 @@ def create_app(
         return {
             "status": "ok" if scheduler.running else "unavailable",
             "queued_requests": scheduler.queued_requests,
+            "executor": getattr(scheduler.executor, "info", {"backend": "custom"}),
             "kv_cache": {
                 "capacity_tokens": scheduler.kv_cache.capacity_tokens,
                 "reserved_tokens": scheduler.kv_cache.reserved_tokens,
