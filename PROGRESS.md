@@ -239,3 +239,59 @@ benchmark preserves workload content/order, not identical arrival times.
 Next: explicit request cancellation with request lookup, API lifecycle handling,
 and existing KV cleanup, followed by real-model integration when the simulated
 runtime behavior is stable. External HTTP benchmarking remains future work.
+
+## 2026-10-22 — Explicit request cancellation milestone
+
+### Architecture and behavior
+
+- Added a scheduler-owned live request registry populated only after successful
+  queue insertion and evicted at finalization. Its size is bounded by waiting
+  plus active capacity; completed streams do not retain registry entries.
+- Added synchronous `cancel(request_id)` on the owning event loop and
+  `POST /requests/{request_id}/cancel`. Accepted live requests return HTTP 202;
+  unknown or finalized IDs return 404; stopped/stopping runtimes return 503.
+- Separate explicit `cancel_requested` intent from disconnected `abandoned`
+  streams. Connected cancelled requests receive exactly one done event with
+  `finish_reason="cancelled"`, generated count, and timing data. Disconnected
+  streams remain silent.
+- Remove queued requests and pending FIFO heads immediately, restoring waiting
+  capacity and preserving survivor order. Use only public asyncio queue operations;
+  reinsert retained work before balancing task bookkeeping so join never observes
+  a false zero. Waiting cancellation costs O(waiting capacity).
+- Active cancellation remains cooperative at iteration boundaries: preserve KV
+  reservations until in-flight work settles, then discard its result and finalize.
+  Requests not selected in the current iteration also clean up at the boundary.
+- Accepted cancellation wins over final decode, execution failure, or subsequent
+  shutdown; an already finalized request is absent and returns 404. Repeated
+  active cancellation returns 202 until finalization. Waiting cancellation
+  finalizes immediately, so repeating it returns 404.
+- Keep both scheduling policies, executor interfaces, and the FCFS baseline
+  unchanged. Earlier buffered token events can still be delivered after the
+  cancellation response; execution is not interrupted per request.
+
+### Validation
+
+- `.venv/bin/python -m pytest -q` — **133 passed in 0.51s**.
+- Added 20 deterministic gated tests for both policies and prefill/decode phases,
+  final-decode and error races, unselected active cancellation, retained KV until
+  the barrier, immediate waiting/pending slot recovery, survivor FIFO order,
+  balanced queue accounting, live lookup cleanup, repeated cancellation,
+  shutdown/disconnect precedence, restart, and actual ASGI streaming cancellation
+  using X-Request-ID. HTTP tests cover 202, 404, and 503 behavior.
+- Independent read-only review found no blocking issues in queue rotation,
+  lifecycle precedence, registry cleanup, or memory ownership.
+- `git diff --check` passed. README includes endpoint semantics and a manual curl
+  example; no new live network performance experiment was needed.
+
+### Limits and next work
+
+Active cleanup still waits for the iteration barrier; a stuck executor delays
+cancellation. Terminal IDs and durable cancellation history are not retained.
+Cancellation is event-loop-local and the API still requires one runtime process.
+
+The next milestone is optional real-model execution: first select a small model
+and supported hardware/backend, then evolve the executor boundary and verify
+blocking-work isolation, output correctness, and actual memory behavior. Real KV
+tensors and tokenizer integration will need explicit design; current memory and
+performance measurements remain simulations. External HTTP benchmarking is also
+still available as a separate follow-up.
