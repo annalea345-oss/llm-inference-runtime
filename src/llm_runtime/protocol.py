@@ -31,6 +31,7 @@ class InferenceRequest:
     # A slow reader cannot block the single scheduler worker.
     events: asyncio.Queue[StreamEvent] = field(default_factory=asyncio.Queue)
     abandoned: bool = False
+    cancel_requested: bool = False
     phase: RequestPhase = "waiting"
     prefilled_tokens: int = 0
     generated_tokens: int = 0

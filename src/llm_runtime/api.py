@@ -70,6 +70,16 @@ def create_app(
             ),
         }
 
+    @app.post("/requests/{request_id}/cancel", status_code=202)
+    async def cancel(request_id: str):
+        try:
+            accepted = app.state.scheduler.cancel(request_id)
+        except RuntimeUnavailableError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        if not accepted:
+            raise HTTPException(status_code=404, detail="request is not live")
+        return {"request_id": request_id, "status": "cancellation_requested"}
+
     @app.post("/generate")
     async def generate(body: GenerationRequest):
         try:

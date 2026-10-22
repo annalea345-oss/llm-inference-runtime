@@ -34,6 +34,8 @@ class ContinuousBatchScheduler:
         self._lifecycle_lock = asyncio.Lock()
         self._stopping = False
         self._prefer_prefill = False
+        # Live requests only: terminal streams may outlive scheduler ownership.
+        self._requests: dict[str, InferenceRequest] = {}
 
     @property
     def queued_requests(self) -> int:
@@ -67,7 +69,36 @@ class ContinuousBatchScheduler:
             self.queue.put_nowait(request)
         except asyncio.QueueFull as exc:
             raise QueueFullError("waiting queue is full") from exc
+        self._requests[request.request_id] = request
         return request
+
+    def cancel(self, request_id: str) -> bool:
+        """Accept cancellation of live work; active cleanup waits for the barrier.
+
+        Runs on the owning event loop without yielding, like submit(). Waiting
+        queue removal uses public queue operations and preserves unfinished work.
+        """
+        if not self.running:
+            raise RuntimeUnavailableError("runtime is not running")
+        request = self._requests.get(request_id)
+        if request is None:
+            return False
+        request.cancel_requested = True
+        if request.phase == "waiting":
+            if self._pending is request:
+                self._pending = None
+                self._finish(request, "cancelled")
+            else:
+                for _ in range(self.queue.qsize()):
+                    queued = self.queue.get_nowait()
+                    if queued is request:
+                        self._finish(queued, "cancelled")
+                    else:
+                        # Reinsert before task_done so join never sees a false
+                        # zero while retained requests still have work pending.
+                        self.queue.put_nowait(queued)
+                        self.queue.task_done()
+        return True
 
     async def stop(self) -> None:
         # Keep restart behind both worker termination and shared-state cleanup.
@@ -98,15 +129,18 @@ class ContinuousBatchScheduler:
     def _finish(self, request: InferenceRequest, phase: RequestPhase, message: str = "") -> None:
         if request.phase in ("finished", "cancelled", "failed"):
             return
+        if request.cancel_requested:
+            phase = "cancelled"
         request.timings.finish()
         self.kv_cache.release(request.request_id)
+        self._requests.pop(request.request_id, None)
         request.phase = phase
         if not request.abandoned:
-            if phase == "finished":
+            if phase in ("finished", "cancelled"):
                 event = StreamEvent("done", {
                     "request_id": request.request_id,
                     "generated_tokens": request.generated_tokens,
-                    "finish_reason": "length",
+                    "finish_reason": "cancelled" if phase == "cancelled" else "length",
                     "timings": request.timings.snapshot(),
                 })
             else:
@@ -117,7 +151,7 @@ class ContinuousBatchScheduler:
         self.queue.task_done()
 
     def _admit(self, request: InferenceRequest) -> bool:
-        if request.abandoned:
+        if request.abandoned or request.cancel_requested:
             self._finish(request, "cancelled")
         else:
             if not self.kv_cache.reserve(
@@ -193,7 +227,7 @@ class ContinuousBatchScheduler:
         try:
             while True:
                 for request in tuple(self._active):
-                    if request.abandoned:
+                    if request.abandoned or request.cancel_requested:
                         self._active.remove(request)
                         self._finish(request, "cancelled")
                 if not self._active and not self.queued_requests:
@@ -212,7 +246,7 @@ class ContinuousBatchScheduler:
                 )
                 for step, result in zip(steps, results):
                     request = step.request
-                    if request.abandoned:
+                    if request.abandoned or request.cancel_requested:
                         self._active.remove(request)
                         self._finish(request, "cancelled")
                     elif isinstance(result, BaseException):

@@ -55,7 +55,8 @@ chunks. Network chunks do not necessarily correspond to complete SSE events.
 defaulting to 16. The simulator splits the prompt on whitespace and cycles its
 words, appending a space to each generated piece. An all-whitespace prompt emits
 `<empty> ` pieces. These pieces are called tokens for the exercise; they are not
-real model tokens. Generation always stops at `max_tokens`; EOS is not modeled.
+real model tokens. Generation normally stops at `max_tokens`; explicit cancellation can stop it earlier.
+EOS is not modeled.
 
 Invalid input or a request whose prompt-plus-output reservation exceeds total
 KV-cache capacity returns HTTP 422. A full waiting queue or unavailable scheduler
@@ -130,7 +131,8 @@ app = create_app(RuntimeConfig(
 ))
 ```
 
-One scheduler task owns all state. Selected simulated steps run concurrently via
+The scheduler owns runtime state on one event loop. Submission and cancellation
+mutate it synchronously; one worker plans and executes iterations. Selected simulated steps run concurrently via
 `asyncio.gather`, with a barrier before the next iteration. The prefill delay
 (default 50 ms per prompt) is apportioned across chunks; each decode step sleeps
 for 30 ms. These are illustrative delays, not hardware performance measurements.
@@ -202,7 +204,7 @@ events are consumed, so slow readers do not retain simulated KV memory.
 `used_tokens`, and `available_tokens` (capacity minus reservations). This bounds
 only simulated cache slots: Python objects, prompt strings, and output queues
 remain outside the bound. There is no paging, eviction, prefix sharing, actual
-cache tensor allocation, or explicit cancellation endpoint.
+cache tensor allocation.
 
 ### Queueing, ownership, and cleanup
 
@@ -224,15 +226,61 @@ Replacement executors must obey the generation limit.
 Stream cleanup marks disconnected requests as abandoned. Queued abandoned work
 is skipped; active work is removed at iteration boundaries. Results from a step
 that finishes after abandonment are discarded without emitting more events. This is
-cooperative cleanup, with no explicit cancellation endpoint, immediate queue
-removal, or GPU interruption. Abandoned waiting requests retain their queue slot
-until dequeued. Shutdown cancels the worker, balances queue bookkeeping, and
-places terminal errors on active and waiting request streams. Delivery still
+cooperative disconnect cleanup, without GPU interruption. Abandoned waiting
+requests retain their queue slot until dequeued; explicit cancellation below
+removes waiting requests immediately. Shutdown cancels the worker, balances queue
+bookkeeping, and places terminal errors on active and waiting request streams
+unless explicit cancellation was already accepted. Delivery still
 depends on the HTTP connection and ASGI server shutdown behavior.
 
 Executor errors terminate only the affected request and are logged server-side;
 the worker continues to subsequent requests. Stream error messages do not expose
 exception details.
+
+### Explicit cancellation
+
+Use `POST /requests/{request_id}/cancel` to stop a live request. The ID is returned
+in the generation response's `X-Request-ID` header and every stream event.
+For a manual check, start generation with response headers visible:
+
+```bash
+curl -N -D - http://127.0.0.1:8000/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"hello world", "max_tokens":100}'
+```
+
+Copy the `X-Request-ID` value, then run in another terminal:
+
+```bash
+curl -X POST http://127.0.0.1:8000/requests/REQUEST_ID/cancel
+```
+
+An accepted cancellation returns HTTP 202 with
+`{"request_id":"...","status":"cancellation_requested"}`. This acknowledges
+acceptance, not immediate interruption of execution. Unknown or already finalized
+IDs return HTTP 404; an unavailable or stopping runtime returns HTTP 503.
+
+Waiting requests, including the pending memory-blocked FIFO head, are finalized
+immediately and release their waiting slot without reordering survivors. Active
+requests remain owned until an iteration boundary. Their in-flight results are
+discarded, and KV reservations are released only after the iteration barrier
+settles (or shutdown cancellation settles). There is no executor task interruption
+per request, so a stuck executor step still delays active cancellation.
+
+A connected stream ends with exactly one `done` event containing
+`finish_reason: "cancelled"`, the number of tokens generated before cancellation,
+and timing data. Tokens already buffered before cancellation can still arrive;
+no further execution results are emitted once cancellation is observed. Explicit
+cancellation accepted before an execution failure, final decode result, or shutdown
+wins that race. If completion or failure finalized first, cancellation returns 404.
+Disconnected streams emit no additional terminal event.
+
+Repeated cancellation of an active request returns 202 until finalization. Waiting
+cancellation finalizes immediately, so its next cancellation returns 404. A live
+request registry is bounded by active plus waiting capacity; finalization removes
+the entry even if the output reader is slow. Terminal IDs are not retained across
+completion or restart. Cancellation runs on the same event loop as scheduling and
+is not thread-safe. The retained FCFS baseline has no cancellation endpoint.
 
 ## Tests
 
@@ -243,7 +291,8 @@ python -m pytest -q
 
 Tests cover the retained FCFS baseline, deterministic generation, continuous
 admission, shared budgets, prefill chunking, round-robin fairness, active and
-waiting limits, shutdown/restart, abandonment in both phases, isolated execution
+waiting limits, shutdown/restart, explicit waiting/active cancellation and races,
+abandonment in both phases, isolated execution
 failures, KV capacity invariants, FIFO memory pressure, partial usage and release,
 HTTP disconnects, validation, health, SSE payloads, and incremental
 streaming. Synchronization gates control
@@ -328,7 +377,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 4 — Continuous batching (implemented) | Admit requests between decode steps; bounded active batch | Show short requests progressing alongside long requests; compare with baseline |
 | 5 — Prefill/decode scheduling (implemented) | Optional decode-first policy with capped prefill and phase fairness | Starvation/lifecycle tests and three mixed-workload comparisons |
 | 6 — Simulated KV cache (implemented) | Token-slot reservations, progressive usage, FIFO memory admission, lifecycle release | Capacity invariants, no leaks, exhaustion, HTTP health and rejection tests |
-| 7 — Explicit cancellation | Request lookup, lifecycle transitions, cancellation API | Cancel waiting and active requests; verify cleanup and race handling |
+| 7 — Explicit cancellation (implemented) | Live request lookup, cancellation endpoint, terminal lifecycle | Immediate waiting-slot release, active boundary cleanup, race and SSE tests |
 | 8 — Optional real executor | Integrate a small model behind an evolved executor interface | Correct output/lifecycle and measured hardware behavior |
 
 Continuous batching was prioritized before the measurement milestone at user
@@ -337,9 +386,9 @@ simulator comparisons are available above; no GPU performance improvement is
 claimed. Shared token budgets and the initial fair prefill policy are implemented.
 
 Introduce only the abstractions each milestone needs. In particular, do not add a
-paged allocator before cache capacity and ownership are modeled. Later cancellation
-work must coordinate scheduler state and KV-cache release, beyond today's stream
-cleanup. Benchmark simulated and real execution separately; simulated throughput
+paged allocator before cache capacity and ownership are modeled. Explicit
+cancellation now coordinates scheduler state and KV-cache release. Benchmark
+simulated and real execution separately; simulated throughput
 is an event-loop/scheduling experiment, not a GPU performance claim.
 
 This project borrows the serving concepts of vLLM; it is not compatible with its
