@@ -3,11 +3,11 @@ from collections.abc import AsyncIterator
 from typing import Protocol
 
 from llm_runtime.config import RuntimeConfig
-from llm_runtime.protocol import ExecutionStep, InferenceRequest
+from llm_runtime.protocol import DecodeResult, ExecutionStep, InferenceRequest
 
 
 class ModelExecutor(Protocol):
-    async def execute(self, step: ExecutionStep) -> str | None: ...
+    async def execute(self, step: ExecutionStep) -> str | DecodeResult | None: ...
 
 
 class LegacyModelExecutor(Protocol):
@@ -21,6 +21,10 @@ class SimulatedExecutor:
 
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
+
+    @property
+    def info(self) -> dict:
+        return {"backend": "simulated", "tokenization": "whitespace"}
 
     async def execute(self, step: ExecutionStep) -> str | None:
         if step.phase == "prefill":

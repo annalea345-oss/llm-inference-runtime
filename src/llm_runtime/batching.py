@@ -8,14 +8,14 @@ from typing import Literal
 from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor
 from llm_runtime.kv_cache import RequestTooLargeError, SimulatedKVCache
-from llm_runtime.protocol import ExecutionStep, InferenceRequest, RequestPhase, StreamEvent
+from llm_runtime.protocol import DecodeResult, ExecutionStep, InferenceRequest, RequestPhase, StreamEvent
 from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
 
 logger = logging.getLogger(__name__)
 
 
 class ContinuousBatchScheduler:
-    """One owner plans iterations; independent simulated steps execute together.
+    """One owner plans iterations; selected steps share an execution barrier.
 
     Active requests rotate after selection, including across budget exhaustion.
     Each gets at most one step per iteration. Admission happens only at iteration
@@ -61,6 +61,14 @@ class ContinuousBatchScheduler:
         if not prompt or type(max_tokens) is not int or not 1 <= max_tokens <= 512:
             raise ValueError("invalid generation request")
         request = InferenceRequest(prompt, max_tokens)
+        tokenize = getattr(self.executor, "tokenize", None)
+        if callable(tokenize):
+            request.prompt_token_ids = tuple(tokenize(prompt))
+            if not request.prompt_token_ids:
+                raise ValueError("executor returned an empty prompt encoding")
+        context_limit = getattr(self.executor, "context_limit", None)
+        if context_limit is not None and request.prompt_token_count + max_tokens > context_limit:
+            raise RequestTooLargeError("request exceeds model context capacity")
         if request.prompt_token_count + max_tokens > self.kv_cache.capacity_tokens:
             raise RequestTooLargeError("request exceeds KV-cache token capacity")
         if self.queued_requests >= self.config.queue_capacity:
@@ -132,6 +140,14 @@ class ContinuousBatchScheduler:
         if request.cancel_requested:
             phase = "cancelled"
         request.timings.finish()
+        release = getattr(self.executor, "release_request", None)
+        if callable(release):
+            try:
+                release(request.request_id)
+            except Exception:
+                logger.exception("Model cleanup failed for %s", request.request_id)
+                if not request.cancel_requested:
+                    phase, message = "failed", "model cleanup failed"
         self.kv_cache.release(request.request_id)
         self._requests.pop(request.request_id, None)
         request.phase = phase
@@ -140,7 +156,7 @@ class ContinuousBatchScheduler:
                 event = StreamEvent("done", {
                     "request_id": request.request_id,
                     "generated_tokens": request.generated_tokens,
-                    "finish_reason": "cancelled" if phase == "cancelled" else "length",
+                    "finish_reason": "cancelled" if phase == "cancelled" else request.finish_reason,
                     "timings": request.timings.snapshot(),
                 })
             else:
@@ -259,15 +275,21 @@ class ContinuousBatchScheduler:
                         request.prefilled_tokens += step.token_count
                         if request.prefilled_tokens == request.prompt_token_count:
                             request.phase = "decode"
-                    elif isinstance(result, str):
+                    elif isinstance(result, (str, DecodeResult)):
                         request.timings.token()
                         self.kv_cache.consume(request.request_id, 1)
-                        request.events.put_nowait(StreamEvent("token", {
+                        payload = {
                             "request_id": request.request_id,
-                            "index": request.generated_tokens, "text": result,
-                        }))
+                            "index": request.generated_tokens,
+                            "text": result.text if isinstance(result, DecodeResult) else result,
+                        }
+                        if isinstance(result, DecodeResult):
+                            payload["token_id"] = result.token_id
+                            if result.finish_reason == "eos":
+                                request.finish_reason = "eos"
+                        request.events.put_nowait(StreamEvent("token", payload))
                         request.generated_tokens += 1
-                        if request.generated_tokens == request.max_tokens:
+                        if request.generated_tokens == request.max_tokens or request.finish_reason == "eos":
                             self._active.remove(request)
                             self._finish(request, "finished")
                     else:

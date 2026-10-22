@@ -1,0 +1,104 @@
+{
+  "scope": "real local CPU model; in-process ASGI; no network latency measurement",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "model_manifest": {
+    "model_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac"
+  },
+  "config": {
+    "queue_capacity": 64,
+    "max_active_requests": 2,
+    "token_budget": 8,
+    "prefill_delay": 0.05,
+    "token_delay": 0.03,
+    "kv_cache_capacity_tokens": 8192,
+    "scheduling_policy": "round_robin",
+    "prefill_token_budget": 8
+  },
+  "executor": {
+    "backend": "transformers",
+    "device": "cpu",
+    "dtype": "float32",
+    "tokenization": "model",
+    "context_limit": 8192,
+    "model": "llama",
+    "parameter_bytes": 538060032,
+    "kv_tensor_bytes_after_last_step": 0
+  },
+  "load_seconds": 2.1957317497581244,
+  "peak_process_rss_bytes": 1121042432,
+  "peak_observed_kv_tensor_bytes": 4377600,
+  "cancellation_verified": true,
+  "final_cache_bytes": 0,
+  "requests": [
+    {
+      "prompt": "What is the capital of France? Answer briefly.",
+      "output": "The capital of France is Paris.",
+      "generated_tokens": 8,
+      "reference_token_ids_match": true,
+      "terminal": {
+        "request_id": "1c5b948050034d7e97967a042f764afa",
+        "generated_tokens": 8,
+        "finish_reason": "eos",
+        "timings": {
+          "queue_wait_ms": 7.815459277480841,
+          "time_to_first_token_ms": 361.5726251155138,
+          "inter_token_ms": [
+            27.32337499037385,
+            26.866875123232603,
+            26.697083842009306,
+            25.881041307002306,
+            26.287666987627745,
+            26.43720805644989,
+            13.196874875575304
+          ],
+          "end_to_end_ms": 534.273125231266
+        }
+      }
+    },
+    {
+      "prompt": "What color is the sky on a clear day?",
+      "output": "The sky on a clear day is usually a deep, rich shade of blue, with a faint hint of pink or orange",
+      "generated_tokens": 24,
+      "reference_token_ids_match": true,
+      "terminal": {
+        "request_id": "b155b743bb084feea3f2dee3ff2f4dfe",
+        "generated_tokens": 24,
+        "finish_reason": "length",
+        "timings": {
+          "queue_wait_ms": 0.17854198813438416,
+          "time_to_first_token_ms": 353.9439579471946,
+          "inter_token_ms": [
+            27.320208959281445,
+            26.86829073354602,
+            26.695375330746174,
+            25.881041772663593,
+            26.28750028088689,
+            26.439957786351442,
+            13.228250201791525,
+            13.491874560713768,
+            13.026959262788296,
+            12.954290956258774,
+            13.308208901435137,
+            13.194875326007605,
+            13.375624548643827,
+            13.088916428387165,
+            12.86983396857977,
+            13.410165905952454,
+            13.449917081743479,
+            13.421082869172096,
+            13.832416851073503,
+            13.744375202804804,
+            13.670457992702723,
+            13.792833779007196,
+            0.1888750120997429
+          ],
+          "end_to_end_ms": 727.4904996156693
+        }
+      }
+    }
+  ]
+}

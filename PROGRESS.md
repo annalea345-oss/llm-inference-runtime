@@ -295,3 +295,69 @@ blocking-work isolation, output correctness, and actual memory behavior. Real KV
 tensors and tokenizer integration will need explicit design; current memory and
 performance measurements remain simulations. External HTTP benchmarking is also
 still available as a separate follow-up.
+
+## 2026-10-22 — Optional real-model CPU milestone
+
+### Architecture and behavior
+
+- Added optional PyTorch/Transformers dependencies and a pinned download helper
+  for HuggingFaceTB/SmolLM2-135M-Instruct. Download only tokenizer/configuration and
+  safetensors weights into ignored `.models/`. The default server remains the
+  lightweight simulator; real startup uses a separate explicit factory and local
+  files only, without remote model code or automatic downloads.
+- Added a dedicated serialized worker thread for loading and model forwards.
+  Repeated asyncio cancellation waits for queued/running work to settle before
+  returning, preserving cache ownership. Worker shutdown rejects new submissions,
+  joins off-loop, and is idempotent.
+- Tokenize single-turn instructions with the model chat template; scheduler
+  prefill budgets, context validation, and logical cache reservations now use
+  model token IDs when supplied. Context/capacity rejection remains HTTP 422.
+- Run actual chunked prefill and greedy decode with independent cached KV tensors
+  per request. Added DecodeResult token IDs and EOS handling without changing
+  existing string-returning simulator executors. Empty text pieces support EOS
+  and buffered incomplete UTF-8 suffixes.
+- Add optional request cleanup/lifespan hooks. Completion, EOS, cancellation,
+  executor errors, and shutdown drop model state after work settles. Lifespan
+  cleanup also covers scheduler startup failures. Health separates backend,
+  context, parameter bytes, and KV tensor snapshots from logical token accounting.
+- Keep scheduling continuous but model calls serialized, not fused tensor batches.
+  CPU float32 and two PyTorch intra-op threads are the initial supported setup.
+
+### Validation and recorded real execution
+
+- Full suite at this increment: `.venv/bin/python -m pytest -q` — **160 passed**.
+- Optional offline model tests use a tiny randomly initialized Llama and compare
+  chunk sizes 1/2/32 against reference greedy generation; verify EOS, Unicode
+  buffering, independent caches, real tensor bytes, and release. These tests skip
+  if model dependencies are absent; normal simulator/protocol tests stay offline.
+- Worker/protocol tests verify optional dependency isolation, model token counts,
+  EOS streaming, capacity/context limits, release after terminal paths, cleanup
+  failure isolation, asynchronous loader lifecycle, and startup failure cleanup.
+  An integrated blocked-thread shutdown test confirms reservations remain owned
+  until work settles, even after repeated cancellation.
+- Downloaded the pinned real checkpoint and ran the reproducible
+  `scripts/verify_local_model.py`: two concurrent ASGI requests matched reference
+  token IDs and decoded text, with EOS/length handling, cancellation, and zero
+  remaining per-request KV state. The France prompt generated
+  "The capital of France is Paris.".
+- Recorded `benchmarks/local-model-smoke.json`; environment and interpretation in
+  `benchmarks/local-model.md`. On this Apple M3/16 GB machine the local model loaded
+  in 2.20s; parameter tensors used ~513 MiB, observed KV snapshots peaked at
+  ~4.18 MiB, and whole-check process RSS peaked at ~1.04 GiB. These are single-run
+  observations including reference generation, not production benchmarks.
+- Live single-worker Uvicorn/curl verification confirmed local factory startup,
+  health metadata, real SSE token/text output, EOS terminal event, and clean
+  shutdown. Test server stopped afterward. `git diff --check` passed.
+
+### Limits and next work
+
+Logical token capacity is not a physical RAM bound. The native allocator can keep
+freed memory, and a stuck forward can delay shutdown. The local backend is tested
+with SmolLM2 only; it does not implement CUDA/MPS, quantization, tensor batching,
+paged KV tensors, sampling, multi-turn chat history, or a chat-compatible API.
+Model quality is not established by the smoke check.
+
+Next: add a minimal chat-compatible adapter and external HTTP streaming benchmark
+before choosing a chat interface, or profile/extend the model-step interface for
+true batching. Keep physical memory and real performance measurements separate
+from simulated scheduling results.
