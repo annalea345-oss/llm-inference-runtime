@@ -35,3 +35,6 @@ continuous-batching policies with mixed prompt lengths over three repetitions.
 
 The [optional local-model smoke check](local-model.md) records real CPU model
 correctness, lifecycle, and memory snapshots separately from simulator results.
+
+The [chat adapter verification](chat-api.md) checks full-history JSON and streaming
+responses against reference real-model generation, separately from latency tests.

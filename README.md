@@ -3,7 +3,9 @@
 A miniature inference serving system inspired by vLLM, built to make scheduling
 and concurrency understandable. Version 0.1 uses Python, FastAPI, asyncio, and a
 **simulated executor** by default. An optional CPU backend now runs a small real
-model; see [local model setup](LOCAL_MODEL.md).
+model; see [local model setup](LOCAL_MODEL.md). A text-only
+[chat-compatible API](CHAT_API.md) accepts conversation histories and both
+streamed and complete assistant responses.
 
 ## Run it
 
@@ -83,7 +85,8 @@ flowchart LR
 
 | Module | Responsibility |
 | --- | --- |
-| `api.py` | Validation, HTTP errors, SSE framing, application lifespan |
+| `api.py` | Generation transport, cancellation, health, application lifespan |
+| `chat.py` | Text-only chat schemas, model discovery, compatible JSON/SSE mapping |
 | `protocol.py` | Input schema, internal request state, output events |
 | `batching.py` | Bounded admission, configurable step planning, lifecycle, failure isolation |
 | `scheduler.py` | Retained run-to-completion FCFS baseline and admission errors |
@@ -394,6 +397,8 @@ Work in small milestones, preserving a runnable server and recording results in
 | 6 — Simulated KV cache (implemented) | Token-slot reservations, progressive usage, FIFO memory admission, lifecycle release | Capacity invariants, no leaks, exhaustion, HTTP health and rejection tests |
 | 7 — Explicit cancellation (implemented) | Live request lookup, cancellation endpoint, terminal lifecycle | Immediate waiting-slot release, active boundary cleanup, race and SSE tests |
 | 8 — Optional real executor (CPU implemented) | SmolLM2 local tokens, greedy cached steps, serialized worker | Offline reference tests, real checkpoint smoke, live SSE and cancellation checks |
+| 9 — Chat-compatible adapter (implemented) | Model discovery, text message history, JSON/streamed completions | Validation, usage, lifecycle tests; real multi-turn reference and live HTTP checks |
+| 10 — External measurement and chat client | Measure real HTTP streaming and connect a client configured for the supported subset | Record external latency and verify an end-to-end chat session |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

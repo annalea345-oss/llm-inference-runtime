@@ -361,3 +361,64 @@ Next: add a minimal chat-compatible adapter and external HTTP streaming benchmar
 before choosing a chat interface, or profile/extend the model-step interface for
 true batching. Keep physical memory and real performance measurements separate
 from simulated scheduling results.
+
+## 2026-10-23 — Text-only chat-compatible API milestone
+
+### Architecture and behavior
+
+- Added `/v1/models`, model lookup, and `/v1/chat/completions` with a deliberately
+  defined text-only Chat Completions subset. Model aliases identify the selected
+  backend: simulated, local-model, or runtime/custom alias. No hosted API call,
+  new model download, or OpenAI account is required.
+- Accept bounded system/user/assistant histories, with an optional initial system
+  message and alternating turns ending in user. Validate before admission: at
+  most 64 messages and 8192 combined content characters, one output choice, and
+  either max_tokens or max_completion_tokens in 1–512 (default 16).
+- Preserve greedy semantics: temperature omitted/null/zero only. Reject unsupported
+  fields, tools, multimodal content, sampling, and unsupported roles explicitly.
+  Use HTTP 400 error envelopes for chat validation while retaining /generate's
+  existing HTTP 422 format. Unsupported aliases return 404.
+- Pass the full history once to the real tokenizer's chat template through
+  submit_chat/tokenize_messages, avoiding single-user double wrapping. Simulator
+  fallback uses readable role-labelled text. Context and logical memory limits
+  still apply to the resulting tokens before queue insertion.
+- Return complete assistant messages with prompt/completion/total token usage, or
+  data-only SSE deltas with stable completion IDs, model, timestamp, final stop or
+  length reason, optional final usage chunk, and [DONE]. EOS maps to stop.
+- Share existing scheduler ownership, capacities, lookup, and cancellation. Keep
+  raw runtime IDs in X-Request-ID; chatcmpl-prefixed completion IDs are transport
+  identifiers. Cancellation yields a compatible error rather than a fabricated
+  success finish reason: JSON409 or streamed error+[DONE] after HTTP200.
+- Watch nonstream disconnects while collecting output; reuse streaming cleanup for
+  disconnects and header-send failure. No conversation history database is added.
+
+### Validation and real-model evidence
+
+- Tests at completion: `.venv/bin/python -m pytest -q` — **221 passed**.
+- Added chat validation/discovery/format/usage tests, error and capacity mappings,
+  shared cancellation and shutdown, full-history fake tokenization, direct-ASGI
+  incremental content/disconnect/header failure, and nonstream task cleanup.
+  Added an offline local tokenizer test proving full-history single templating.
+- Independent read-only review found no blocking issues; its transport and local
+  tokenizer coverage suggestions were added.
+- Ran `scripts/verify_chat_api.py` with the pinned real checkpoint. Nonstream and
+  streamed multi-turn results matched independent reference greedy generation,
+  with 48 prompt tokens, six completion tokens (including EOS), and zero remaining
+  per-request caches. Recorded benchmarks/chat-api-smoke.json and interpretation
+  in benchmarks/chat-api.md.
+- Live Uvicorn/curl check verified discovery plus real chat deltas, stop finish,
+  final usage, and [DONE]. Test server stopped after verification.
+- `git diff --check` passed. CHAT_API.md describes exact options, error semantics,
+  client setup, ownership, and compatibility limits. README and LOCAL_MODEL updated.
+
+### Limits and next work
+
+This is a text-only compatibility subset, not a complete OpenAI API. Sampling,
+tools, images/audio, persistent conversations, arbitrary message ordering, CORS
+for arbitrary browser origins, and a packaged chat interface remain outside this
+milestone. Some clients need configuration changes to avoid unsupported fields.
+
+Next: external HTTP streaming measurement and a concrete chat-client integration
+configured for this supported subset, using local-model rather than hosted model
+names. Continue measuring real-model/network performance separately from the
+in-process simulator benchmarks.

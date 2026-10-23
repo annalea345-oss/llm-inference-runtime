@@ -118,3 +118,24 @@ async def test_invalid_step_offsets_fail_and_cleanup_remains_available():
         assert executor.cache_bytes == 0
     finally:
         await executor.aclose()
+
+
+async def test_local_chat_tokenization_passes_whole_history_once_without_user_wrapping():
+    model, tokenizer, torch = components()
+    executor = LocalModelExecutor(model, tokenizer, torch, SerialWorker())
+    seen = []
+
+    def template(messages, **kwargs):
+        seen.append((messages, kwargs))
+        return [1, 7, 8]
+
+    tokenizer.apply_chat_template = template
+    history = [dict(role='system', content='Be brief.'), dict(role='user', content='My name is Ada.'),
+               dict(role='assistant', content='Hello Ada.'), dict(role='user', content='What is my name?')]
+    try:
+        assert executor.tokenize_messages(history) == (1, 7, 8)
+        assert seen == [(history, dict(tokenize=True, add_generation_prompt=True))]
+        assert executor.tokenize('single instruction') == (1, 7, 8)
+        assert seen[-1][0] == [dict(role='user', content='single instruction')]
+    finally:
+        await executor.aclose()

@@ -12,6 +12,7 @@ from llm_runtime.kv_cache import RequestTooLargeError
 from llm_runtime.protocol import GenerationRequest, InferenceRequest
 from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
 from llm_runtime.batching import ContinuousBatchScheduler
+from llm_runtime.chat import install_chat_routes
 
 
 class GenerationResponse(StreamingResponse):
@@ -108,6 +109,7 @@ def create_app(
 
         return GenerationResponse(request, stream())
 
+    install_chat_routes(app, GenerationResponse)
     return app
 
 

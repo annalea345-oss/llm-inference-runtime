@@ -1,0 +1,64 @@
+{
+  "scope": "real checkpoint chat adapter; buffered in-process ASGI, not network latency",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "model_manifest": {
+    "model_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac"
+  },
+  "model_id": "local-model",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant. Answer briefly."
+    },
+    {
+      "role": "user",
+      "content": "My name is Ada."
+    },
+    {
+      "role": "assistant",
+      "content": "Hello, Ada."
+    },
+    {
+      "role": "user",
+      "content": "What is my name?"
+    }
+  ],
+  "reference_text": "My name is Ada.",
+  "reference_token_ids": [
+    5965,
+    1462,
+    314,
+    34099,
+    30,
+    2
+  ],
+  "json_matches_reference": true,
+  "stream_matches_reference": true,
+  "json_response": {
+    "id": "chatcmpl-bd14f0c43332425599a30d28e6215759",
+    "object": "chat.completion",
+    "created": 1792748170,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "My name is Ada."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 48,
+      "completion_tokens": 6,
+      "total_tokens": 54
+    }
+  },
+  "stream_chunk_count": 8,
+  "final_live_cache_bytes": 0
+}

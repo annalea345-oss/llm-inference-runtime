@@ -9,7 +9,7 @@ from llm_runtime.config import RuntimeConfig
 from llm_runtime.executor import ModelExecutor
 from llm_runtime.kv_cache import RequestTooLargeError, SimulatedKVCache
 from llm_runtime.protocol import DecodeResult, ExecutionStep, InferenceRequest, RequestPhase, StreamEvent
-from llm_runtime.scheduler import QueueFullError, RuntimeUnavailableError
+from llm_runtime.scheduler import ChatUnsupportedError, QueueFullError, RuntimeUnavailableError
 
 logger = logging.getLogger(__name__)
 
@@ -56,12 +56,29 @@ class ContinuousBatchScheduler:
                 self._worker = asyncio.create_task(self._run(), name="continuous-batch-worker")
 
     def submit(self, prompt: str, max_tokens: int) -> InferenceRequest:
+        return self._submit(prompt, max_tokens, getattr(self.executor, "tokenize", None))
+
+    def submit_chat(self, messages: list[dict[str, str]], max_tokens: int) -> InferenceRequest:
+        if not self.running:
+            raise RuntimeUnavailableError("runtime is not running")
+        # Readable roles for simulation; model backends tokenize the full history
+        # directly, rather than wrapping this serialization in a single user turn.
+        prompt = "\n".join(f"{m['role']}: {m['content']}" for m in messages) + "\nassistant:"
+        tokenize_chat = getattr(self.executor, "tokenize_messages", None)
+        if callable(tokenize_chat):
+            tokenize = lambda _: tokenize_chat(messages)
+        elif callable(getattr(self.executor, "tokenize", None)):
+            raise ChatUnsupportedError("executor does not support conversation tokenization")
+        else:
+            tokenize = None
+        return self._submit(prompt, max_tokens, tokenize)
+
+    def _submit(self, prompt: str, max_tokens: int, tokenize) -> InferenceRequest:
         if not self.running:
             raise RuntimeUnavailableError("runtime is not running")
         if not prompt or type(max_tokens) is not int or not 1 <= max_tokens <= 512:
             raise ValueError("invalid generation request")
         request = InferenceRequest(prompt, max_tokens)
-        tokenize = getattr(self.executor, "tokenize", None)
         if callable(tokenize):
             request.prompt_token_ids = tuple(tokenize(prompt))
             if not request.prompt_token_ids:
