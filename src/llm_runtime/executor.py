@@ -19,6 +19,8 @@ class LegacyModelExecutor(Protocol):
 class SimulatedExecutor:
     """Deterministic word pieces, not a tokenizer or a language model."""
 
+    model_id = "simulated"
+
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
 

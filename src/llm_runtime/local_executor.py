@@ -24,6 +24,8 @@ class LocalModelExecutor:
     limit. release_request() runs after that request's execute() has settled.
     """
 
+    model_id = 'local-model'
+
     def __init__(self, model, tokenizer, torch_module, worker: SerialWorker) -> None:
         self.model = model
         self.tokenizer = tokenizer
@@ -95,8 +97,11 @@ class LocalModelExecutor:
     def tokenize(self, prompt: str) -> tuple[int, ...]:
         # Bounded HTTP prompts use the fast tokenizer on the owning event loop.
         # Applying the template makes this endpoint a single-turn instruction.
+        return self.tokenize_messages([{'role': 'user', 'content': prompt}])
+
+    def tokenize_messages(self, messages: list[dict[str, str]]) -> tuple[int, ...]:
         ids = self.tokenizer.apply_chat_template(
-            [{'role': 'user', 'content': prompt}], tokenize=True,
+            messages, tokenize=True,
             add_generation_prompt=True,
         )
         if not ids:

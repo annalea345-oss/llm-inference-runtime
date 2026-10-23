@@ -16,6 +16,10 @@ class RuntimeUnavailableError(Exception):
     pass
 
 
+class ChatUnsupportedError(Exception):
+    pass
+
+
 class FCFSScheduler:
     """One worker owns execution; every admitted request runs to completion."""
 

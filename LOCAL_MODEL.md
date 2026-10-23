@@ -46,9 +46,11 @@ curl http://127.0.0.1:8000/health
 
 The verified answer was `The capital of France is Paris.`. This tiny model can
 produce incorrect or incomplete answers; the integration does not establish answer
-quality. Inputs are single user instructions, with the tokenizer's chat template
-and generation prefix applied automatically. Multi-turn history, sampling, tools,
-and OpenAI-compatible chat endpoints are not implemented.
+quality. `/generate` inputs are single user instructions, with the tokenizer's
+chat template and generation prefix applied automatically. The new
+[text-only chat adapter](CHAT_API.md) accepts full multi-turn histories at
+`/v1/chat/completions` and advertises `local-model` at `/v1/models`. Sampling,
+tools, and stored conversation sessions remain outside the supported subset.
 
 Cancel with the ID from `X-Request-ID`:
 
