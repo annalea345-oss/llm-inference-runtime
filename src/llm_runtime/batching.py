@@ -46,6 +46,19 @@ class ContinuousBatchScheduler:
         return tuple(self._active)
 
     @property
+    def request_states(self) -> tuple[dict, ...]:
+        """Detached progress snapshots without prompt text or token IDs."""
+        allocations = self.kv_cache.allocations
+        return tuple({
+            "request_id": r.request_id, "phase": r.phase,
+            "prompt_tokens": r.prompt_token_count, "prefilled_tokens": r.prefilled_tokens,
+            "generated_tokens": r.generated_tokens, "max_tokens": r.max_tokens,
+            "cancel_requested": r.cancel_requested,
+            "reserved_tokens": allocations[r.request_id].reserved_tokens if r.request_id in allocations else 0,
+            "used_tokens": allocations[r.request_id].used_tokens if r.request_id in allocations else 0,
+        } for r in self._requests.values())
+
+    @property
     def running(self) -> bool:
         return not self._stopping and self._worker is not None and not self._worker.done()
 

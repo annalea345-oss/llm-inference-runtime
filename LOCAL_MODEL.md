@@ -35,7 +35,8 @@ at load time. CUDA/MPS, quantization, and device selection are not implemented.
 Use one Uvicorn worker: each process would otherwise load its own weights and own
 separate queues. Startup loads the model before accepting requests.
 
-In another terminal:
+Open **http://127.0.0.1:8000/** for the [browser client](BROWSER_CLIENT.md),
+or use the API from another terminal:
 
 ```bash
 curl -N -D - http://127.0.0.1:8000/generate \

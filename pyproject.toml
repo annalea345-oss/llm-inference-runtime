@@ -16,9 +16,13 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8,<9", "pytest-asyncio>=0.24,<1", "httpx>=0.27,<1"]
 local = ["torch>=2.6,<3", "transformers>=4.57.1,<4.58"]
+browser = ["playwright>=1.56,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+llm_runtime = ["web/*.html", "web/*.css", "web/*.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

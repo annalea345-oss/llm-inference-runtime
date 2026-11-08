@@ -5,7 +5,8 @@ and concurrency understandable. Version 0.1 uses Python, FastAPI, asyncio, and a
 **simulated executor** by default. An optional CPU backend now runs a small real
 model; see [local model setup](LOCAL_MODEL.md). A text-only
 [chat-compatible API](CHAT_API.md) accepts conversation histories and both
-streamed and complete assistant responses.
+streamed and complete assistant responses. A [built-in browser client](BROWSER_CLIENT.md)
+now provides local chat and live runtime activity at `/`.
 
 ## Run it
 
@@ -17,6 +18,9 @@ source .venv/bin/activate
 python -m pip install -e '.[dev]'
 uvicorn llm_runtime.api:app --host 127.0.0.1 --port 8000
 ```
+
+Open **http://127.0.0.1:8000/** for the browser client. This default command
+runs the simulator; use [the real-model setup](LOCAL_MODEL.md) for actual answers.
 
 Use one Uvicorn worker: every process owns a separate queue and scheduler. Multiple
 workers would not share admission ordering or queue capacity.
@@ -87,6 +91,7 @@ flowchart LR
 | --- | --- |
 | `api.py` | Generation transport, cancellation, health, application lifespan |
 | `chat.py` | Text-only chat schemas, model discovery, compatible JSON/SSE mapping |
+| `web/` | Same-origin browser chat, streaming parser, and runtime activity view |
 | `protocol.py` | Input schema, internal request state, output events |
 | `batching.py` | Bounded admission, configurable step planning, lifecycle, failure isolation |
 | `scheduler.py` | Retained run-to-completion FCFS baseline and admission errors |
@@ -98,6 +103,7 @@ flowchart LR
 | `kv_cache.py` | Per-request token-slot reservations, usage, and release |
 | `metrics.py` | Monotonic request timestamps and derived durations |
 | `benchmark.py` | Closed-loop in-process workload client and JSON comparison reports |
+| `http_benchmark.py` | Separate client measuring actual HTTP streaming receipt |
 
 The application factory `create_app(config, executor)` supports isolated tests
 and replacement executors. The scheduler depends on the `ModelExecutor` protocol,
@@ -379,8 +385,10 @@ finalization time because cleanup is cooperative. Stop always drains the runtime
 
 Recorded examples are in [benchmarks/README.md](benchmarks/README.md). They are
 single-run simulator observations, not performance guarantees. Repeat runs and
-compare equivalent workloads before choosing a scheduling change. An external
-HTTP streaming benchmark remains future work.
+compare equivalent workloads before choosing a scheduling change. The new
+[external HTTP benchmark](BROWSER_CLIENT.md#measure-the-external-http-path) measures
+client receipt separately; recorded real CPU results are in
+[benchmarks/http-local.md](benchmarks/http-local.md).
 
 ## Development roadmap
 
@@ -398,7 +406,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 7 — Explicit cancellation (implemented) | Live request lookup, cancellation endpoint, terminal lifecycle | Immediate waiting-slot release, active boundary cleanup, race and SSE tests |
 | 8 — Optional real executor (CPU implemented) | SmolLM2 local tokens, greedy cached steps, serialized worker | Offline reference tests, real checkpoint smoke, live SSE and cancellation checks |
 | 9 — Chat-compatible adapter (implemented) | Model discovery, text message history, JSON/streamed completions | Validation, usage, lifecycle tests; real multi-turn reference and live HTTP checks |
-| 10 — External measurement and chat client | Measure real HTTP streaming and connect a client configured for the supported subset | Record external latency and verify an end-to-end chat session |
+| 10 — External measurement and browser client (implemented) | Built-in chat with runtime view; separate HTTP streaming client | Real Chrome history/Stop/two-client checks, mobile layout, recorded receipt timings |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

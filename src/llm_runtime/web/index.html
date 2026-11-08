@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Inference Lab — Local Chat</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="module" src="/assets/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Inference Lab home"><span class="brand-mark" aria-hidden="true">i<span></span></span><span>Inference Lab<small>LOCAL RUNTIME</small></span></a>
+    <div class="connection"><span class="status-dot" id="connection-dot"></span><span id="connection-status" role="status">Connecting</span><span class="local-badge">On your machine</span></div>
+  </header>
+  <main class="workspace">
+    <section class="chat-panel" aria-label="Conversation">
+      <div class="panel-heading"><div><p class="eyebrow">THE CONVERSATION</p><h1>A window into inference.</h1></div><button id="new-chat" type="button" class="button secondary">New chat <span aria-hidden="true">↗</span></button></div>
+      <div class="model-strip"><span class="tiny-label">MODEL</span><select id="model" aria-label="Served model" disabled><option>Loading…</option></select><span id="backend-label" class="pill">Checking runtime</span></div>
+      <div class="conversation" id="conversation" role="log" aria-label="Messages">
+        <div class="welcome" id="welcome"><div class="welcome-symbol" aria-hidden="true">✳</div><h2>Ask something. Watch it work.</h2><p>Send a question and follow the answer as it arrives. The runtime view shows what happens behind it.</p><div class="suggestions"><button type="button" data-prompt="What is the capital of France? Answer briefly.">A quick question <span aria-hidden="true">↗</span></button><button type="button" data-prompt="Explain how rain forms in simple terms.">Explain how rain forms <span aria-hidden="true">↗</span></button><button type="button" data-prompt="Write a detailed explanation of how plants grow, from a seed to a mature plant.">Try a longer answer <span aria-hidden="true">↗</span></button></div></div>
+      </div>
+      <div class="composer-area">
+        <p id="notice" class="notice" role="status" hidden></p>
+        <details class="settings"><summary>Conversation settings</summary><div class="settings-grid"><label>Instructions <span class="muted">optional</span><textarea id="system-prompt" rows="2" maxlength="8192" placeholder="For example: explain things simply."></textarea></label><label>Output limit <span class="muted">tokens</span><input id="max-tokens" type="number" min="1" max="512" step="1" value="64"></label></div></details>
+        <form id="chat-form"><label class="sr-only" for="prompt">Your message</label><div class="composer"><textarea id="prompt" rows="2" maxlength="8192" placeholder="Ask your local model…" required></textarea><button id="send" class="button primary" type="submit" disabled>Send <span aria-hidden="true">↑</span></button><button id="stop" class="button stop" type="button" hidden>Stop <span aria-hidden="true">■</span></button></div><div class="composer-footer"><span>Enter to send · Shift + Enter for a new line</span><span id="input-count">0 characters</span></div></form>
+      </div>
+    </section>
+    <aside class="runtime-panel" aria-label="Live runtime activity">
+      <div class="runtime-heading"><div><p class="eyebrow">BEHIND THE ANSWER</p><h2>Runtime activity</h2></div><span class="live-indicator" id="live-indicator">Live</span></div>
+      <p class="helper" id="snapshot-note">Waiting for a runtime snapshot.</p>
+      <section class="stat-section"><div class="counter-grid"><div><span class="tiny-label">WAITING</span><strong id="waiting-count">—</strong></div><div><span class="tiny-label">ACTIVE</span><strong id="active-count">—</strong></div></div><div class="capacity-note" id="capacity-note">Checking capacity…</div></section>
+      <section class="stat-section"><div class="section-label"><h3>Token capacity</h3><span id="capacity-total">— slots</span></div><div class="capacity-bar" role="img" id="capacity-bar" aria-label="Token capacity loading"><div class="reserved-bar" id="reserved-bar"></div><div class="used-bar" id="used-bar"></div></div><dl class="memory-values"><div><dt><span class="legend used"></span>Used</dt><dd id="used-value">—</dd></div><div><dt><span class="legend reserved"></span>Reserved</dt><dd id="reserved-value">—</dd></div><div><dt>Available to reserve</dt><dd id="available-value">—</dd></div></dl><p class="helper">Reserved slots include room for future output. This is a token budget, not a RAM limit.</p></section>
+      <section class="stat-section"><div class="section-label"><h3>Model working memory</h3><strong id="kv-bytes">—</strong></div><p class="helper" id="memory-note">KV tensor snapshot after model steps. Weights and temporary calculations are separate.</p></section>
+      <section class="stat-section request-section"><div class="section-label"><h3>Live requests</h3><span class="muted" id="request-count">0</span></div><div id="request-list"><p class="empty-state">Waiting for runtime information.</p></div></section>
+      <section class="last-response"><p class="eyebrow">THIS CLIENT · LAST RESPONSE</p><dl><div><dt>First text</dt><dd id="first-text">—</dd></div><div><dt>Total time</dt><dd id="total-time">—</dd></div><div><dt>Output tokens</dt><dd id="output-tokens">—</dd></div></dl><p class="helper">Times are measured in this browser. Token counts come from the server.</p></section>
+      <div class="second-client"><strong>See requests share the runtime.</strong><p>Each tab is a separate client. Open another tab and send a short question while a long answer runs.</p><a class="button secondary" href="/" target="_blank" rel="noopener">Open a second client <span aria-hidden="true">↗</span></a></div>
+      <footer class="sidebar-footer"><span id="policy-label">Round-robin scheduling</span><a href="/docs" target="_blank" rel="noopener">API docs ↗</a></footer>
+    </aside>
+  </main>
+</body>
+</html>

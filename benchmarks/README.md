@@ -38,3 +38,7 @@ correctness, lifecycle, and memory snapshots separately from simulator results.
 
 The [chat adapter verification](chat-api.md) checks full-history JSON and streaming
 responses against reference real-model generation, separately from latency tests.
+
+The [external HTTP baseline](http-local.md) measures actual client receipt from a
+running local model server; the browser smoke and screenshot verify the visual
+client separately from latency benchmarks.
