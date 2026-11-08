@@ -1,0 +1,321 @@
+{
+  "scope": "external HTTP streaming; client receipt times, not model token timings",
+  "base_url": "http://127.0.0.1:8765",
+  "model": {
+    "id": "local-model",
+    "object": "model",
+    "created": 1794149997,
+    "owned_by": "llm-runtime"
+  },
+  "health": {
+    "status": "ok",
+    "queued_requests": 0,
+    "config": {
+      "queue_capacity": 64,
+      "max_active_requests": 2,
+      "token_budget": 32,
+      "prefill_delay": 0.05,
+      "token_delay": 0.03,
+      "kv_cache_capacity_tokens": 8192,
+      "scheduling_policy": "round_robin",
+      "prefill_token_budget": 8
+    },
+    "request_states": [],
+    "executor": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 8192,
+      "model": "llama",
+      "parameter_bytes": 538060032,
+      "kv_tensor_bytes_after_last_step": 0
+    },
+    "kv_cache": {
+      "capacity_tokens": 8192,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "available_tokens": 8192
+    },
+    "active_request_ids": [],
+    "active_requests": 0,
+    "active_request_id": null
+  },
+  "workload": {
+    "requests": 8,
+    "concurrency": 1,
+    "warmup": 2,
+    "prompt": "What is the capital of France? Answer briefly.",
+    "max_tokens": 24,
+    "timeout_seconds": 30
+  },
+  "connections": "shared client pool; metadata and warmup connections reused; no retries",
+  "notes": [
+    "Warmup and metadata requests excluded from measured elapsed time.",
+    "Content deltas can contain multiple tokens or arrive together in network buffers.",
+    "Token throughput uses terminal server usage only for validated completed streams."
+  ],
+  "elapsed_seconds": 1.1863978747278452,
+  "completed": 8,
+  "rejected": 0,
+  "errors": 0,
+  "timeouts": 0,
+  "completed_requests_per_second": 6.743100413792605,
+  "completed_tokens_per_second": 53.94480331034084,
+  "latency_ms": {
+    "headers": {
+      "count": 8,
+      "mean": 1.0514375171624124,
+      "p50": 1.0432922281324863,
+      "p95": 1.1471249163150787,
+      "p99": 1.1471249163150787
+    },
+    "first_content": {
+      "count": 8,
+      "mean": 68.30797897418961,
+      "p50": 67.38050002604723,
+      "p95": 75.06966590881348,
+      "p99": 75.06966590881348
+    },
+    "completion": {
+      "count": 8,
+      "mean": 148.0614165775478,
+      "p50": 146.54066739603877,
+      "p95": 154.9772499129176,
+      "p99": 154.9772499129176
+    }
+  },
+  "content_delta_gap_ms": {
+    "count": 48,
+    "mean": 13.253178864639873,
+    "p50": 13.16370815038681,
+    "p95": 14.015292283147573,
+    "p99": 14.620375353842974
+  },
+  "samples": [
+    {
+      "index": 0,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0457499884068966,
+        "first_content": 67.38050002604723,
+        "completion": 146.05241594836116,
+        "content_delta_gaps": [
+          13.052832800894976,
+          12.97137513756752,
+          12.88808323442936,
+          13.059333898127079,
+          13.223332818597555,
+          13.267042115330696
+        ]
+      },
+      "request_id": "253f421db53d402b825e506bd2606ec1",
+      "elapsed_ms": 146.2572501040995
+    },
+    {
+      "index": 1,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0138326324522495,
+        "first_content": 66.73991587013006,
+        "completion": 147.68329076468945,
+        "content_delta_gaps": [
+          13.558417093008757,
+          13.211207929998636,
+          13.020999729633331,
+          14.015292283147573,
+          13.591999653726816,
+          13.330667279660702
+        ]
+      },
+      "request_id": "7092624829084f97b8bf8a2cde151f75",
+      "elapsed_ms": 147.90383260697126
+    },
+    {
+      "index": 2,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0257079266011715,
+        "first_content": 75.06966590881348,
+        "completion": 154.9772499129176,
+        "content_delta_gaps": [
+          13.040084391832352,
+          13.146665878593922,
+          12.942667119204998,
+          12.90612481534481,
+          13.605167157948017,
+          14.04033275321126
+        ]
+      },
+      "request_id": "239e0a5bcc3d4ebc84e9ac986f267747",
+      "elapsed_ms": 155.23504093289375
+    },
+    {
+      "index": 3,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.1471249163150787,
+        "first_content": 69.39679197967052,
+        "completion": 149.6374998241663,
+        "content_delta_gaps": [
+          13.342957943677902,
+          13.21500027552247,
+          13.417083770036697,
+          13.505083043128252,
+          13.428333215415478,
+          13.11170868575573
+        ]
+      },
+      "request_id": "52ac3c2fa9dd4673b93a7eb710ed8114",
+      "elapsed_ms": 149.90129182115197
+    },
+    {
+      "index": 4,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0182922706007957,
+        "first_content": 65.92887500301003,
+        "completion": 146.54066739603877,
+        "content_delta_gaps": [
+          13.36000021547079,
+          12.960209045559168,
+          13.16370815038681,
+          12.969416566193104,
+          14.620375353842974,
+          13.313665986061096
+        ]
+      },
+      "request_id": "e61edc0de6dd47c989dc8418cfddada1",
+      "elapsed_ms": 146.77154226228595
+    },
+    {
+      "index": 5,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0672500357031822,
+        "first_content": 66.4851670153439,
+        "completion": 146.52716694399714,
+        "content_delta_gaps": [
+          12.877458240836859,
+          13.576457742601633,
+          13.376874849200249,
+          13.518917374312878,
+          13.223541900515556,
+          13.122790958732367
+        ]
+      },
+      "request_id": "dfaf334320214abc8b935c2512331cd4",
+      "elapsed_ms": 146.74291713163257
+    },
+    {
+      "index": 6,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0502501390874386,
+        "first_content": 67.84020783379674,
+        "completion": 146.49824984371662,
+        "content_delta_gaps": [
+          13.078125193715096,
+          13.04608304053545,
+          12.869167141616344,
+          13.059916906058788,
+          13.051500078290701,
+          13.340749777853489
+        ]
+      },
+      "request_id": "e0810d398ccb4818b0ab7347dad983e9",
+      "elapsed_ms": 146.70908311381936
+    },
+    {
+      "index": 7,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "completion_tokens": 8,
+        "total_tokens": 48
+      },
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 1.0432922281324863,
+        "first_content": 67.6227081567049,
+        "completion": 146.57479198649526,
+        "content_delta_gaps": [
+          13.030041940510273,
+          12.914707884192467,
+          13.089834246784449,
+          13.141040690243244,
+          13.30304192379117,
+          13.253167271614075
+        ]
+      },
+      "request_id": "3899238f86814665aadc9f32a46fecc7",
+      "elapsed_ms": 146.79804211482406
+    }
+  ]
+}

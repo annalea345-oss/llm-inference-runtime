@@ -136,8 +136,9 @@ Use base URL `http://127.0.0.1:8000/v1`, select the model from discovery, set
 sampling temperature to zero, and disable unsupported features. If a client
 requires a key field, it can use a placeholder: this local server does not check
 an Authorization header. A server-side client can use these endpoints; arbitrary
-browser origins are not enabled by this milestone. No specific chat interface
-has been integrated or certified yet.
+browser origins are not enabled. The [built-in browser client](BROWSER_CLIENT.md)
+is served at `/` on the same origin and has been tested with this subset.
+Third-party chat interfaces have not been certified.
 
 ## Verification
 

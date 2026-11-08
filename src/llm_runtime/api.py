@@ -1,9 +1,12 @@
 import json
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
+from dataclasses import asdict
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.types import Receive, Scope, Send
 
 from llm_runtime.config import RuntimeConfig
@@ -60,6 +63,12 @@ def create_app(
                     await close()
 
     app = FastAPI(title="LLM Inference Runtime", lifespan=lifespan)
+    web_directory = Path(__file__).with_name("web")
+    app.mount("/assets", StaticFiles(directory=web_directory), name="assets")
+
+    @app.get("/", include_in_schema=False)
+    async def browser_client():
+        return FileResponse(web_directory / "index.html", headers={"Cache-Control": "no-store"})
 
     @app.get("/health")
     async def health():
@@ -67,6 +76,8 @@ def create_app(
         return {
             "status": "ok" if scheduler.running else "unavailable",
             "queued_requests": scheduler.queued_requests,
+            "config": asdict(scheduler.config),
+            "request_states": scheduler.request_states,
             "executor": getattr(scheduler.executor, "info", {"backend": "custom"}),
             "kv_cache": {
                 "capacity_tokens": scheduler.kv_cache.capacity_tokens,

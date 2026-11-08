@@ -422,3 +422,74 @@ Next: external HTTP streaming measurement and a concrete chat-client integration
 configured for this supported subset, using local-model rather than hosted model
 names. Continue measuring real-model/network performance separately from the
 in-process simulator benchmarks.
+
+## 2026-11-08 — Browser client and external HTTP measurement milestone
+
+### Architecture and behavior
+
+- Added a built-in same-origin browser client at `/`, packaged with the Python
+  wheel. Plain HTML/CSS/ES modules use the existing text-only chat API; no frontend
+  build, npm dependencies, separate host, public deployment, or model download.
+- Added streamed conversations, optional instructions, output limit, Stop, New
+  chat, model discovery, backend identification, and an explicit second-client
+  link. Each tab keeps independent in-memory history. Failed/cancelled/empty
+  replies remain visible but do not enter future conversation context.
+- Handle partial UTF-8 and SSE boundaries, stable response identity, final usage,
+  errors, and missing completion markers. Render all user/model text literally.
+  Stop calls request cancellation when the raw ID is available and falls back
+  to closing the stream; model cleanup remains cooperative at execution boundaries.
+- Added detached request progress snapshots and runtime configuration to health.
+  Show all clients' waiting/active states, prompt/output progress, logical slots,
+  actual KV tensor snapshots, and this tab's observed response times. Telemetry
+  excludes prompt text and token IDs; offline snapshots are marked stale.
+- Added a separate loopback HTTP benchmark with bounded closed-loop clients,
+  shared connection pool, warmup exclusion, request deadlines, validated SSE
+  identity/finish/usage/[DONE], raw samples, error counts, and latency distributions.
+  Measure headers, first nonempty content, completion, and received content gaps;
+  do not label network deltas as model tokens. Throughput uses successful usage.
+
+### Validation and recorded evidence
+
+- `.venv/bin/python -m pytest -q` — **301 passed** at completion. This includes
+  server asset/telemetry tests, 74 HTTP benchmark cases, and a wrapper running the
+  optional Node parser suite when Node 20+ is available.
+- `node --test tests/browser_stream.test.mjs` — **18 passed**, covering fragmented
+  UTF-8/CRLF/multiline SSE, identity/usage errors, truncation, abort, and literal text.
+- Built a wheel from an isolated temporary source copy and confirmed all four
+  browser assets are included; no build output was left in the repository.
+- Real Chrome/Playwright check against the local CPU model verified actual
+  answers, conversation replay, two overlapping clients, Stop and cancelled-context
+  exclusion, New chat, and zero remaining reservations/KV. Browser fixtures
+  separately verified literal HTML rendering, truncated-response errors, failed
+  history exclusion, offline health/recovery, and 390/320px layout. No page errors.
+- Recorded benchmarks/browser-client-smoke.json and a representative desktop
+  screenshot. Optional browser QA uses the already installed Chrome; Playwright
+  is a separate optional extra. No browser binary was downloaded.
+- Recorded external HTTP runs at client concurrency 1 and 2, eight measured
+  requests plus two excluded warmups each. All completed successfully. Mean first
+  content was 68.31ms and 133.73ms; throughput was 53.94 and 54.55 output tokens/s.
+  These results are consistent with serialized CPU forwards, not a batching speedup.
+  Full samples/methodology are in benchmarks/http-local-c1.json, http-local-c2.json,
+  and http-local.md. Browser clients were closed during measurement.
+- Independent review found a benchmark identity-validation gap; corrected it and
+  added malformed/mixed identity cases before recording measurements. Stale health
+  labeling was also improved. Final transport review found that stopping at [DONE]
+  prevented HTTP connection reuse; fixed by recording that timestamp then draining
+  to HTTP EOF. Added drain/deadline/trailing-data tests, verified one/two reused
+  connections in server logs, and rerecorded results without concurrent QA work.
+  `git diff --check` passed.
+- Browser and HTTP test server stopped after verification. BROWSER_CLIENT.md,
+  README, CHAT_API, and LOCAL_MODEL document setup, behavior, and limits.
+
+### Limits and next work
+
+This remains a local educational client: no authentication, durable chat storage,
+Markdown rendering, tools, file uploads, GPU backend, or fused model batching.
+Health polling can miss brief phases/peaks, logical slots are not a RAM bound,
+and the tiny single-workload HTTP samples are not production capacity evidence.
+Browser QA covers installed Chrome, not every browser or an accessibility audit.
+
+Next: choose a measured backend improvement such as real tensor batching or
+hardware acceleration, or strengthen deployment/observability if sharing the
+service becomes the goal. Compare equivalent real workloads and preserve the
+simulator as a deterministic regression baseline.

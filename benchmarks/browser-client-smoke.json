@@ -1,0 +1,28 @@
+{
+  "scope": "real Chrome against local HTTP; fixture cases marked separately",
+  "playwright": "1.64.1",
+  "browser": "156.0.8078.80",
+  "backend": "transformers",
+  "first_answer": "The capital of France is Paris.",
+  "history_replay_verified": true,
+  "observed_concurrent_requests": 2,
+  "stop_and_cancelled_context_verified": true,
+  "new_chat_verified": true,
+  "fixture_checks": [
+    "literal HTML rendering",
+    "truncated stream rejection",
+    "failed turn omitted from history",
+    "stale health and recovery"
+  ],
+  "mobile_widths": [
+    390,
+    320
+  ],
+  "screenshots": [
+    "desktop.png",
+    "mobile.png"
+  ],
+  "final_reserved_tokens": 0,
+  "final_used_tokens": 0,
+  "browser_errors": []
+}
