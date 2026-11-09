@@ -1,0 +1,15 @@
+{
+  "baseline": {
+    "active": 0.0,
+    "queued": 0.0,
+    "cached_prefix_tokens_total": 0.0
+  },
+  "final": {
+    "elapsed_ms": 1.1486662551760674,
+    "active": 0.0,
+    "queued": 0.0,
+    "cached_prefix_tokens_total": 0.0
+  },
+  "rss_before_bytes": 949731328,
+  "rss_after_bytes": 689618944
+}

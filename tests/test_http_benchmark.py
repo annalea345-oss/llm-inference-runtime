@@ -54,12 +54,13 @@ def response_stream(text):
 
 
 async def get_sample(text=VALID, *, status=200, content_type='text/event-stream', timeout=1,
-                     usage_mode='required'):
+                     usage_mode='required', created_policy='stable'):
     async def handler(request):
         return httpx.Response(status, headers={'content-type': content_type}, stream=response_stream(text))
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
         return await bench.sample(client, 'http://localhost:8000', 'model', index=0,
-                                  prompt='hi', max_tokens=4, timeout=timeout, usage_mode=usage_mode)
+                                  prompt='hi', max_tokens=4, timeout=timeout, usage_mode=usage_mode,
+                                  created_policy=created_policy)
 
 
 async def test_timings_start_at_nonempty_content_and_end_at_done():
@@ -564,3 +565,27 @@ def test_preflight_cli_exit_and_json(monkeypatch, capsys, passed):
     monkeypatch.setattr(bench, 'benchmark', benchmark)
     assert bench.main(['--profile', 'portable', '--model', 'model', '--preflight-only']) == (0 if passed else 1)
     assert json.loads(capsys.readouterr().out)['completed'] == 0
+
+
+async def test_per_chunk_timestamp_requires_explicit_policy_and_records_changes():
+    frames = [frame({'content': 'a'}), {**frame({'content': 'b'}), 'created': 124},
+              {**frame(reason='stop'), 'created': 125}, {**USAGE, 'created': 125}, '[DONE]']
+    text = ''.join(map(encode, frames))
+    assert (await get_sample(text))['status'] == 'error'
+    row = await get_sample(text, created_policy='per_chunk')
+    assert row['status'] == 'completed'
+    assert row['stream_metadata'] == {'created_policy': 'per_chunk', 'first_created': 123,
+                                      'last_created': 125, 'created_changes': 2}
+
+
+@pytest.mark.parametrize('field,value', [('id', 'changed'), ('model', 'other'),
+                                         ('created', True), ('created', '124')])
+async def test_per_chunk_timestamps_keep_identity_and_integer_validation(field, value):
+    changed = {**frame({'content': 'b'}), field: value}
+    text = ''.join(map(encode, [frame({'content': 'a'}), changed, frame(reason='stop'), USAGE, '[DONE]']))
+    assert (await get_sample(text, created_policy='per_chunk'))['status'] == 'error'
+
+
+async def test_unknown_timestamp_policy_rejected_before_network():
+    with pytest.raises(ValueError, match='created-policy'):
+        await bench.benchmark(created_policy='guess')

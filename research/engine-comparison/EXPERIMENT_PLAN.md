@@ -1,13 +1,17 @@
 # Local comparison experiment plan
 
-Status: **compatibility verified; comparative experiments pending**. Read [the findings](README.md) first.
+Status: **first repeated CPU comparison complete**. Read [the findings](README.md) first.
 This plan does not change runtime behavior or install another engine.
 
 Update, 2026-11-09: the portable measurement/preflight portion of step 2 is now
 implemented and verified against this runtime. See [HTTP compatibility](../../benchmarks/http-compatibility.md).
 Follow-up: [pinned llama.cpp compatibility](../../benchmarks/llama-cpp.md) is now
 verified, including conversion, four prompt fixtures, and the portable HTTP smoke.
-Comparative performance and lifecycle experiments remain unexecuted.
+Follow-up: [repeated CPU comparison](../../benchmarks/cpu-comparison.md) now records
+640 measured completions plus separate cancellation, RSS, and logical-admission
+observations. Fixed-arrival fairness, cold/warm cache reuse, long-context stress,
+and production overload capacity remain future work. The protocol below is the
+original plan; the report identifies the executed subset and limitations.
 
 ## 1. Compatibility preflight
 

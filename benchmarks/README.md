@@ -50,3 +50,8 @@ CPU model compatibility checks. It does not contain external engine measurements
 The [llama.cpp compatibility check](llama-cpp.md) verifies the pinned external
 engine's conversion, prompt tokens, and streaming protocol. Its short smoke runs
 are not comparative performance evidence.
+
+The [repeated CPU comparison](cpu-comparison.md) records five repetitions of
+short/long/mixed workloads for both engines, with 640 measured completions and
+separate lifecycle/RSS/admission probes. It identifies delayed queued-disconnect
+cleanup in our runtime and a concrete reason to test real tensor batching later.

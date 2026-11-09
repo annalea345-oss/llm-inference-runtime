@@ -1,0 +1,19 @@
+{
+  "baseline": {
+    "active": 0,
+    "queued": 0,
+    "reserved_tokens": 0,
+    "used_tokens": 0,
+    "kv_tensor_bytes": 0
+  },
+  "final": {
+    "elapsed_ms": 1.0717082768678665,
+    "active": 0,
+    "queued": 0,
+    "reserved_tokens": 0,
+    "used_tokens": 0,
+    "kv_tensor_bytes": 0
+  },
+  "rss_before_bytes": 556924928,
+  "rss_after_bytes": 742506496
+}

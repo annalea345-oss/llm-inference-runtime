@@ -73,13 +73,15 @@ def _usage(value):
 
 
 async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
-                 clock=perf_counter, usage_mode='required'):
+                 clock=perf_counter, usage_mode='required', created_policy='stable'):
     """Time receipt of headers/content/[DONE], with one total request deadline."""
     started = clock()
     row = {'index': index, 'status': 'error', 'http_status': None, 'message': None,
            'usage': None, 'usage_status': 'unverified', 'content_deltas': 0, 'finish_reason': None,
            'timings_ms': {'headers': None, 'first_content': None, 'completion': None,
-                          'content_delta_gaps': []}}
+                          'content_delta_gaps': []},
+           'stream_metadata': {'created_policy': created_policy, 'first_created': None,
+                               'last_created': None, 'created_changes': 0}}
 
     async def consume():
         payload = {'model': model, 'messages': [{'role': 'user', 'content': prompt}],
@@ -121,10 +123,18 @@ async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
                         or type(frame.get('created')) is not int
                         or frame.get('model') != model):
                     raise ValueError('invalid chunk metadata')
-                current_identity = (frame['id'], frame['created'], frame['model'])
+                current_identity = (frame['id'], frame['model'])
                 if identity is not None and identity != current_identity:
                     raise ValueError('stream chunk identity changed')
                 identity = current_identity
+                metadata = row['stream_metadata']
+                if metadata['first_created'] is None:
+                    metadata['first_created'] = frame['created']
+                if metadata['last_created'] is not None and metadata['last_created'] != frame['created']:
+                    if created_policy == 'stable':
+                        raise ValueError('stream created timestamp changed')
+                    metadata['created_changes'] += 1
+                metadata['last_created'] = frame['created']
                 choices = frame.get('choices')
                 if choices == []:
                     if terminal is None or usage is not None:
@@ -183,7 +193,7 @@ async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
 
 
 async def workload(client, base_url, model, *, requests, concurrency, prompt, max_tokens,
-                   timeout, clock=perf_counter, usage_mode='required'):
+                   timeout, clock=perf_counter, usage_mode='required', created_policy='stable'):
     rows = [None] * requests
     indices = iter(range(requests))
 
@@ -191,7 +201,7 @@ async def workload(client, base_url, model, *, requests, concurrency, prompt, ma
         for index in indices:
             rows[index] = await sample(client, base_url, model, index=index, prompt=prompt,
                                        max_tokens=max_tokens, timeout=timeout, clock=clock,
-                                       usage_mode=usage_mode)
+                                       usage_mode=usage_mode, created_policy=created_policy)
     await asyncio.gather(*(worker() for _ in range(min(requests, concurrency))))
     return rows
 
@@ -224,7 +234,7 @@ def summarize(rows, elapsed):
             'samples': rows}
 
 
-def validate_profile(profile, model, readiness_path, usage_mode, preflight_only):
+def validate_profile(profile, model, readiness_path, usage_mode, preflight_only, created_policy='stable'):
     if profile not in ('runtime', 'portable'):
         raise ValueError('profile must be runtime or portable')
     if model is not None and (not isinstance(model, str) or not model.strip()):
@@ -233,6 +243,8 @@ def validate_profile(profile, model, readiness_path, usage_mode, preflight_only)
         raise ValueError('usage-mode must be required, optional, or disabled')
     if type(preflight_only) is not bool:
         raise ValueError('preflight-only must be a boolean')
+    if created_policy not in ('stable', 'per_chunk'):
+        raise ValueError('created-policy must be stable or per_chunk')
     if readiness_path is not None:
         if not isinstance(readiness_path, str):
             raise ValueError('readiness-path must be a local absolute path')
@@ -244,7 +256,7 @@ def validate_profile(profile, model, readiness_path, usage_mode, preflight_only)
 
 
 async def preflight(client, base_url, *, profile, model, readiness_path, prompt,
-                    max_tokens, timeout, usage_mode, clock=perf_counter):
+                    max_tokens, timeout, usage_mode, clock=perf_counter, created_policy='stable'):
     """Exercise one real stream before measuring; never silently retry/fallback."""
     result = {'status': 'failed', 'stage': 'readiness', 'message': None,
               'readiness': {'path': readiness_path, 'status': 'skipped'},
@@ -286,7 +298,8 @@ async def preflight(client, base_url, *, profile, model, readiness_path, prompt,
         result['model'] = record
         result['stage'] = 'stream'
         row = await sample(client, base_url, record['id'], index=-1, prompt=prompt,
-                           max_tokens=max_tokens, timeout=timeout, usage_mode=usage_mode, clock=clock)
+                           max_tokens=max_tokens, timeout=timeout, usage_mode=usage_mode, clock=clock,
+                           created_policy=created_policy)
         result['sample'] = row
         if row['status'] != 'completed':
             raise ValueError(f"stream preflight {row['status']}: {row['message']}")
@@ -300,9 +313,9 @@ async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency
                     warmup=2, max_tokens=24,
                     prompt='What is the capital of France? Answer briefly.', timeout=30,
                     client=None, clock=perf_counter, profile='runtime', model=None,
-                    readiness_path=None, usage_mode='required', preflight_only=False):
+                    readiness_path=None, usage_mode='required', preflight_only=False, created_policy='stable'):
     validate_options(base_url, requests, concurrency, warmup, max_tokens, prompt, timeout)
-    validate_profile(profile, model, readiness_path, usage_mode, preflight_only)
+    validate_profile(profile, model, readiness_path, usage_mode, preflight_only, created_policy)
     if readiness_path is None and profile == 'runtime':
         readiness_path = '/health'
     base_url = base_url.rstrip('/')
@@ -318,10 +331,11 @@ async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency
                                    warmup=warmup, max_tokens=max_tokens, prompt=prompt,
                                    timeout=timeout, client=owned, clock=clock, profile=profile,
                                    model=model, readiness_path=readiness_path, usage_mode=usage_mode,
-                                   preflight_only=preflight_only)
+                                   preflight_only=preflight_only, created_policy=created_policy)
     checked = await preflight(client, base_url, profile=profile, model=model,
                               readiness_path=readiness_path, prompt=prompt, max_tokens=max_tokens,
-                              timeout=timeout, usage_mode=usage_mode, clock=clock)
+                              timeout=timeout, usage_mode=usage_mode, clock=clock,
+                              created_policy=created_policy)
     report = {
         'schema_version': 2,
         'scope': 'external HTTP streaming; client receipt times, not model token timings',
@@ -329,7 +343,7 @@ async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency
         'health': checked['health'], 'preflight': checked, 'preflight_only': preflight_only,
         'workload': {'requests': requests, 'concurrency': concurrency, 'warmup': warmup,
                      'prompt': prompt, 'max_tokens': max_tokens, 'timeout_seconds': timeout,
-                     'arrival_mode': 'closed_loop', 'usage_mode': usage_mode},
+                     'arrival_mode': 'closed_loop', 'usage_mode': usage_mode, 'created_policy': created_policy},
         'connections': 'shared client pool; metadata and preflight/warmup connections reused; no retries',
         'notes': ['Metadata, one preflight stream, and warmups excluded from measured elapsed time.',
                   'Preflight uses the workload prompt and may warm server prefix caches.',
@@ -340,7 +354,7 @@ async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency
         return {**report, **summarize([], 0)}
     model = checked['model']['id']
     options = dict(concurrency=concurrency, prompt=prompt, max_tokens=max_tokens,
-                   timeout=timeout, clock=clock, usage_mode=usage_mode)
+                   timeout=timeout, clock=clock, usage_mode=usage_mode, created_policy=created_policy)
     if warmup:
         warmed = await workload(client, base_url, model, requests=warmup, **options)
         if any(r['status'] != 'completed' for r in warmed):
@@ -367,6 +381,8 @@ def parser():
     result.add_argument('--usage-mode', choices=('required', 'optional', 'disabled'), default='required',
                         help='required/optional request final usage; disabled omits stream_options')
     result.add_argument('--preflight-only', action='store_true', help='check one stream; do not benchmark')
+    result.add_argument('--created-policy', choices=('stable', 'per_chunk'), default='stable',
+                        help='per_chunk explicitly permits changing integer timestamps; ID/model stay stable')
     return result
 
 
