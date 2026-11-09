@@ -407,6 +407,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 8 — Optional real executor (CPU implemented) | SmolLM2 local tokens, greedy cached steps, serialized worker | Offline reference tests, real checkpoint smoke, live SSE and cancellation checks |
 | 9 — Chat-compatible adapter (implemented) | Model discovery, text message history, JSON/streamed completions | Validation, usage, lifecycle tests; real multi-turn reference and live HTTP checks |
 | 10 — External measurement and browser client (implemented) | Built-in chat with runtime view; separate HTTP streaming client | Real Chrome history/Stop/two-client checks, mobile layout, recorded receipt timings |
+| 11 — Engine comparison (research complete; experiments pending) | Sourced review of vLLM, SGLang, llama.cpp, and MLX LM; local comparison protocol | [Findings and pinned sources](research/engine-comparison/README.md); [experiment plan](research/engine-comparison/EXPERIMENT_PLAN.md); no external engine measurements yet |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded
