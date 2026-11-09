@@ -1,11 +1,13 @@
 # Local comparison experiment plan
 
-Status: **planned, not executed**. Read [the findings](README.md) first.
+Status: **compatibility verified; comparative experiments pending**. Read [the findings](README.md) first.
 This plan does not change runtime behavior or install another engine.
 
 Update, 2026-11-09: the portable measurement/preflight portion of step 2 is now
 implemented and verified against this runtime. See [HTTP compatibility](../../benchmarks/http-compatibility.md).
-External engine compatibility and comparative experiments remain unexecuted.
+Follow-up: [pinned llama.cpp compatibility](../../benchmarks/llama-cpp.md) is now
+verified, including conversion, four prompt fixtures, and the portable HTTP smoke.
+Comparative performance and lifecycle experiments remain unexecuted.
 
 ## 1. Compatibility preflight
 

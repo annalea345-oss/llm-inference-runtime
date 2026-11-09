@@ -408,7 +408,8 @@ Work in small milestones, preserving a runnable server and recording results in
 | 9 — Chat-compatible adapter (implemented) | Model discovery, text message history, JSON/streamed completions | Validation, usage, lifecycle tests; real multi-turn reference and live HTTP checks |
 | 10 — External measurement and browser client (implemented) | Built-in chat with runtime view; separate HTTP streaming client | Real Chrome history/Stop/two-client checks, mobile layout, recorded receipt timings |
 | 11 — Engine comparison (research complete; experiments pending) | Sourced review of vLLM, SGLang, llama.cpp, and MLX LM; local comparison protocol | [Findings and pinned sources](research/engine-comparison/README.md); [experiment plan](research/engine-comparison/EXPERIMENT_PLAN.md); no external engine measurements yet |
-| 12 — Portable benchmark preflight (implemented) | Explicit model selection, configurable readiness, portable profile, usage policies, excluded streaming compatibility check | [Protocol and real-model smoke evidence](benchmarks/http-compatibility.md); external engine verification pending |
+| 12 — Portable benchmark preflight (implemented) | Explicit model selection, configurable readiness, portable profile, usage policies, excluded streaming compatibility check | [Protocol and real-model smoke evidence](benchmarks/http-compatibility.md); external engine verification in milestone 13 |
+| 13 — External engine compatibility (verified) | Pinned CPU-only llama.cpp build, float32 conversion, prompt equivalence, real HTTP smoke | [272 tensor checks, four prompt fixtures, eight completed smoke requests](benchmarks/llama-cpp.md); comparative performance experiments pending |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

@@ -5,6 +5,10 @@ local engines. It does not change inference, download a model, or establish
 compatibility with an external engine. The first llama.cpp comparison remains
 pending under the [experiment plan](../research/engine-comparison/EXPERIMENT_PLAN.md).
 
+Follow-up: [the pinned llama.cpp CPU configuration](llama-cpp.md) now passes this
+client's required-usage preflight and smoke workload. Comparative experiments
+remain pending; the statements below record the adapter milestone's original scope.
+
 ## How it works
 
 The client first selects a model, optionally checks a readiness endpoint, and sends
