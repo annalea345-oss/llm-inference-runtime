@@ -1,0 +1,1013 @@
+{
+  "checked_at": "2026-11-09T15:05:29.272418+00:00",
+  "scope": "Pinned llama.cpp CPU compatibility smoke, not comparative performance evidence",
+  "project_base_commit": "8d4d6ee4e29d07d72cd9b5545b3119887d7d5db8",
+  "verifier_sha256": "e5274bbbf9d2f3b1ccf12c1ff15fd67f9c83749458239ee42467c574740e4805",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "python": "3.12.7",
+  "packages": {
+    "torch": "2.14.1",
+    "transformers": "4.57.6",
+    "numpy": "2.5.4",
+    "httpx": "0.28.1"
+  },
+  "model_files_sha256": {
+    "README.md": "4f97533ad95b1b2fea15fbc075c01b94578ebdd7c8138888fa43fa3abd530dc4",
+    "config.json": "8eb740e8bbe4cff95ea7b4588d17a2432deb16e8075bc5828ff7ba9be94d982a",
+    "generation_config.json": "87b916edaaab66b3899b9d0dd0752727dff6666686da0504d89ae0a6e055a013",
+    "merges.txt": "0b54e8aa4e53d5383e2e4bc635a56b43f9647f7b13832d5d9ecd8f82dac4f510",
+    "model.safetensors": "5af571cbf074e6d21a03528d2330792e532ca608f24ac70a143f6b369968ab8c",
+    "runtime_model.json": "45cc0e40e9c1d996c578edc209efd5f97a356c66214a4c6efb1c0699809ff762",
+    "special_tokens_map.json": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52",
+    "tokenizer.json": "9ca9acddb6525a194ec8ac7a87f24fbba7232a9a15ffa1af0c1224fcd888e47c",
+    "tokenizer_config.json": "4ec77d44f62efeb38d7e044a1db318f6a939438425312dfa333b8382dbad98df",
+    "vocab.json": "82b84012e3add4d01d12ba14442026e49b8cbbaead1f79ecf3d919784f82dc79"
+  },
+  "gguf_sha256": "3e81d31ae0e9a7ceac46eb63139e3f6fef5ff481491623b57c581b0e6a76c31d",
+  "conversion": {
+    "status": "passed",
+    "float32_tensors_verified": 272,
+    "qk_rope_layout_transform": "HF rows reshaped by head; pair axis exchanged",
+    "special_token_ids_verified": {
+      "bos": 1,
+      "eos": 2,
+      "pad": 2
+    },
+    "chat_template_sha256": "872be49dbb638044ad01b60388f48d469ff2980e5f0dccdc22ec907db54d0788"
+  },
+  "prompt_fixtures": [
+    {
+      "name": "single_turn",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the capital of France? Answer briefly."
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n<|im_start|>user\nWhat is the capital of France? Answer briefly.<|im_end|>\n<|im_start|>assistant\n",
+      "token_ids": [
+        1,
+        9690,
+        198,
+        2683,
+        359,
+        253,
+        5356,
+        5646,
+        11173,
+        3365,
+        3511,
+        308,
+        34519,
+        28,
+        7018,
+        411,
+        407,
+        19712,
+        8182,
+        2,
+        198,
+        1,
+        4093,
+        198,
+        1780,
+        314,
+        260,
+        3575,
+        282,
+        4649,
+        47,
+        19842,
+        13099,
+        30,
+        2,
+        198,
+        1,
+        520,
+        9531,
+        198
+      ],
+      "status": "passed"
+    },
+    {
+      "name": "system",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Answer in one sentence."
+        },
+        {
+          "role": "user",
+          "content": "What is a token?"
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nAnswer in one sentence.<|im_end|>\n<|im_start|>user\nWhat is a token?<|im_end|>\n<|im_start|>assistant\n",
+      "token_ids": [
+        1,
+        9690,
+        198,
+        21350,
+        281,
+        582,
+        6330,
+        30,
+        2,
+        198,
+        1,
+        4093,
+        198,
+        1780,
+        314,
+        253,
+        9624,
+        47,
+        2,
+        198,
+        1,
+        520,
+        9531,
+        198
+      ],
+      "status": "passed"
+    },
+    {
+      "name": "multi_turn",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Name a city in Norway."
+        },
+        {
+          "role": "assistant",
+          "content": "Oslo."
+        },
+        {
+          "role": "user",
+          "content": "Name another."
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n<|im_start|>user\nName a city in Norway.<|im_end|>\n<|im_start|>assistant\nOslo.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n<|im_start|>assistant\n",
+      "token_ids": [
+        1,
+        9690,
+        198,
+        2683,
+        359,
+        253,
+        5356,
+        5646,
+        11173,
+        3365,
+        3511,
+        308,
+        34519,
+        28,
+        7018,
+        411,
+        407,
+        19712,
+        8182,
+        2,
+        198,
+        1,
+        4093,
+        198,
+        5820,
+        253,
+        2240,
+        281,
+        14197,
+        30,
+        2,
+        198,
+        1,
+        520,
+        9531,
+        198,
+        11062,
+        5365,
+        30,
+        2,
+        198,
+        1,
+        4093,
+        198,
+        5820,
+        1372,
+        30,
+        2,
+        198,
+        1,
+        520,
+        9531,
+        198
+      ],
+      "status": "passed"
+    },
+    {
+      "name": "unicode",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain bl\u00e5b\u00e6r, caf\u00e9, and \u65e5\u672c\u8a9e. \ud83d\ude42"
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n<|im_start|>user\nExplain bl\u00e5b\u00e6r, caf\u00e9, and \u65e5\u672c\u8a9e. \ud83d\ude42<|im_end|>\n<|im_start|>assistant\n",
+      "token_ids": [
+        1,
+        9690,
+        198,
+        2683,
+        359,
+        253,
+        5356,
+        5646,
+        11173,
+        3365,
+        3511,
+        308,
+        34519,
+        28,
+        7018,
+        411,
+        407,
+        19712,
+        8182,
+        2,
+        198,
+        1,
+        4093,
+        198,
+        36971,
+        754,
+        27054,
+        82,
+        16467,
+        98,
+        28,
+        37366,
+        28,
+        284,
+        17097,
+        241,
+        115,
+        40993,
+        179,
+        120,
+        248,
+        30,
+        47526,
+        2,
+        198,
+        1,
+        520,
+        9531,
+        198
+      ],
+      "status": "passed"
+    }
+  ],
+  "http_smoke": [
+    {
+      "schema_version": 2,
+      "scope": "external HTTP streaming; client receipt times, not model token timings",
+      "base_url": "http://127.0.0.1:8018",
+      "profile": "portable",
+      "model": {
+        "id": "local-model"
+      },
+      "health": null,
+      "preflight": {
+        "status": "passed",
+        "stage": "complete",
+        "message": null,
+        "readiness": {
+          "path": "/health",
+          "status": "passed",
+          "http_status": 200,
+          "body": {
+            "status": "ok"
+          }
+        },
+        "model": {
+          "id": "local-model"
+        },
+        "health": null,
+        "sample": {
+          "index": -1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 2.233167178928852,
+            "first_content": 161.62054240703583,
+            "completion": 228.12916710972786,
+            "content_delta_gaps": [
+              8.502249605953693,
+              9.410667233169079,
+              9.43350000306964,
+              9.568708017468452,
+              9.633332956582308,
+              9.4847921282053
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 228.42320939525962
+        },
+        "model_selection": "explicit; discovery skipped"
+      },
+      "preflight_only": false,
+      "workload": {
+        "requests": 4,
+        "concurrency": 1,
+        "warmup": 2,
+        "prompt": "What is the capital of France? Answer briefly.",
+        "max_tokens": 24,
+        "timeout_seconds": 30,
+        "arrival_mode": "closed_loop",
+        "usage_mode": "required"
+      },
+      "connections": "shared client pool; metadata and preflight/warmup connections reused; no retries",
+      "notes": [
+        "Metadata, one preflight stream, and warmups excluded from measured elapsed time.",
+        "Preflight uses the workload prompt and may warm server prefix caches.",
+        "Readiness checks only validate HTTP success; liveness is not measured.",
+        "Content deltas can contain multiple tokens or arrive together in network buffers.",
+        "Token throughput is null if any completed stream lacks verified terminal usage."
+      ],
+      "elapsed_seconds": 0.8191729169338942,
+      "completed": 4,
+      "rejected": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "completed_requests_per_second": 4.882973932990503,
+      "usage_verified_requests": 4,
+      "usage_missing_requests": 0,
+      "completed_tokens_per_second": 39.06379146392403,
+      "latency_ms": {
+        "headers": {
+          "count": 4,
+          "mean": 1.2791561894118786,
+          "p50": 1.2705828994512558,
+          "p95": 1.3370420783758163,
+          "p99": 1.3370420783758163
+        },
+        "first_content": {
+          "count": 4,
+          "mean": 136.78470824379474,
+          "p50": 136.4601249806583,
+          "p95": 137.4260000884533,
+          "p99": 137.4260000884533
+        },
+        "completion": {
+          "count": 4,
+          "mean": 204.4749683700502,
+          "p50": 204.35779076069593,
+          "p95": 205.08320815861225,
+          "p99": 205.08320815861225
+        }
+      },
+      "content_delta_gap_ms": {
+        "count": 24,
+        "mean": 9.689921862445772,
+        "p50": 9.667667094618082,
+        "p95": 10.04124991595745,
+        "p99": 10.29308419674635
+      },
+      "samples": [
+        {
+          "index": 0,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.21366698294878,
+            "first_content": 136.4601249806583,
+            "completion": 203.37629178538918,
+            "content_delta_gaps": [
+              9.667667094618082,
+              9.519165847450495,
+              9.418999776244164,
+              9.848667308688164,
+              9.560083039104939,
+              9.47704166173935
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 203.67866707965732
+        },
+        {
+          "index": 1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.3370420783758163,
+            "first_content": 137.4260000884533,
+            "completion": 205.08320815861225,
+            "content_delta_gaps": [
+              10.021707974374294,
+              9.687250014394522,
+              9.569583926349878,
+              9.709666017442942,
+              9.717958979308605,
+              9.41379088908434
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 205.35979187116027
+        },
+        {
+          "index": 2,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.2705828994512558,
+            "first_content": 136.79399993270636,
+            "completion": 204.35779076069593,
+            "content_delta_gaps": [
+              10.04124991595745,
+              9.511208161711693,
+              9.450874757021666,
+              9.796833153814077,
+              9.780250024050474,
+              9.498834144324064
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 204.6829997561872
+        },
+        {
+          "index": 3,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.2953327968716621,
+            "first_content": 136.45870797336102,
+            "completion": 205.0825827755034,
+            "content_delta_gaps": [
+              9.779874701052904,
+              9.900833014398813,
+              9.80391725897789,
+              9.617582894861698,
+              10.29308419674635,
+              9.471999946981668
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 205.3691246546805
+        }
+      ]
+    },
+    {
+      "schema_version": 2,
+      "scope": "external HTTP streaming; client receipt times, not model token timings",
+      "base_url": "http://127.0.0.1:8018",
+      "profile": "portable",
+      "model": {
+        "id": "local-model"
+      },
+      "health": null,
+      "preflight": {
+        "status": "passed",
+        "stage": "complete",
+        "message": null,
+        "readiness": {
+          "path": "/health",
+          "status": "passed",
+          "http_status": 200,
+          "body": {
+            "status": "ok"
+          }
+        },
+        "model": {
+          "id": "local-model"
+        },
+        "health": null,
+        "sample": {
+          "index": -1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 0.7063751108944416,
+            "first_content": 136.6610419936478,
+            "completion": 204.41108383238316,
+            "content_delta_gaps": [
+              9.938708040863276,
+              9.627209044992924,
+              10.126874782145023,
+              9.54412529245019,
+              9.520874824374914,
+              9.509291034191847
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 204.72666714340448
+        },
+        "model_selection": "explicit; discovery skipped"
+      },
+      "preflight_only": false,
+      "workload": {
+        "requests": 4,
+        "concurrency": 2,
+        "warmup": 2,
+        "prompt": "What is the capital of France? Answer briefly.",
+        "max_tokens": 24,
+        "timeout_seconds": 30,
+        "arrival_mode": "closed_loop",
+        "usage_mode": "required"
+      },
+      "connections": "shared client pool; metadata and preflight/warmup connections reused; no retries",
+      "notes": [
+        "Metadata, one preflight stream, and warmups excluded from measured elapsed time.",
+        "Preflight uses the workload prompt and may warm server prefix caches.",
+        "Readiness checks only validate HTTP success; liveness is not measured.",
+        "Content deltas can contain multiple tokens or arrive together in network buffers.",
+        "Token throughput is null if any completed stream lacks verified terminal usage."
+      ],
+      "elapsed_seconds": 0.713957792147994,
+      "completed": 4,
+      "rejected": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "completed_requests_per_second": 5.602572090383254,
+      "usage_verified_requests": 4,
+      "usage_missing_requests": 0,
+      "completed_tokens_per_second": 44.82057672306603,
+      "latency_ms": {
+        "headers": {
+          "count": 4,
+          "mean": 55.57164584752172,
+          "p50": 9.459374938160181,
+          "p95": 106.57525015994906,
+          "p99": 106.57525015994906
+        },
+        "first_content": {
+          "count": 4,
+          "mean": 244.85847901087254,
+          "p50": 220.78116657212377,
+          "p95": 274.1599162109196,
+          "p99": 274.1599162109196
+        },
+        "completion": {
+          "count": 4,
+          "mean": 354.1810002643615,
+          "p50": 354.501917026937,
+          "p95": 358.58350014314055,
+          "p99": 358.58350014314055
+        }
+      },
+      "content_delta_gap_ms": {
+        "count": 24,
+        "mean": 16.364553826861084,
+        "p50": 12.337666936218739,
+        "p95": 59.73016703501344,
+        "p99": 60.58429228141904
+      },
+      "samples": [
+        {
+          "index": 0,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.6535832546651363,
+            "first_content": 213.7368330731988,
+            "completion": 348.84612495079637,
+            "content_delta_gaps": [
+              60.58429228141904,
+              13.127290643751621,
+              12.432666961103678,
+              12.25504232570529,
+              12.137374840676785,
+              12.3024582862854
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 349.21175008639693
+        },
+        {
+          "index": 1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 106.57525015994906,
+            "first_content": 274.1599162109196,
+            "completion": 358.58350014314055,
+            "content_delta_gaps": [
+              13.153709005564451,
+              12.437332887202501,
+              12.220917269587517,
+              12.160290963947773,
+              12.303916737437248,
+              12.080499902367592
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 358.83712535724044
+        },
+        {
+          "index": 2,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 9.459374938160181,
+            "first_content": 220.78116657212377,
+            "completion": 354.7924589365721,
+            "content_delta_gaps": [
+              59.73016703501344,
+              12.549750041216612,
+              12.231250293552876,
+              12.223915662616491,
+              12.344625312834978,
+              12.354666832834482
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 355.21041695028543
+        },
+        {
+          "index": 3,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 104.59837503731251,
+            "first_content": 270.756000187248,
+            "completion": 354.501917026937,
+            "content_delta_gaps": [
+              12.545167002826929,
+              12.226707767695189,
+              12.228542007505894,
+              12.337666936218739,
+              12.360500171780586,
+              12.420540675520897
+            ]
+          },
+          "request_id": null,
+          "elapsed_ms": 354.7988338395953
+        }
+      ]
+    }
+  ],
+  "server_properties": {
+    "default_generation_settings": {
+      "params": {
+        "seed": 4294967295,
+        "temperature": 0.800000011920929,
+        "dynatemp_range": 0.0,
+        "dynatemp_exponent": 1.0,
+        "top_k": 40,
+        "top_p": 0.949999988079071,
+        "min_p": 0.05000000074505806,
+        "top_n_sigma": -1.0,
+        "xtc_probability": 0.0,
+        "xtc_threshold": 0.10000000149011612,
+        "typical_p": 1.0,
+        "repeat_last_n": 64,
+        "repeat_penalty": 1.0,
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "dry_multiplier": 0.0,
+        "dry_base": 1.75,
+        "dry_allowed_length": 2,
+        "dry_penalty_last_n": 64,
+        "mirostat": 0,
+        "mirostat_tau": 5.0,
+        "mirostat_eta": 0.10000000149011612,
+        "adaptive_target": -1.0,
+        "adaptive_decay": 0.8999999761581421,
+        "max_tokens": -1,
+        "n_predict": -1,
+        "n_keep": 0,
+        "n_discard": 0,
+        "ignore_eos": false,
+        "stream": false,
+        "n_probs": 0,
+        "min_keep": 0,
+        "chat_format": "Content-only",
+        "reasoning_format": "none",
+        "reasoning_in_content": false,
+        "generation_prompt": "",
+        "samplers": [
+          "penalties",
+          "dry",
+          "top_n_sigma",
+          "top_k",
+          "typ_p",
+          "top_p",
+          "min_p",
+          "xtc",
+          "temperature"
+        ],
+        "speculative.types": "none",
+        "timings_per_token": false,
+        "post_sampling_probs": false,
+        "backend_sampling": false,
+        "lora": []
+      },
+      "n_ctx": 8192
+    },
+    "total_slots": 2,
+    "model_alias": "local-model",
+    "model_ftype": "all F32",
+    "model_path": ".experiments/smollm2-f32.gguf",
+    "modalities": {
+      "vision": false,
+      "video": false,
+      "audio": false
+    },
+    "media_marker": "<__media_bXkAE2wN7wx532kRcQbg8caEma7PpGoO__>",
+    "endpoint_slots": true,
+    "endpoint_props": false,
+    "endpoint_metrics": true,
+    "ui": true,
+    "ui_settings": {},
+    "chat_template": "{% for message in messages %}{% if loop.first and messages[0]['role'] != 'system' %}{{ '<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n' }}{% endif %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}",
+    "chat_template_caps": {
+      "supports_object_arguments": false,
+      "supports_parallel_tool_calls": false,
+      "supports_preserve_reasoning": false,
+      "supports_reasoning_effort": false,
+      "supports_string_content": true,
+      "supports_system_role": true,
+      "supports_tool_calls": false,
+      "supports_tools": false,
+      "supports_typed_content": false,
+      "reasoning_effort_levels": []
+    },
+    "bos_token": "<|im_start|>",
+    "eos_token": "<|im_end|>",
+    "build_info": "b0-unknown",
+    "is_sleeping": false,
+    "cors_proxy_enabled": false
+  },
+  "nonstreaming_answer": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "The capital of France is Paris."
+        }
+      }
+    ],
+    "created": 1794236736,
+    "model": "local-model",
+    "system_fingerprint": "b0-unknown",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 8,
+      "prompt_tokens": 40,
+      "total_tokens": 48,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "id": "chatcmpl-pskIOFMfjTS1zhCErmWYozvC5wHot0gW",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 40,
+      "prompt_ms": 135.047,
+      "prompt_per_token_ms": 3.376175,
+      "prompt_per_second": 296.19317719016345,
+      "predicted_n": 8,
+      "predicted_ms": 67.994,
+      "predicted_per_token_ms": 9.71342857142857,
+      "predicted_per_second": 102.9502603170868
+    }
+  },
+  "final_slots": [
+    {
+      "id": 0,
+      "n_ctx": 8192,
+      "speculative": false,
+      "is_processing": false,
+      "id_task": 233,
+      "n_prompt_tokens": 47,
+      "n_prompt_tokens_processed": 0,
+      "n_prompt_tokens_cache": 0,
+      "params": {
+        "seed": 4294967295,
+        "temperature": 0.0,
+        "dynatemp_range": 0.0,
+        "dynatemp_exponent": 1.0,
+        "top_k": 40,
+        "top_p": 0.949999988079071,
+        "min_p": 0.05000000074505806,
+        "top_n_sigma": -1.0,
+        "xtc_probability": 0.0,
+        "xtc_threshold": 0.10000000149011612,
+        "typical_p": 1.0,
+        "repeat_last_n": 64,
+        "repeat_penalty": 1.0,
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "dry_multiplier": 0.0,
+        "dry_base": 1.75,
+        "dry_allowed_length": 2,
+        "dry_penalty_last_n": 64,
+        "mirostat": 0,
+        "mirostat_tau": 5.0,
+        "mirostat_eta": 0.10000000149011612,
+        "adaptive_target": -1.0,
+        "adaptive_decay": 0.8999999761581421,
+        "max_tokens": 24,
+        "n_predict": 24,
+        "n_keep": 0,
+        "n_discard": 0,
+        "ignore_eos": false,
+        "stream": false,
+        "n_probs": 0,
+        "min_keep": 0,
+        "chat_format": "peg-native",
+        "reasoning_format": "deepseek",
+        "reasoning_in_content": false,
+        "generation_prompt": "<|im_start|>assistant\n",
+        "samplers": [
+          "penalties",
+          "dry",
+          "top_n_sigma",
+          "top_k",
+          "typ_p",
+          "top_p",
+          "min_p",
+          "xtc",
+          "temperature"
+        ],
+        "speculative.types": "none",
+        "timings_per_token": false,
+        "post_sampling_probs": false,
+        "backend_sampling": false,
+        "lora": []
+      },
+      "next_token": [
+        {
+          "has_next_token": false,
+          "has_new_line": false,
+          "n_remain": -1,
+          "n_decoded": 0
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "n_ctx": 8192,
+      "speculative": false,
+      "is_processing": false,
+      "id_task": 223,
+      "n_prompt_tokens": 47,
+      "n_prompt_tokens_processed": 0,
+      "n_prompt_tokens_cache": 0,
+      "params": {
+        "seed": 4294967295,
+        "temperature": 0.0,
+        "dynatemp_range": 0.0,
+        "dynatemp_exponent": 1.0,
+        "top_k": 40,
+        "top_p": 0.949999988079071,
+        "min_p": 0.05000000074505806,
+        "top_n_sigma": -1.0,
+        "xtc_probability": 0.0,
+        "xtc_threshold": 0.10000000149011612,
+        "typical_p": 1.0,
+        "repeat_last_n": 64,
+        "repeat_penalty": 1.0,
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "dry_multiplier": 0.0,
+        "dry_base": 1.75,
+        "dry_allowed_length": 2,
+        "dry_penalty_last_n": 64,
+        "mirostat": 0,
+        "mirostat_tau": 5.0,
+        "mirostat_eta": 0.10000000149011612,
+        "adaptive_target": -1.0,
+        "adaptive_decay": 0.8999999761581421,
+        "max_tokens": 24,
+        "n_predict": 24,
+        "n_keep": 0,
+        "n_discard": 0,
+        "ignore_eos": false,
+        "stream": true,
+        "n_probs": 0,
+        "min_keep": 0,
+        "chat_format": "peg-native",
+        "reasoning_format": "deepseek",
+        "reasoning_in_content": false,
+        "generation_prompt": "<|im_start|>assistant\n",
+        "samplers": [
+          "penalties",
+          "dry",
+          "top_n_sigma",
+          "top_k",
+          "typ_p",
+          "top_p",
+          "min_p",
+          "xtc",
+          "temperature"
+        ],
+        "speculative.types": "none",
+        "timings_per_token": false,
+        "post_sampling_probs": false,
+        "backend_sampling": false,
+        "lora": []
+      },
+      "next_token": [
+        {
+          "has_next_token": false,
+          "has_new_line": false,
+          "n_remain": -1,
+          "n_decoded": 0
+        }
+      ]
+    }
+  ],
+  "final_metrics": "# HELP llamacpp:prompt_tokens_total Number of prompt tokens processed, excluding cached tokens\n# TYPE llamacpp:prompt_tokens_total counter\nllamacpp:prompt_tokens_total 1160\n# HELP llamacpp:prompt_tokens_cached_total Number of prompt tokens reused from the cache\n# TYPE llamacpp:prompt_tokens_cached_total counter\nllamacpp:prompt_tokens_cached_total 0\n# HELP llamacpp:prompt_seconds_total Total time spent processing prompts\n# TYPE llamacpp:prompt_seconds_total counter\nllamacpp:prompt_seconds_total 4.22463\n# HELP llamacpp:tokens_predicted_total Number of generation tokens processed\n# TYPE llamacpp:tokens_predicted_total counter\nllamacpp:tokens_predicted_total 232\n# HELP llamacpp:tokens_predicted_seconds_total Total time spent generating tokens\n# TYPE llamacpp:tokens_predicted_seconds_total counter\nllamacpp:tokens_predicted_seconds_total 2.54808\n# HELP llamacpp:n_decode_total Total number of llama_decode() calls, excluding speculative decoding and multimodal decoding\n# TYPE llamacpp:n_decode_total counter\nllamacpp:n_decode_total 213\n# HELP llamacpp:n_tokens_max Largest observed sequence length (prompt + generation)\n# TYPE llamacpp:n_tokens_max counter\nllamacpp:n_tokens_max 47\n# HELP llamacpp:spec_decode_num_draft_tokens_total Speculative: Total draft tokens generated\n# TYPE llamacpp:spec_decode_num_draft_tokens_total counter\nllamacpp:spec_decode_num_draft_tokens_total 0\n# HELP llamacpp:spec_decode_num_accepted_tokens_total Speculative: Total draft tokens accepted by the target model\n# TYPE llamacpp:spec_decode_num_accepted_tokens_total counter\nllamacpp:spec_decode_num_accepted_tokens_total 0\n# HELP llamacpp:spec_decode_num_drafts_total Speculative: Total speculative decoding verification steps\n# TYPE llamacpp:spec_decode_num_drafts_total counter\nllamacpp:spec_decode_num_drafts_total 0\n# HELP llamacpp:prompt_tokens_seconds Average prompt throughput in tokens/s\n# TYPE llamacpp:prompt_tokens_seconds gauge\nllamacpp:prompt_tokens_seconds 274.58\n# HELP llamacpp:predicted_tokens_seconds Average generation throughput in tokens/s\n# TYPE llamacpp:predicted_tokens_seconds gauge\nllamacpp:predicted_tokens_seconds 79.6679\n# HELP llamacpp:requests_processing Number of requests processing\n# TYPE llamacpp:requests_processing gauge\nllamacpp:requests_processing 0\n# HELP llamacpp:requests_deferred Number of requests deferred\n# TYPE llamacpp:requests_deferred gauge\nllamacpp:requests_deferred 0\n# HELP llamacpp:n_busy_slots_per_decode Average number of busy slots per llama_decode() call\n# TYPE llamacpp:n_busy_slots_per_decode gauge\nllamacpp:n_busy_slots_per_decode 1.23474\n"
+}

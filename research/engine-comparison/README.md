@@ -1,9 +1,13 @@
 # Inference engine comparison: research findings
 
-Research date: **2026-11-09**. Status: source review complete; external engine
+Original research snapshot: **2026-11-09**. At that point, source review was complete; external engine
 installation, compatibility checks, and comparative measurements **not run**.
 Exact upstream revisions and source hashes are recorded in [sources.json](sources.json).
 Documentation sites marked `moving` can change independently of those revisions.
+
+Follow-up: [llama.cpp compatibility](../../benchmarks/llama-cpp.md) is now verified
+with the existing checkpoint. This document retains the original research
+snapshot below; comparative performance measurements are still pending.
 
 ## Purpose
 

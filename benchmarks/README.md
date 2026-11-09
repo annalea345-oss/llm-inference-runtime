@@ -46,3 +46,7 @@ client separately from latency benchmarks.
 The [portable HTTP preflight milestone](http-compatibility.md) adds model selection,
 readiness configuration, and explicit token usage policies, with recorded real
 CPU model compatibility checks. It does not contain external engine measurements.
+
+The [llama.cpp compatibility check](llama-cpp.md) verifies the pinned external
+engine's conversion, prompt tokens, and streaming protocol. Its short smoke runs
+are not comparative performance evidence.

@@ -578,3 +578,47 @@ external cancellation/memory experiments remain pending.
 Next: check/build the pinned llama.cpp revision and convert the existing checkpoint
 faithfully; verify tokenizer/template and CPU/weight/KV precision, then exercise
 the preflight against that server before recording comparative measurements.
+
+## 2026-11-09 — Pinned llama.cpp CPU compatibility verification
+
+- Downloaded the previously reviewed llama.cpp commit
+  `a4d4f2fd4ec85ec6a0a9ece4870416c1b6cc24f5` as an archive into ignored
+  `.experiments/`. Reviewed its MIT license/build/conversion requirements first.
+  Installed CMake 4.1.3 and SentencePiece 0.2.1 in a separate experiment tools
+  environment; project dependencies and the existing checkpoint were unchanged.
+- Built the CPU server with Metal, Accelerate, BLAS, OpenMP, UI/assets, and HTTPS
+  support disabled. No upstream patch was required. Set a Git discovery ceiling
+  so the archive build reports unknown provenance instead of inheriting the
+  parent runtime repository's commit; captured archive/executable/library hashes.
+- Converted existing checkpoint weights to a roughly 538 MB float32 GGUF using
+  the existing PyTorch/Transformers/NumPy plus upstream source-tree GGUF tooling.
+  Did not install upstream's different pinned conversion requirements wholesale.
+- Added scripts/verify_llama_cpp.py for existing artifacts and a running external
+  server. Verified all **272 tensors** exactly against source values widened to
+  float32, including the HF-to-GGML Q/K RoPE layout permutation; verified the
+  embedded template and BOS/EOS/padding IDs.
+- Four single/system/multi-turn/Unicode fixtures matched both rendered templates
+  and prompt IDs between Transformers and llama.cpp. Required-usage portable
+  preflight and eight measured HTTP smoke requests completed at concurrency 1/2,
+  with two excluded warmups per setting. Each measured request reported 40 prompt
+  tokens and 8 output tokens with EOS finish. A separate JSON completion answered
+  the France question with `The capital of France is Paris.`
+- Captured launch/configuration/build details in benchmarks/llama-cpp-build.json;
+  raw fixtures, usage/timing samples, server properties, final slots/metrics,
+  checkpoint hashes, and verifier hash in benchmarks/llama-cpp-smoke.json.
+  Documented setup, downloads, commands, limits, and follow-up in
+  benchmarks/llama-cpp.md and linked the updated research/roadmap.
+- Both slots were idle; final metrics reported zero processing/deferred requests
+  and zero cached-prefix tokens. Stopped the temporary server. Physical memory
+  release, cancellation, overload recovery, long contexts, and fairness have not
+  been established by this smoke check. CPU kernels/libraries and scheduling
+  still differ, even with matched precision and model-thread settings.
+- `.venv/bin/python -m pytest -q` — **354 passed**. The added verifier was exercised
+  against actual converted tensors and a live external server. Documentation
+  links, recorded hashes, JSON, and `git diff --check` were also validated.
+
+This completes external compatibility for the recorded configuration, not a
+performance comparison or a new runtime backend. Large sources/builds/weights
+remain ignored locally. Next: versioned short/long/mixed workloads, repeated
+alternating-engine CPU runs, bounded cancellation/recovery and memory observations,
+then choose one runtime improvement from the evidence.
