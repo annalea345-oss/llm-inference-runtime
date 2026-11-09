@@ -42,3 +42,7 @@ responses against reference real-model generation, separately from latency tests
 The [external HTTP baseline](http-local.md) measures actual client receipt from a
 running local model server; the browser smoke and screenshot verify the visual
 client separately from latency benchmarks.
+
+The [portable HTTP preflight milestone](http-compatibility.md) adds model selection,
+readiness configuration, and explicit token usage policies, with recorded real
+CPU model compatibility checks. It does not contain external engine measurements.

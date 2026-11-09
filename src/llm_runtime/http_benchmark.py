@@ -57,6 +57,8 @@ async def sse_frames(lines):
         elif field == 'event':
             event = value
     # SSE dispatch requires a blank line; EOF does not complete a partial frame.
+    if data:
+        raise ValueError('stream ended with an incomplete SSE frame')
 
 
 def _usage(value):
@@ -71,19 +73,21 @@ def _usage(value):
 
 
 async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
-                 clock=perf_counter):
+                 clock=perf_counter, usage_mode='required'):
     """Time receipt of headers/content/[DONE], with one total request deadline."""
     started = clock()
     row = {'index': index, 'status': 'error', 'http_status': None, 'message': None,
-           'usage': None, 'content_deltas': 0, 'finish_reason': None,
+           'usage': None, 'usage_status': 'unverified', 'content_deltas': 0, 'finish_reason': None,
            'timings_ms': {'headers': None, 'first_content': None, 'completion': None,
                           'content_delta_gaps': []}}
 
     async def consume():
         payload = {'model': model, 'messages': [{'role': 'user', 'content': prompt}],
-                   'max_tokens': max_tokens, 'temperature': 0, 'stream': True,
-                   'stream_options': {'include_usage': True}}
-        async with client.stream('POST', base_url + '/v1/chat/completions', json=payload) as response:
+                   'max_tokens': max_tokens, 'temperature': 0, 'stream': True}
+        if usage_mode != 'disabled':
+            payload['stream_options'] = {'include_usage': True}
+        async with client.stream('POST', base_url + '/v1/chat/completions', json=payload,
+                                 follow_redirects=False) as response:
             row['timings_ms']['headers'] = (clock() - started) * 1000
             row['http_status'] = response.status_code
             row['request_id'] = response.headers.get('x-request-id')
@@ -101,9 +105,9 @@ async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
                 if event == 'error':
                     raise ValueError('server sent an SSE error event')
                 if data == '[DONE]':
-                    if terminal is None or usage is None:
+                    if terminal is None or (usage is None and usage_mode == 'required'):
                         raise ValueError('[DONE] requires a valid finish reason and usage')
-                    if usage['completion_tokens'] > max_tokens:
+                    if usage is not None and usage['completion_tokens'] > max_tokens:
                         raise ValueError('usage exceeds requested output limit')
                     # Record user-visible completion now, then consume the HTTP
                     # ending so HTTPX can return this connection to its pool.
@@ -154,9 +158,16 @@ async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
                     if reason not in ('stop', 'length'):
                         raise ValueError('unsupported finish reason')
                     terminal = reason
+                # Some servers attach usage to the finish chunk instead of a
+                # separate choices=[] chunk. Only terminal usage is supported.
+                if frame.get('usage') is not None:
+                    if terminal is None or usage is not None:
+                        raise ValueError('unexpected usage before finish or duplicate usage')
+                    usage = _usage(frame['usage'])
             if done_at is None:
                 raise ValueError('stream ended without [DONE]')
-            row.update(status='completed', usage=usage, finish_reason=terminal)
+            row.update(status='completed', usage=usage, finish_reason=terminal,
+                       usage_status='verified' if usage is not None else 'not_reported')
             row['timings_ms']['completion'] = (done_at - started) * 1000
 
     try:
@@ -172,14 +183,15 @@ async def sample(client, base_url, model, *, index, prompt, max_tokens, timeout,
 
 
 async def workload(client, base_url, model, *, requests, concurrency, prompt, max_tokens,
-                   timeout, clock=perf_counter):
+                   timeout, clock=perf_counter, usage_mode='required'):
     rows = [None] * requests
     indices = iter(range(requests))
 
     async def worker():
         for index in indices:
             rows[index] = await sample(client, base_url, model, index=index, prompt=prompt,
-                                       max_tokens=max_tokens, timeout=timeout, clock=clock)
+                                       max_tokens=max_tokens, timeout=timeout, clock=clock,
+                                       usage_mode=usage_mode)
     await asyncio.gather(*(worker() for _ in range(min(requests, concurrency))))
     return rows
 
@@ -193,12 +205,17 @@ def distribution(values):
 
 def summarize(rows, elapsed):
     completed = [r for r in rows if r['status'] == 'completed']
+    verified = [r for r in completed if r['usage'] is not None]
     return {'elapsed_seconds': elapsed,
             **{name: sum(r['status'] == status for r in rows)
                for name, status in (('completed', 'completed'), ('rejected', 'rejected'),
                                     ('errors', 'error'), ('timeouts', 'timeout'))},
-            'completed_requests_per_second': len(completed) / elapsed,
-            'completed_tokens_per_second': sum(r['usage']['completion_tokens'] for r in completed) / elapsed,
+            'completed_requests_per_second': len(completed) / elapsed if elapsed > 0 else None,
+            'usage_verified_requests': len(verified),
+            'usage_missing_requests': len(completed) - len(verified),
+            'completed_tokens_per_second': (
+                sum(r['usage']['completion_tokens'] for r in verified) / elapsed
+                if completed and len(verified) == len(completed) and elapsed > 0 else None),
             'latency_ms': {name: distribution([r['timings_ms'][name] for r in completed
                                               if r['timings_ms'][name] is not None])
                            for name in ('headers', 'first_content', 'completion')},
@@ -207,11 +224,87 @@ def summarize(rows, elapsed):
             'samples': rows}
 
 
+def validate_profile(profile, model, readiness_path, usage_mode, preflight_only):
+    if profile not in ('runtime', 'portable'):
+        raise ValueError('profile must be runtime or portable')
+    if model is not None and (not isinstance(model, str) or not model.strip()):
+        raise ValueError('model must be a nonempty string')
+    if usage_mode not in ('required', 'optional', 'disabled'):
+        raise ValueError('usage-mode must be required, optional, or disabled')
+    if type(preflight_only) is not bool:
+        raise ValueError('preflight-only must be a boolean')
+    if readiness_path is not None:
+        if not isinstance(readiness_path, str):
+            raise ValueError('readiness-path must be a local absolute path')
+        parsed = urlsplit(readiness_path)
+        if (not readiness_path.startswith('/') or readiness_path.startswith('//')
+                or parsed.scheme or parsed.netloc or parsed.query or parsed.fragment
+                or '\\' in readiness_path or any(ord(c) <= 32 or ord(c) == 127 for c in readiness_path)):
+            raise ValueError('readiness-path must be a local absolute path without query or fragment')
+
+
+async def preflight(client, base_url, *, profile, model, readiness_path, prompt,
+                    max_tokens, timeout, usage_mode, clock=perf_counter):
+    """Exercise one real stream before measuring; never silently retry/fallback."""
+    result = {'status': 'failed', 'stage': 'readiness', 'message': None,
+              'readiness': {'path': readiness_path, 'status': 'skipped'},
+              'model': None, 'health': None, 'sample': None}
+    try:
+        if readiness_path is not None:
+            result['readiness']['status'] = 'failed'
+            response = await asyncio.wait_for(
+                client.get(base_url + readiness_path, follow_redirects=False), timeout)
+            result['readiness']['http_status'] = response.status_code
+            response.raise_for_status()
+            try:
+                body = response.json()
+            except ValueError:
+                body = response.text[:4096]
+            result['readiness'].update(status='passed', body=body)
+            if profile == 'runtime':
+                result['health'] = body
+        result['stage'] = 'model_selection'
+        if model is not None and profile == 'portable':
+            # Explicit portable selection also supports servers without discovery.
+            record = {'id': model}
+            result['model_selection'] = 'explicit; discovery skipped'
+        else:
+            response = await asyncio.wait_for(
+                client.get(base_url + '/v1/models', follow_redirects=False), timeout)
+            response.raise_for_status()
+            body = response.json()
+            records = body.get('data') if isinstance(body, dict) else None
+            if (not isinstance(records, list) or not records
+                    or any(not isinstance(r, dict) or not isinstance(r.get('id'), str)
+                           or not r['id'].strip() for r in records)):
+                raise ValueError('invalid model discovery; expected nonempty data with model IDs')
+            selected = [r for r in records if model is None or r['id'] == model]
+            if len(selected) != 1:
+                raise ValueError('select exactly one advertised model with --model')
+            record = selected[0]
+            result['model_selection'] = 'discovery'
+        result['model'] = record
+        result['stage'] = 'stream'
+        row = await sample(client, base_url, record['id'], index=-1, prompt=prompt,
+                           max_tokens=max_tokens, timeout=timeout, usage_mode=usage_mode, clock=clock)
+        result['sample'] = row
+        if row['status'] != 'completed':
+            raise ValueError(f"stream preflight {row['status']}: {row['message']}")
+        result.update(status='passed', stage='complete')
+    except Exception as exc:
+        result['message'] = f'{type(exc).__name__}: {exc}'
+    return result
+
+
 async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency=2,
                     warmup=2, max_tokens=24,
                     prompt='What is the capital of France? Answer briefly.', timeout=30,
-                    client=None, clock=perf_counter):
+                    client=None, clock=perf_counter, profile='runtime', model=None,
+                    readiness_path=None, usage_mode='required', preflight_only=False):
     validate_options(base_url, requests, concurrency, warmup, max_tokens, prompt, timeout)
+    validate_profile(profile, model, readiness_path, usage_mode, preflight_only)
+    if readiness_path is None and profile == 'runtime':
+        readiness_path = '/health'
     base_url = base_url.rstrip('/')
     if client is None:
         try:
@@ -223,17 +316,31 @@ async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency
                                                          max_keepalive_connections=concurrency)) as owned:
             return await benchmark(base_url, requests=requests, concurrency=concurrency,
                                    warmup=warmup, max_tokens=max_tokens, prompt=prompt,
-                                   timeout=timeout, client=owned, clock=clock)
-    models = await client.get(base_url + '/v1/models')
-    models.raise_for_status()
-    records = models.json().get('data')
-    if not isinstance(records, list) or len(records) != 1 or not isinstance(records[0].get('id'), str):
-        raise ValueError('expected exactly one model from /v1/models')
-    model = records[0]['id']
-    health = await client.get(base_url + '/health')
-    health.raise_for_status()
+                                   timeout=timeout, client=owned, clock=clock, profile=profile,
+                                   model=model, readiness_path=readiness_path, usage_mode=usage_mode,
+                                   preflight_only=preflight_only)
+    checked = await preflight(client, base_url, profile=profile, model=model,
+                              readiness_path=readiness_path, prompt=prompt, max_tokens=max_tokens,
+                              timeout=timeout, usage_mode=usage_mode, clock=clock)
+    report = {
+        'schema_version': 2,
+        'scope': 'external HTTP streaming; client receipt times, not model token timings',
+        'base_url': base_url, 'profile': profile, 'model': checked['model'],
+        'health': checked['health'], 'preflight': checked, 'preflight_only': preflight_only,
+        'workload': {'requests': requests, 'concurrency': concurrency, 'warmup': warmup,
+                     'prompt': prompt, 'max_tokens': max_tokens, 'timeout_seconds': timeout,
+                     'arrival_mode': 'closed_loop', 'usage_mode': usage_mode},
+        'connections': 'shared client pool; metadata and preflight/warmup connections reused; no retries',
+        'notes': ['Metadata, one preflight stream, and warmups excluded from measured elapsed time.',
+                  'Preflight uses the workload prompt and may warm server prefix caches.',
+                  'Readiness checks only validate HTTP success; liveness is not measured.',
+                  'Content deltas can contain multiple tokens or arrive together in network buffers.',
+                  'Token throughput is null if any completed stream lacks verified terminal usage.']}
+    if checked['status'] != 'passed' or preflight_only:
+        return {**report, **summarize([], 0)}
+    model = checked['model']['id']
     options = dict(concurrency=concurrency, prompt=prompt, max_tokens=max_tokens,
-                   timeout=timeout, clock=clock)
+                   timeout=timeout, clock=clock, usage_mode=usage_mode)
     if warmup:
         warmed = await workload(client, base_url, model, requests=warmup, **options)
         if any(r['status'] != 'completed' for r in warmed):
@@ -241,15 +348,7 @@ async def benchmark(base_url='http://127.0.0.1:8000', *, requests=8, concurrency
     started = clock()
     rows = await workload(client, base_url, model, requests=requests, **options)
     elapsed = clock() - started
-    return {'scope': 'external HTTP streaming; client receipt times, not model token timings',
-            'base_url': base_url, 'model': records[0], 'health': health.json(),
-            'workload': {'requests': requests, 'concurrency': concurrency, 'warmup': warmup,
-                         'prompt': prompt, 'max_tokens': max_tokens, 'timeout_seconds': timeout},
-            'connections': 'shared client pool; metadata and warmup connections reused; no retries',
-            'notes': ['Warmup and metadata requests excluded from measured elapsed time.',
-                      'Content deltas can contain multiple tokens or arrive together in network buffers.',
-                      'Token throughput uses terminal server usage only for validated completed streams.'],
-            **summarize(rows, elapsed)}
+    return {**report, **summarize(rows, elapsed)}
 
 
 def parser():
@@ -261,6 +360,13 @@ def parser():
     result.add_argument('--max-tokens', type=int, default=24)
     result.add_argument('--prompt', default='What is the capital of France? Answer briefly.')
     result.add_argument('--timeout', type=float, default=30)
+    result.add_argument('--profile', choices=('runtime', 'portable'), default='runtime',
+                        help='runtime collects /health and discovers models; portable skips health by default')
+    result.add_argument('--model', help='model ID; portable selection skips model discovery')
+    result.add_argument('--readiness-path', help='local readiness endpoint; portable default: no readiness GET')
+    result.add_argument('--usage-mode', choices=('required', 'optional', 'disabled'), default='required',
+                        help='required/optional request final usage; disabled omits stream_options')
+    result.add_argument('--preflight-only', action='store_true', help='check one stream; do not benchmark')
     return result
 
 
@@ -272,6 +378,10 @@ def main(argv=None):
         print(f'HTTP benchmark failed: {exc}', file=sys.stderr)
         return 1
     print(json.dumps(report, indent=2, allow_nan=False))
+    if report.get('preflight', {}).get('status') == 'failed':
+        return 1
+    if arguments.preflight_only:
+        return 0
     return 0 if report['completed'] == arguments.requests else 1
 
 

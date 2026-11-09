@@ -3,6 +3,10 @@
 Status: **planned, not executed**. Read [the findings](README.md) first.
 This plan does not change runtime behavior or install another engine.
 
+Update, 2026-11-09: the portable measurement/preflight portion of step 2 is now
+implemented and verified against this runtime. See [HTTP compatibility](../../benchmarks/http-compatibility.md).
+External engine compatibility and comparative experiments remain unexecuted.
+
 ## 1. Compatibility preflight
 
 Use the current Apple M3 / 16 GB host. Record the exact OS, hardware, available

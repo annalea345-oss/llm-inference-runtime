@@ -53,12 +53,13 @@ def response_stream(text):
     return Chunks([(0, raw[i:i + 7]) for i in range(0, len(raw), 7)])
 
 
-async def get_sample(text=VALID, *, status=200, content_type='text/event-stream', timeout=1):
+async def get_sample(text=VALID, *, status=200, content_type='text/event-stream', timeout=1,
+                     usage_mode='required'):
     async def handler(request):
         return httpx.Response(status, headers={'content-type': content_type}, stream=response_stream(text))
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
         return await bench.sample(client, 'http://localhost:8000', 'model', index=0,
-                                  prompt='hi', max_tokens=4, timeout=timeout)
+                                  prompt='hi', max_tokens=4, timeout=timeout, usage_mode=usage_mode)
 
 
 async def test_timings_start_at_nonempty_content_and_end_at_done():
@@ -249,6 +250,9 @@ async def test_metadata_warmup_exclusion_and_throughput_arithmetic(monkeypatch):
     monkeypatch.setattr(bench, 'workload', workload)
 
     def handler(request):
+        if request.method == 'POST':
+            return httpx.Response(200, headers={'content-type': 'text/event-stream'},
+                                  stream=response_stream(VALID.replace('"model": "model"', '"model": "test-model"')))
         return httpx.Response(200, json={'data': [{'id': 'test-model'}]} if request.url.path == '/v1/models'
                               else {'config': {'token_budget': 8}})
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
@@ -260,6 +264,8 @@ async def test_metadata_warmup_exclusion_and_throughput_arithmetic(monkeypatch):
     assert len(report['samples']) == 4
     assert report['health'] == {'config': {'token_budget': 8}}
     assert report['model']['id'] == 'test-model'
+    assert report['preflight']['status'] == 'passed'
+    assert report['preflight']['sample']['index'] == -1
 
 
 async def test_warmup_failure_aborts_measurement(monkeypatch):
@@ -271,6 +277,9 @@ async def test_warmup_failure_aborts_measurement(monkeypatch):
     monkeypatch.setattr(bench, 'workload', workload)
 
     def handler(request):
+        if request.method == 'POST':
+            return httpx.Response(200, headers={'content-type': 'text/event-stream'},
+                                  stream=response_stream(VALID.replace('"model": "model"', '"model": "test-model"')))
         return httpx.Response(200, json={'data': [{'id': 'test-model'}]})
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
         with pytest.raises(ValueError, match='warmup failed'):
@@ -370,3 +379,188 @@ async def test_deadline_also_bounds_http_ending_after_done():
                                  prompt='hi', max_tokens=4, timeout=0.01)
     assert row['status'] == 'timeout'
     assert row['usage'] is None
+
+
+NO_USAGE = ''.join(map(encode, [frame({'content': 'answer'}), frame(reason='stop'), '[DONE]']))
+
+
+@pytest.mark.parametrize('mode', ['optional', 'disabled'])
+async def test_missing_usage_allows_latency_but_never_fabricates_throughput(mode):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        body = json.loads(request.content)
+        assert ('stream_options' in body) == (mode == 'optional')
+        return httpx.Response(200, headers={'content-type': 'text/event-stream'},
+                              stream=response_stream(NO_USAGE))
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        report = await bench.benchmark(profile='portable', model='model', usage_mode=mode,
+                                       requests=2, warmup=0, client=client)
+    assert len(calls) == 3  # One excluded preflight, then two measured requests.
+    assert all(r.method == 'POST' for r in calls)  # No discovery or health dependency.
+    assert report['preflight']['status'] == 'passed'
+    assert report['preflight']['readiness']['status'] == 'skipped'
+    assert report['completed'] == report['usage_missing_requests'] == 2
+    assert report['usage_verified_requests'] == 0
+    assert report['completed_tokens_per_second'] is None
+    assert report['latency_ms']['completion']['count'] == 2
+
+
+async def test_mixed_usage_runs_do_not_publish_partial_token_throughput():
+    rows = [completed_row(4), {**completed_row(), 'usage': None}]
+    report = bench.summarize(rows, 2)
+    assert report['usage_verified_requests'] == report['usage_missing_requests'] == 1
+    assert report['completed_tokens_per_second'] is None
+    assert report['completed_requests_per_second'] == 1
+
+
+@pytest.mark.parametrize('mode', ['required', 'optional', 'disabled'])
+async def test_usage_on_finish_chunk_is_validated(mode):
+    terminal = {**frame(reason='stop'), 'usage': USAGE['usage']}
+    row = await get_sample(''.join(map(encode, [frame({'content': 'a'}), terminal, '[DONE]'])),
+                           usage_mode=mode)
+    assert row['status'] == 'completed'
+    assert row['usage_status'] == 'verified'
+    assert row['usage'] == USAGE['usage']
+
+
+@pytest.mark.parametrize('mode', ['optional', 'disabled'])
+@pytest.mark.parametrize('text', [
+    encode(frame({'content': 'incomplete'})),
+    NO_USAGE.removesuffix(encode('[DONE]')),
+    VALID + 'data: unfinished',
+    VALID.replace('"completion_tokens": 2', '"completion_tokens": 99'),
+    VALID.replace('"total_tokens": 7', '"total_tokens": 8'),
+    VALID.replace('"finish_reason": "stop"', '"finish_reason": "tool_calls"'),
+    encode({**frame({'content': 'a'}), 'usage': USAGE['usage']}) + NO_USAGE,
+    encode({**frame(reason='stop'), 'usage': USAGE['usage']}) + encode(USAGE) + encode('[DONE]'),
+])
+async def test_latency_only_modes_do_not_relax_stream_or_usage_validation(mode, text):
+    assert (await get_sample(text, usage_mode=mode))['status'] == 'error'
+
+
+async def test_output_limit_checked_even_when_usage_is_optional():
+    text = VALID.replace('"completion_tokens": 2', '"completion_tokens": 5').replace(
+        '"total_tokens": 7', '"total_tokens": 10')
+    assert (await get_sample(text, usage_mode='optional'))['status'] == 'error'
+
+
+async def test_portable_discovery_selects_model_and_plain_text_readiness():
+    paths = []
+
+    def handler(request):
+        paths.append(request.url.path)
+        if request.url.path == '/ready':
+            return httpx.Response(200, text='ready')
+        if request.url.path == '/v1/models':
+            return httpx.Response(200, json={'data': [{'id': 'model'}]})
+        return httpx.Response(200, headers={'content-type': 'text/event-stream'},
+                              stream=response_stream(VALID))
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        report = await bench.benchmark(profile='portable', readiness_path='/ready',
+                                       preflight_only=True, client=client)
+    assert paths == ['/ready', '/v1/models', '/v1/chat/completions']
+    assert report['preflight']['readiness']['body'] == 'ready'
+    assert report['preflight']['status'] == 'passed'
+    assert report['health'] is None
+    assert report['samples'] == [] and report['completed_tokens_per_second'] is None
+
+
+async def test_runtime_explicit_selection_from_multiple_models():
+    def handler(request):
+        if request.method == 'POST':
+            assert json.loads(request.content)['model'] == 'model'
+            return httpx.Response(200, headers={'content-type': 'text/event-stream'},
+                                  stream=response_stream(VALID))
+        return httpx.Response(200, json={'data': [{'id': 'other'}, {'id': 'model'}]})
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        report = await bench.benchmark(model='model', preflight_only=True, client=client)
+    assert report['preflight']['status'] == 'passed'
+    assert report['model']['id'] == 'model'
+
+
+@pytest.mark.parametrize('body,model', [
+    ({'data': [{'id': 'a'}, {'id': 'b'}]}, None),
+    ({'data': [{'id': 'a'}]}, 'missing'),
+    ({'data': [{'id': 'a'}, {'id': 'a'}]}, 'a'),
+    ({'data': [None]}, None), ({'data': [{'id': ''}]}, None),
+    ({'data': []}, None), ([], None),
+])
+async def test_ambiguous_or_invalid_discovery_prevents_any_generation(body, model):
+    def handler(request):
+        assert request.method == 'GET'
+        return httpx.Response(200, json=body)
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        report = await bench.benchmark(model=model, client=client)
+    assert report['preflight']['status'] == 'failed'
+    assert report['preflight']['stage'] == 'model_selection'
+    assert report['samples'] == []
+
+
+@pytest.mark.parametrize('status,text', [(400, VALID), (200, NO_USAGE), (200, 'data: bad\n\n')])
+async def test_stream_preflight_failure_prevents_warmup_and_measurement(status, text):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(status, headers={'content-type': 'text/event-stream'},
+                              stream=response_stream(text))
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        report = await bench.benchmark(profile='portable', model='model', client=client)
+    assert len(calls) == 1
+    assert report['preflight']['status'] == 'failed'
+    assert report['preflight']['stage'] == 'stream'
+    assert report['preflight']['message']
+    assert report['samples'] == []
+
+
+@pytest.mark.parametrize('stage', ['readiness', 'model_selection'])
+async def test_metadata_deadlines_are_bounded_even_with_injected_client(stage):
+    async def handler(request):
+        await asyncio.Event().wait()
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler), timeout=None) as client:
+        report = await bench.benchmark(profile='portable', timeout=0.01, client=client,
+                                       readiness_path='/ready' if stage == 'readiness' else None)
+    assert report['preflight']['status'] == 'failed'
+    assert report['preflight']['stage'] == stage
+    assert report['samples'] == []
+
+
+@pytest.mark.parametrize('stage', ['readiness', 'model_selection', 'stream'])
+async def test_redirects_are_never_followed_even_with_injected_client(stage):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(307, headers={'location': 'https://example.com/elsewhere'})
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler), follow_redirects=True) as client:
+        report = await bench.benchmark(profile='portable', client=client,
+                                       model='model' if stage == 'stream' else None,
+                                       readiness_path='/ready' if stage == 'readiness' else None)
+    assert len(calls) == 1
+    assert report['preflight']['status'] == 'failed'
+    assert report['preflight']['stage'] == stage
+
+
+@pytest.mark.parametrize('options', [
+    {'profile': 'unknown'}, {'model': ''}, {'model': 1}, {'usage_mode': 'auto'},
+    {'readiness_path': '//example.com'}, {'readiness_path': 'http://localhost/ready'},
+    {'readiness_path': '/ready?url=elsewhere'}, {'readiness_path': '/ready#x'},
+    {'readiness_path': '/ready\n'}, {'readiness_path': '/\\example.com'},
+    {'preflight_only': 1},
+])
+async def test_invalid_profile_options_are_rejected_before_network(options):
+    with pytest.raises(ValueError):
+        await bench.benchmark(**options)
+
+
+@pytest.mark.parametrize('passed', [True, False])
+def test_preflight_cli_exit_and_json(monkeypatch, capsys, passed):
+    async def benchmark(**options):
+        assert options['preflight_only'] is True
+        assert options['profile'] == 'portable' and options['model'] == 'model'
+        return {'completed': 0, 'preflight': {'status': 'passed' if passed else 'failed'}}
+    monkeypatch.setattr(bench, 'benchmark', benchmark)
+    assert bench.main(['--profile', 'portable', '--model', 'model', '--preflight-only']) == (0 if passed else 1)
+    assert json.loads(capsys.readouterr().out)['completed'] == 0
