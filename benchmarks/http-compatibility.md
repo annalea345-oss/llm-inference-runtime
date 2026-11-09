@@ -107,6 +107,13 @@ the required chunk metadata or `[DONE]` are not supported. One preflight does no
 verify load capacity, cancellation, memory limits, or answer quality. Connection
 draining is tested; actual reuse by another engine remains to be checked.
 
+The later [repeated CPU comparison](cpu-comparison.md) found that the pinned
+llama.cpp build recomputes `created` on each chunk. For that explicitly documented
+case, `--created-policy per_chunk` permits changing integer timestamps while
+requiring stable ID/model. The default remains `stable`. Reports record the chosen
+policy and per-sample timestamp changes. This is independent of usage policy and
+does not relax truncation, terminal, usage, or response identity validation.
+
 ## Verification recorded in this milestone
 
 - `python -m pytest -q`: **354 passed**, including **127 HTTP benchmark tests**.

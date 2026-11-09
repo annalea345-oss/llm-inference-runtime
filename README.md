@@ -104,6 +104,7 @@ flowchart LR
 | `metrics.py` | Monotonic request timestamps and derived durations |
 | `benchmark.py` | Closed-loop in-process workload client and JSON comparison reports |
 | `http_benchmark.py` | Separate client measuring actual HTTP streaming receipt |
+| `comparison.py` | Versioned mixed-prompt closed-loop experiments using the same strict HTTP client |
 
 The application factory `create_app(config, executor)` supports isolated tests
 and replacement executors. The scheduler depends on the `ModelExecutor` protocol,
@@ -407,9 +408,10 @@ Work in small milestones, preserving a runnable server and recording results in
 | 8 — Optional real executor (CPU implemented) | SmolLM2 local tokens, greedy cached steps, serialized worker | Offline reference tests, real checkpoint smoke, live SSE and cancellation checks |
 | 9 — Chat-compatible adapter (implemented) | Model discovery, text message history, JSON/streamed completions | Validation, usage, lifecycle tests; real multi-turn reference and live HTTP checks |
 | 10 — External measurement and browser client (implemented) | Built-in chat with runtime view; separate HTTP streaming client | Real Chrome history/Stop/two-client checks, mobile layout, recorded receipt timings |
-| 11 — Engine comparison (research complete; experiments pending) | Sourced review of vLLM, SGLang, llama.cpp, and MLX LM; local comparison protocol | [Findings and pinned sources](research/engine-comparison/README.md); [experiment plan](research/engine-comparison/EXPERIMENT_PLAN.md); no external engine measurements yet |
+| 11 — Engine comparison research (complete) | Sourced review of vLLM, SGLang, llama.cpp, and MLX LM; local comparison protocol | [Findings and pinned sources](research/engine-comparison/README.md); [experiment plan](research/engine-comparison/EXPERIMENT_PLAN.md); measurements followed in milestone 14 |
 | 12 — Portable benchmark preflight (implemented) | Explicit model selection, configurable readiness, portable profile, usage policies, excluded streaming compatibility check | [Protocol and real-model smoke evidence](benchmarks/http-compatibility.md); external engine verification in milestone 13 |
-| 13 — External engine compatibility (verified) | Pinned CPU-only llama.cpp build, float32 conversion, prompt equivalence, real HTTP smoke | [272 tensor checks, four prompt fixtures, eight completed smoke requests](benchmarks/llama-cpp.md); comparative performance experiments pending |
+| 13 — External engine compatibility (verified) | Pinned CPU-only llama.cpp build, float32 conversion, prompt equivalence, real HTTP smoke | [272 tensor checks, four prompt fixtures, eight completed smoke requests](benchmarks/llama-cpp.md); repeated comparison in milestone 14 |
+| 14 — Repeated CPU comparison (complete) | Five repetitions of short/long/mixed workloads at concurrency 1/2; separate disconnect, RSS, and token-admission probes | [640 measured completions, 383 tests, raw data, and a queued-disconnect finding](benchmarks/cpu-comparison.md) |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

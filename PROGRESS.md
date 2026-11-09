@@ -622,3 +622,81 @@ performance comparison or a new runtime backend. Large sources/builds/weights
 remain ignored locally. Next: versioned short/long/mixed workloads, repeated
 alternating-engine CPU runs, bounded cancellation/recovery and memory observations,
 then choose one runtime improvement from the evidence.
+
+## 2026-11-09 — Repeated CPU comparison and lifecycle findings
+
+### Measurement implementation
+
+- Added versioned exact short/longer-prompt/larger-output cases and a mixed
+  pattern in benchmarks/cpu-workloads-v1.json. Shared comparison client records
+  request class and submission offsets, preserves strict SSE validation, and
+  checks server prompt usage against verified tokenizer counts.
+- Added scripts/compare_engines.py: five repetitions, concurrency 1/2, alternating
+  engine/workload/concurrency order, one restarted loopback server at a time,
+  excluded startup/preflight/warmup, checkpointed raw reports, and guaranteed
+  child-process cleanup. Timing intervals have no concurrent health/RSS polling.
+- The bounded pilot discovered changing `created` timestamps in longer llama.cpp
+  streams. Pinned server-task.cpp computes time at chunk serialization. Added an
+  explicit `--created-policy per_chunk`; default remains stable. Both policies
+  validate integer timestamps and stable ID/model, finish reason, usage, terminal
+  marker, deadlines, and HTTP drain. Raw samples record timestamp changes.
+- Separate lifecycle sessions probe active/queued disconnect, follow-up recovery,
+  our explicit cancel endpoint with its connection kept open, and five bounded
+  mixed memory waves. Native admission probe separately tests logical reservation
+  pressure. Sources/builds/model artifacts remain unchanged and no dependencies
+  or weights were downloaded.
+
+### Recorded results and interpretation
+
+- All **80 timing runs / 640 measured requests completed**, with no measured
+  rejection/error/timeout. Prompt counts were 40/562/56 and outputs 8/24/96 for
+  short/longer-prompt/larger-output cases across both engines. Homogeneous warmup
+  covers live concurrency (1/2); mixed warmup covers all four pattern entries.
+- Our runtime had lower median per-run mean first-content latency in each tested
+  profile. llama.cpp's larger-output median throughput rose from 65.88 tokens/s
+  at concurrency 1 to 109.03 at 2; our serial executor rose from 63.20 to 65.13.
+  These are whole-engine results for the pinned native CPU build with
+  BLAS/Accelerate/Metal disabled, not a general engine ranking or proof of a
+  scheduler-only cause. Full tables and per-run variation are in the report.
+- Active disconnect reached observed idle in about 23 ms in one probe per engine.
+  llama.cpp removed its queued task after about 926 ms while both blockers were
+  still active. Our queued disconnected request remained counted during the
+  two-second window, reproducing the pilot finding. Both engines reached idle
+  after all streams closed and successfully served follow-ups. Explicit native
+  cancellation delivered request_cancelled/[DONE] while its stream stayed open.
+- The native token-pressure probe submitted two individually valid requests,
+  each reserving 4,242 slots against an 8,192 cap. It observed one active/one
+  waiting despite a free active slot. Explicit waiting/active cancellation
+  released all tracked KV and follow-up succeeded. Reservations precede actual
+  usage; this does not enforce or test host-RAM exhaustion.
+- Final runtime state had zero queued/active requests, reserved/used slots, and
+  tracked KV bytes. RSS rose across the five observation waves (about 857–873 MiB
+  after waves for our runtime; 913–914 MiB for llama.cpp). This establishes neither
+  a leak nor a stable plateau. Retained process memory needs separate profiling.
+- Recorded 281 timestamp transitions in llama.cpp's measured samples. The prior
+  short compatibility smoke therefore did not establish longer-stream coverage.
+
+### Verification and next milestone
+
+- `.venv/bin/python -m pytest -q` — **383 passed**. Tests cover mixed workers,
+  workload validation, excluded phases, usage mismatches, explicit timestamp
+  policy, process cleanup on error/stall, and invalid/incomplete report rejection.
+  A test fixture initially patched sockets through async teardown; scoped that
+  patch correctly and reran successfully. The native probe was also rerun after
+  adding source-hash/command provenance.
+- Added scripts/summarize_engine_comparison.py, which refuses incomplete matrices
+  and summarizes distributions across per-run statistics. Saved exact raw JSON,
+  manifest, lifecycle/admission records, and summary in benchmarks/cpu-comparison-v1.
+  The report and artifact index explain settings, actual work, sample sizes,
+  limitations, RSS interpretation, reproduction, and future work. Temporary
+  servers were stopped; logs stay in ignored .experiments/.
+- Validated all 95 dataset JSON records, the complete 80-run matrix, 640 measured
+  completions and 170 excluded warmups, source/workload/probe hashes, exact summary
+  reproduction from copied data, 56 local documentation links, and `git diff --check`.
+- Recommended next: promptly reclaim disconnected waiting requests when active
+  capacity is full, preserving FIFO/task accounting and step-boundary release.
+  Add deterministic saturation/disconnect tests and repeat the real queued probe.
+  Then test real tensor batching against the larger-output profile, preserving
+  mixed-request latency checks, and investigate retained RSS. Fixed-arrival
+  fairness replay, cache reuse, acceleration, and production-capacity stress are
+  not established by this experiment. No scheduler/executor code changed here.

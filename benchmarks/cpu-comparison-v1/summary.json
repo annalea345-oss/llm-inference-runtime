@@ -1,0 +1,1338 @@
+{
+  "schema_version": 1,
+  "scope": "Per-run descriptive statistics; no confidence intervals or scheduler-only attribution",
+  "started_at": "2026-11-09T15:54:04.709111+00:00",
+  "finished_at": "2026-11-09T16:11:38.105544+00:00",
+  "timing_runs": 80,
+  "measured_requests": 640,
+  "groups": [
+    {
+      "engine": "llama_cpp",
+      "workload_id": "larger-output",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 268.8428698340431,
+        "p50": 275.04809375386685,
+        "p95": 300.5700314533897,
+        "p99": 300.5700314533897
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 274.6264415793121,
+        "p50": 279.125084169209,
+        "p95": 307.0689160376787,
+        "p99": 307.0689160376787
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1380.7419541291893,
+        "p50": 1456.8757757660933,
+        "p95": 1499.9263384961523,
+        "p99": 1499.9263384961523
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 70.08522388124496,
+        "p50": 65.88075228032679,
+        "p95": 78.98730627938991,
+        "p99": 78.98730627938991
+      },
+      "created_timestamp_changes": 48,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 40,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 268.8428698340431,
+            "p50": 275.04809375386685,
+            "p95": 300.5700314533897,
+            "p99": 300.5700314533897
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 274.6264415793121,
+            "p50": 279.125084169209,
+            "p95": 307.0689160376787,
+            "p99": 307.0689160376787
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "larger-output",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 297.2325603594072,
+        "p50": 302.7699216036126,
+        "p95": 305.1467966870405,
+        "p99": 305.1467966870405
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 434.00740837678313,
+        "p50": 442.99770798534155,
+        "p95": 447.6452087983489,
+        "p99": 447.6452087983489
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1751.0693812393583,
+        "p50": 1757.8795572044328,
+        "p95": 1848.7419373122975,
+        "p99": 1848.7419373122975
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 109.65732059591355,
+        "p50": 109.02909948923353,
+        "p95": 115.93600014071238,
+        "p99": 115.93600014071238
+      },
+      "created_timestamp_changes": 63,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 40,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 297.2325603594072,
+            "p50": 302.7699216036126,
+            "p95": 305.1467966870405,
+            "p99": 305.1467966870405
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 434.00740837678313,
+            "p50": 442.99770798534155,
+            "p95": 447.6452087983489,
+            "p99": 447.6452087983489
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "long-prompt",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 2429.6113427262753,
+        "p50": 2188.161942816805,
+        "p95": 2937.8999636974186,
+        "p99": 2937.8999636974186
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 2453.631841763854,
+        "p50": 2214.3737920559943,
+        "p95": 2987.8256670199335,
+        "p99": 2987.8256670199335
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 2699.089138582349,
+        "p50": 2446.50377612561,
+        "p95": 3225.449005374685,
+        "p99": 3225.449005374685
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 9.077623525595742,
+        "p50": 9.808740605810074,
+        "p95": 10.479657731995959,
+        "p99": 10.479657731995959
+      },
+      "created_timestamp_changes": 11,
+      "by_class": {
+        "long_prompt": {
+          "completed": 40,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 2429.6113427262753,
+            "p50": 2188.161942816805,
+            "p95": 2937.8999636974186,
+            "p99": 2937.8999636974186
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 2453.631841763854,
+            "p50": 2214.3737920559943,
+            "p95": 2987.8256670199335,
+            "p99": 2987.8256670199335
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "long-prompt",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 3386.3023186684586,
+        "p50": 3395.2306146966293,
+        "p95": 3533.490999834612,
+        "p99": 3533.490999834612
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 5647.271083109081,
+        "p50": 5638.392041902989,
+        "p95": 5979.216166771948,
+        "p99": 5979.216166771948
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 5923.223928071093,
+        "p50": 5933.072541782167,
+        "p95": 6179.665000003297,
+        "p99": 6179.665000003297
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 8.075092017910311,
+        "p50": 8.051498671361056,
+        "p95": 8.585852164182187,
+        "p99": 8.585852164182187
+      },
+      "created_timestamp_changes": 103,
+      "by_class": {
+        "long_prompt": {
+          "completed": 40,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 3386.3023186684586,
+            "p50": 3395.2306146966293,
+            "p95": 3533.490999834612,
+            "p99": 3533.490999834612
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 5647.271083109081,
+            "p50": 5638.392041902989,
+            "p95": 5979.216166771948,
+            "p99": 5979.216166771948
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "mixed",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 708.1400853814557,
+        "p50": 711.4852499216795,
+        "p95": 725.0078906072304,
+        "p99": 725.0078906072304
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 2213.703866954893,
+        "p50": 2241.1787076853216,
+        "p95": 2267.84933404997,
+        "p99": 2267.84933404997
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1105.9528811718337,
+        "p50": 1120.3090103226714,
+        "p95": 1133.7007394758984,
+        "p99": 1133.7007394758984
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 30.753048971216298,
+        "p50": 30.338674274148172,
+        "p95": 31.966052837991185,
+        "p99": 31.966052837991185
+      },
+      "created_timestamp_changes": 17,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 10,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 249.06264571473002,
+            "p50": 248.4662914648652,
+            "p95": 258.2566044293344,
+            "p99": 258.2566044293344
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 252.04121638089418,
+            "p50": 248.78595815971494,
+            "p95": 263.4259997867048,
+            "p99": 263.4259997867048
+          }
+        },
+        "long_prompt": {
+          "completed": 10,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 2207.960941735655,
+            "p50": 2235.307541443035,
+            "p95": 2260.398979531601,
+            "p99": 2260.398979531601
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 2213.703866954893,
+            "p50": 2241.1787076853216,
+            "p95": 2267.84933404997,
+            "p99": 2267.84933404997
+          }
+        },
+        "short": {
+          "completed": 20,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 20
+          },
+          "finish_reasons": {
+            "stop": 20
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 187.7683770377189,
+            "p50": 185.1614579791203,
+            "p95": 199.08071868121624,
+            "p99": 199.08071868121624
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 209.40770851448178,
+            "p50": 190.3689163736999,
+            "p95": 275.62745893374085,
+            "p99": 275.62745893374085
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "mixed",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 1052.3253989871591,
+        "p50": 1056.0892550856806,
+        "p95": 1084.4537084340118,
+        "p99": 1084.4537084340118
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 2589.340550173074,
+        "p50": 2590.0255418382585,
+        "p95": 2660.5544998310506,
+        "p99": 2660.5544998310506
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1903.5336344502866,
+        "p50": 1906.6382603487,
+        "p95": 1958.1681355484761,
+        "p99": 1958.1681355484761
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 34.21613812140997,
+        "p50": 34.1601439983307,
+        "p95": 35.05047779158108,
+        "p99": 35.05047779158108
+      },
+      "created_timestamp_changes": 34,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 10,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 271.3400541804731,
+            "p50": 272.8020416107029,
+            "p95": 279.44808336906135,
+            "p99": 279.44808336906135
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 273.43658339232206,
+            "p50": 274.5795832015574,
+            "p95": 279.65958369895816,
+            "p99": 279.65958369895816
+          }
+        },
+        "long_prompt": {
+          "completed": 10,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 2473.1379626784474,
+            "p50": 2479.196063010022,
+            "p95": 2548.4157083556056,
+            "p99": 2548.4157083556056
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 2589.340550173074,
+            "p50": 2590.0255418382585,
+            "p95": 2660.5544998310506,
+            "p99": 2660.5544998310506
+          }
+        },
+        "short": {
+          "completed": 20,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 20
+          },
+          "finish_reasons": {
+            "stop": 20
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 732.411789544858,
+            "p50": 735.6344683794305,
+            "p95": 754.9755210056901,
+            "p99": 754.9755210056901
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 2356.802416779101,
+            "p50": 2368.2092912495136,
+            "p95": 2436.1390420235693,
+            "p99": 2436.1390420235693
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "short",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 142.74802394211292,
+        "p50": 139.72922385437414,
+        "p95": 149.03504709945992,
+        "p99": 149.03504709945992
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 148.19685006514192,
+        "p50": 148.92970817163587,
+        "p95": 153.68083398789167,
+        "p99": 153.68083398789167
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 210.48836663831025,
+        "p50": 207.20352057833225,
+        "p95": 216.38593764510006,
+        "p99": 216.38593764510006
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 37.97305807407322,
+        "p50": 38.556215332493885,
+        "p95": 38.85281991655447,
+        "p99": 38.85281991655447
+      },
+      "created_timestamp_changes": 2,
+      "by_class": {
+        "short": {
+          "completed": 40,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 40
+          },
+          "finish_reasons": {
+            "stop": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 142.74802394211292,
+            "p50": 139.72922385437414,
+            "p95": 149.03504709945992,
+            "p99": 149.03504709945992
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 148.19685006514192,
+            "p50": 148.92970817163587,
+            "p95": 153.68083398789167,
+            "p99": 153.68083398789167
+          }
+        }
+      }
+    },
+    {
+      "engine": "llama_cpp",
+      "workload_id": "short",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 258.66523849545047,
+        "p50": 258.46529187401757,
+        "p95": 269.7272551013157,
+        "p99": 269.7272551013157
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 290.2238579466939,
+        "p50": 291.8402086943388,
+        "p95": 303.8857909850776,
+        "p99": 303.8857909850776
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 372.11661256151274,
+        "p50": 371.6300677624531,
+        "p95": 386.5536823286675,
+        "p99": 386.5536823286675
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 42.840378671228414,
+        "p50": 42.8721541032797,
+        "p95": 44.81038424241456,
+        "p99": 44.81038424241456
+      },
+      "created_timestamp_changes": 3,
+      "by_class": {
+        "short": {
+          "completed": 40,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 40
+          },
+          "finish_reasons": {
+            "stop": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 258.66523849545047,
+            "p50": 258.46529187401757,
+            "p95": 269.7272551013157,
+            "p99": 269.7272551013157
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 290.2238579466939,
+            "p50": 291.8402086943388,
+            "p95": 303.8857909850776,
+            "p99": 303.8857909850776
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "larger-output",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 102.93754462618381,
+        "p50": 104.88392150728032,
+        "p95": 108.22467680554837,
+        "p99": 108.22467680554837
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 112.30020830407739,
+        "p50": 112.07299958914518,
+        "p95": 129.46429196745157,
+        "p99": 129.46429196745157
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1521.1951467674226,
+        "p50": 1518.748208298348,
+        "p95": 1558.7303958600387,
+        "p99": 1558.7303958600387
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 63.11033590388198,
+        "p50": 63.198071330079564,
+        "p95": 64.2144971561564,
+        "p99": 64.2144971561564
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 40,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 102.93754462618381,
+            "p50": 104.88392150728032,
+            "p95": 108.22467680554837,
+            "p99": 108.22467680554837
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 112.30020830407739,
+            "p50": 112.07299958914518,
+            "p95": 129.46429196745157,
+            "p99": 129.46429196745157
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "larger-output",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 196.33819790324196,
+        "p50": 199.9995416845195,
+        "p95": 205.691734328866,
+        "p99": 205.691734328866
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 272.65426674857736,
+        "p50": 271.54470793902874,
+        "p95": 287.2809171676636,
+        "p99": 287.2809171676636
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 2961.291884316597,
+        "p50": 2945.974729140289,
+        "p95": 3025.604099035263,
+        "p99": 3025.604099035263
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 64.7965397730204,
+        "p50": 65.1250787011915,
+        "p95": 65.19247033590608,
+        "p99": 65.19247033590608
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 40,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 196.33819790324196,
+            "p50": 199.9995416845195,
+            "p95": 205.691734328866,
+            "p99": 205.691734328866
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 272.65426674857736,
+            "p50": 271.54470793902874,
+            "p95": 287.2809171676636,
+            "p99": 287.2809171676636
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "long-prompt",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 796.5261353878304,
+        "p50": 780.543927277904,
+        "p95": 899.8507706564851,
+        "p99": 899.8507706564851
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 820.2073333784938,
+        "p50": 808.2167082466185,
+        "p95": 960.1552081294358,
+        "p99": 960.1552081294358
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1201.6753550851718,
+        "p50": 1185.121130256448,
+        "p95": 1318.9559840830043,
+        "p99": 1318.9559840830043
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 20.06986977055427,
+        "p50": 20.24582651351854,
+        "p95": 22.152483351338688,
+        "p99": 22.152483351338688
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "long_prompt": {
+          "completed": 40,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 796.5261353878304,
+            "p50": 780.543927277904,
+            "p95": 899.8507706564851,
+            "p99": 899.8507706564851
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 820.2073333784938,
+            "p50": 808.2167082466185,
+            "p95": 960.1552081294358,
+            "p99": 960.1552081294358
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "long-prompt",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 1530.9544219751842,
+        "p50": 1510.9702603076585,
+        "p95": 1647.8330467944033,
+        "p99": 1647.8330467944033
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 1649.0596999414265,
+        "p50": 1660.7083748094738,
+        "p95": 1754.0646670386195,
+        "p99": 1754.0646670386195
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 2346.107267716434,
+        "p50": 2318.898046738468,
+        "p95": 2459.750046778936,
+        "p99": 2459.750046778936
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 20.411542587544265,
+        "p50": 20.617131876058675,
+        "p95": 21.463534014391747,
+        "p99": 21.463534014391747
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "long_prompt": {
+          "completed": 40,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 40
+          },
+          "finish_reasons": {
+            "length": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 1530.9544219751842,
+            "p50": 1510.9702603076585,
+            "p95": 1647.8330467944033,
+            "p99": 1647.8330467944033
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 1649.0596999414265,
+            "p50": 1660.7083748094738,
+            "p95": 1754.0646670386195,
+            "p99": 1754.0646670386195
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "mixed",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 275.92128016985953,
+        "p50": 279.98872922034934,
+        "p95": 286.2001300090924,
+        "p99": 286.2001300090924
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 823.4443251043558,
+        "p50": 833.2750839181244,
+        "p95": 880.6796655990183,
+        "p99": 880.6796655990183
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 768.0349448462948,
+        "p50": 769.2640104796737,
+        "p95": 780.9174738358706,
+        "p99": 780.9174738358706
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 44.26275512563039,
+        "p50": 44.18159344000883,
+        "p95": 45.208116269187364,
+        "p99": 45.208116269187364
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 10,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 101.05445398949087,
+            "p50": 101.44452028907835,
+            "p95": 101.93064576014876,
+            "p99": 101.93064576014876
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 103.13270818442106,
+            "p50": 103.65824960172176,
+            "p95": 105.6430833414197,
+            "p99": 105.6430833414197
+          }
+        },
+        "long_prompt": {
+          "completed": 10,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 814.505225000903,
+            "p50": 831.7681250628084,
+            "p95": 850.4030213225633,
+            "p99": 850.4030213225633
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 823.4443251043558,
+            "p50": 833.2750839181244,
+            "p95": 880.6796655990183,
+            "p99": 880.6796655990183
+          }
+        },
+        "short": {
+          "completed": 20,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 20
+          },
+          "finish_reasons": {
+            "stop": 20
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 94.06272084452212,
+            "p50": 93.87330221943557,
+            "p95": 96.47648921236396,
+            "p99": 96.47648921236396
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 97.57158327847719,
+            "p50": 96.34095802903175,
+            "p95": 101.46179189905524,
+            "p99": 101.46179189905524
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "mixed",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 421.92563127027825,
+        "p50": 425.3770050709136,
+        "p95": 444.8641822091304,
+        "p99": 444.8641822091304
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 1141.8735833838582,
+        "p50": 1145.5384586006403,
+        "p95": 1200.635583139956,
+        "p99": 1200.635583139956
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 1348.2275250484236,
+        "p50": 1354.5453802216798,
+        "p95": 1400.7859427365474,
+        "p99": 1400.7859427365474
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 45.28474298306487,
+        "p50": 45.06149889920706,
+        "p95": 47.24853805645663,
+        "p99": 47.24853805645663
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "larger_output_limit": {
+          "completed": 10,
+          "prompt_token_counts": [
+            56
+          ],
+          "output_token_counts": {
+            "96": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 209.13152918219566,
+            "p50": 212.76824991218746,
+            "p95": 230.2740211598575,
+            "p99": 230.2740211598575
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 297.18743339180946,
+            "p50": 303.7890000268817,
+            "p95": 326.51800010353327,
+            "p99": 326.51800010353327
+          }
+        },
+        "long_prompt": {
+          "completed": 10,
+          "prompt_token_counts": [
+            562
+          ],
+          "output_token_counts": {
+            "24": 10
+          },
+          "finish_reasons": {
+            "length": 10
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 1126.9037374760956,
+            "p50": 1132.4473333079368,
+            "p95": 1197.496083099395,
+            "p99": 1197.496083099395
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 1141.8735833838582,
+            "p50": 1145.5384586006403,
+            "p95": 1200.635583139956,
+            "p99": 1200.635583139956
+          }
+        },
+        "short": {
+          "completed": 20,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 20
+          },
+          "finish_reasons": {
+            "stop": 20
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 175.83362921141088,
+            "p50": 178.14621853176504,
+            "p95": 181.0170834651217,
+            "p99": 181.0170834651217
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 299.4633747264743,
+            "p50": 299.879833124578,
+            "p95": 309.2746250331402,
+            "p99": 309.2746250331402
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "short",
+      "concurrency": 1,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 89.45686570368707,
+        "p50": 82.21302612219006,
+        "p95": 104.05197931686416,
+        "p99": 104.05197931686416
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 125.21482519805431,
+        "p50": 127.61975033208728,
+        "p95": 142.49712461605668,
+        "p99": 142.49712461605668
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 175.0774302170612,
+        "p50": 164.39354163594544,
+        "p95": 198.21820850484073,
+        "p99": 198.21820850484073
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 45.930083290740114,
+        "p50": 48.58258563364075,
+        "p95": 49.05490896254716,
+        "p99": 49.05490896254716
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "short": {
+          "completed": 40,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 40
+          },
+          "finish_reasons": {
+            "stop": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 89.45686570368707,
+            "p50": 82.21302612219006,
+            "p95": 104.05197931686416,
+            "p99": 104.05197931686416
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 125.21482519805431,
+            "p50": 127.61975033208728,
+            "p95": 142.49712461605668,
+            "p99": 142.49712461605668
+          }
+        }
+      }
+    },
+    {
+      "engine": "runtime",
+      "workload_id": "short",
+      "concurrency": 2,
+      "run_count": 5,
+      "measured_requests": 40,
+      "completed": 40,
+      "failures": {},
+      "per_run_mean_first_content_ms": {
+        "count": 5,
+        "mean": 178.57810837449506,
+        "p50": 185.85482821799815,
+        "p95": 203.26580747496337,
+        "p99": 203.26580747496337
+      },
+      "per_run_p95_first_content_ms": {
+        "count": 5,
+        "mean": 214.1027663834393,
+        "p50": 212.98958314582705,
+        "p95": 298.8153747282922,
+        "p99": 298.8153747282922
+      },
+      "per_run_mean_completion_ms": {
+        "count": 5,
+        "mean": 351.2990947929211,
+        "p50": 372.59846890810877,
+        "p95": 378.63725010538474,
+        "p99": 378.63725010538474
+      },
+      "per_run_tokens_per_second": {
+        "count": 5,
+        "mean": 45.86739203260124,
+        "p50": 42.90879743615735,
+        "p95": 51.088072861745786,
+        "p99": 51.088072861745786
+      },
+      "created_timestamp_changes": 0,
+      "by_class": {
+        "short": {
+          "completed": 40,
+          "prompt_token_counts": [
+            40
+          ],
+          "output_token_counts": {
+            "8": 40
+          },
+          "finish_reasons": {
+            "stop": 40
+          },
+          "per_run_mean_first_content_ms": {
+            "count": 5,
+            "mean": 178.57810837449506,
+            "p50": 185.85482821799815,
+            "p95": 203.26580747496337,
+            "p99": 203.26580747496337
+          },
+          "per_run_p95_first_content_ms": {
+            "count": 5,
+            "mean": 214.1027663834393,
+            "p50": 212.98958314582705,
+            "p95": 298.8153747282922,
+            "p99": 298.8153747282922
+          }
+        }
+      }
+    }
+  ],
+  "lifecycle": {
+    "runtime": {
+      "active_disconnect_idle_ms": 23.34674960002303,
+      "queued_disconnect": {
+        "queued_before_disconnect": {
+          "elapsed_ms": 24.00491712614894,
+          "active": 2,
+          "queued": 1,
+          "reserved_tokens": 1136,
+          "used_tokens": 32,
+          "kv_tensor_bytes": 1474560
+        },
+        "queue_removal_observed": false,
+        "detail": "runtime state did not settle: {'active': 2, 'queued': 1, 'reserved_tokens': 1136, 'used_tokens': 237, 'kv_tensor_bytes': 10967040}"
+      },
+      "rss_at_readiness_bytes": 655900672,
+      "observed_rss_peak_bytes": 915062784,
+      "settled_wave_rss_bytes": [
+        898711552,
+        911228928,
+        911507456,
+        912375808,
+        915013632
+      ],
+      "final_rss_bytes": 915062784,
+      "final_state": {
+        "active": 0,
+        "queued": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "explicit_cancel_idle_ms": 15.025165863335133
+    },
+    "llama_cpp": {
+      "active_disconnect_idle_ms": 22.8083748370409,
+      "queued_disconnect": {
+        "queued_before_disconnect": {
+          "elapsed_ms": 87.4970001168549,
+          "active": 2.0,
+          "queued": 1.0,
+          "cached_prefix_tokens_total": 0.0
+        },
+        "queue_removal_observed": true,
+        "blockers_still_active_at_removal": 2.0,
+        "observed_queue_removal_after_ms": 925.9934173896909
+      },
+      "rss_at_readiness_bytes": 951418880,
+      "observed_rss_peak_bytes": 958595072,
+      "settled_wave_rss_bytes": [
+        956923904,
+        957644800,
+        957808640,
+        958464000,
+        958545920
+      ],
+      "final_rss_bytes": 958611456,
+      "final_state": {
+        "active": 0.0,
+        "queued": 0.0,
+        "cached_prefix_tokens_total": 0.0
+      }
+    }
+  }
+}

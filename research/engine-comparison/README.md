@@ -5,9 +5,11 @@ installation, compatibility checks, and comparative measurements **not run**.
 Exact upstream revisions and source hashes are recorded in [sources.json](sources.json).
 Documentation sites marked `moving` can change independently of those revisions.
 
-Follow-up: [llama.cpp compatibility](../../benchmarks/llama-cpp.md) is now verified
-with the existing checkpoint. This document retains the original research
-snapshot below; comparative performance measurements are still pending.
+Current follow-up: [llama.cpp compatibility](../../benchmarks/llama-cpp.md) and the
+[first repeated CPU comparison](../../benchmarks/cpu-comparison.md) are complete.
+Results depend on the workload; the report recommends fixing delayed queued
+disconnect cleanup first. This document retains the original research snapshot
+below, including its then-pending experiment recommendations.
 
 ## Purpose
 

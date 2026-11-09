@@ -4,6 +4,11 @@ Verified **2026-11-09** on the existing Apple M3 / 16 GB development host.
 This is a conversion and HTTP compatibility milestone, **not a comparative speed
 benchmark**. It leaves the project's inference backend unchanged.
 
+Follow-up: the [repeated CPU comparison](cpu-comparison.md) now tests longer and
+mixed workloads. It found changing `created` timestamps in longer external streams,
+handled by an explicit client policy, and records comparative results separately
+from this original short compatibility check.
+
 ## What passed
 
 - Built upstream commit `a4d4f2fd4ec85ec6a0a9ece4870416c1b6cc24f5` from its

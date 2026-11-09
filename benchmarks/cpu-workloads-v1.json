@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "description": "CPU comparison v1: exact prompts and output caps; closed-loop arrivals; EOS can shorten output.",
+  "cases": [
+    {
+      "id": "short",
+      "class": "short",
+      "prompt": "What is the capital of France? Answer briefly.",
+      "max_tokens": 24
+    },
+    {
+      "id": "prefill",
+      "class": "long_prompt",
+      "prompt": "Use only these notes to answer the final question.\nNote 01: The research team stores reports in labelled folders and checks the records each Friday.\nNote 02: The research team stores reports in labelled folders and checks the records each Friday.\nNote 03: The research team stores reports in labelled folders and checks the records each Friday.\nNote 04: The research team stores reports in labelled folders and checks the records each Friday.\nNote 05: The research team stores reports in labelled folders and checks the records each Friday.\nNote 06: The research team stores reports in labelled folders and checks the records each Friday.\nNote 07: The research team stores reports in labelled folders and checks the records each Friday.\nNote 08: The research team stores reports in labelled folders and checks the records each Friday.\nNote 09: The research team stores reports in labelled folders and checks the records each Friday.\nNote 10: The research team stores reports in labelled folders and checks the records each Friday.\nNote 11: The research team stores reports in labelled folders and checks the records each Friday.\nNote 12: The research team stores reports in labelled folders and checks the records each Friday.\nNote 13: The research team stores reports in labelled folders and checks the records each Friday.\nNote 14: The research team stores reports in labelled folders and checks the records each Friday.\nNote 15: The research team stores reports in labelled folders and checks the records each Friday.\nNote 16: The research team stores reports in labelled folders and checks the records each Friday.\nNote 17: The research team stores reports in labelled folders and checks the records each Friday.\nNote 18: The research team stores reports in labelled folders and checks the records each Friday.\nNote 19: The research team stores reports in labelled folders and checks the records each Friday.\nNote 20: The research team stores reports in labelled folders and checks the records each Friday.\nNote 21: The research team stores reports in labelled folders and checks the records each Friday.\nNote 22: The research team stores reports in labelled folders and checks the records each Friday.\nNote 23: The research team stores reports in labelled folders and checks the records each Friday.\nNote 24: The research team stores reports in labelled folders and checks the records each Friday.\nFinal question: On what day does the research team check the records? Answer briefly.",
+      "max_tokens": 24
+    },
+    {
+      "id": "decode",
+      "class": "larger_output_limit",
+      "prompt": "Write a detailed numbered guide explaining how to plant and care for a vegetable garden. Include preparation, planting, watering, and harvesting.",
+      "max_tokens": 96
+    }
+  ],
+  "workloads": [
+    {
+      "id": "short",
+      "pattern": [
+        "short"
+      ],
+      "requests": 8,
+      "concurrencies": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "long-prompt",
+      "pattern": [
+        "prefill"
+      ],
+      "requests": 8,
+      "concurrencies": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "larger-output",
+      "pattern": [
+        "decode"
+      ],
+      "requests": 8,
+      "concurrencies": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "mixed",
+      "pattern": [
+        "prefill",
+        "short",
+        "decode",
+        "short"
+      ],
+      "requests": 8,
+      "concurrencies": [
+        1,
+        2
+      ]
+    }
+  ]
+}
