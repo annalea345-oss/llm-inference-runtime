@@ -1,0 +1,83 @@
+{
+  "reviewed_on": "2026-11-09",
+  "status": "Source review only; external engines not installed or benchmarked",
+  "repositories": [
+    {
+      "repository": "vllm-project/vllm",
+      "branch": "main",
+      "commit": "0ee57d457f56caeaf1b57d5ec527094772e97151",
+      "committed_at": "2026-11-09T13:46:53Z",
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "ba4998a8520051250ec81c60187203745e6bc0b9c197af6e1b6a73143f5e575e",
+          "url": "https://github.com/vllm-project/vllm/blob/0ee57d457f56caeaf1b57d5ec527094772e97151/README.md"
+        }
+      ]
+    },
+    {
+      "repository": "sgl-project/sglang",
+      "branch": "main",
+      "commit": "704681229f1cdda291dbd2261dabb2ae80a4a49d",
+      "committed_at": "2026-11-09T13:58:41Z",
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "a7654a48a8cd08c824e4445cb906405704148a3c55fb84362c7071d27397303c",
+          "url": "https://github.com/sgl-project/sglang/blob/704681229f1cdda291dbd2261dabb2ae80a4a49d/README.md"
+        }
+      ]
+    },
+    {
+      "repository": "ggml-org/llama.cpp",
+      "branch": "master",
+      "commit": "a4d4f2fd4ec85ec6a0a9ece4870416c1b6cc24f5",
+      "committed_at": "2026-11-09T13:48:32Z",
+      "files": [
+        {
+          "path": "tools/server/README.md",
+          "sha256": "15f9bb48e47bc5a28d2575e9e3cea09af7002be7f3b29d3d2d7be0f55e4134b7",
+          "url": "https://github.com/ggml-org/llama.cpp/blob/a4d4f2fd4ec85ec6a0a9ece4870416c1b6cc24f5/tools/server/README.md"
+        }
+      ]
+    },
+    {
+      "repository": "ml-explore/mlx-lm",
+      "branch": "main",
+      "commit": "56230fa02b8ff8330daf26dc95c28480423ed5fe",
+      "committed_at": "2026-11-05T20:48:53Z",
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "fc4dc67d70ca364ef8c2f94e84d170072d3c5f4fdfd2aa7a7be7a38a6b3d0008",
+          "url": "https://github.com/ml-explore/mlx-lm/blob/56230fa02b8ff8330daf26dc95c28480423ed5fe/README.md"
+        },
+        {
+          "path": "mlx_lm/server.py",
+          "sha256": "8b6968a3aa1b3b4a70c70d85a9db94484c9722ea2e9ded7c7a4a69ca7930c6cd",
+          "url": "https://github.com/ml-explore/mlx-lm/blob/56230fa02b8ff8330daf26dc95c28480423ed5fe/mlx_lm/server.py"
+        }
+      ]
+    }
+  ],
+  "moving_documentation": [
+    {
+      "url": "https://docs.vllm.ai/en/latest/usage/metrics/",
+      "reviewed_on": "2026-11-09",
+      "version": "moving latest; not asserted to match the pinned repository commit",
+      "used_for": "Production metrics and observability context"
+    },
+    {
+      "url": "https://docs.sglang.io/docs/advanced_features/session_radix_cache",
+      "reviewed_on": "2026-11-09",
+      "version": "moving; not asserted to match the pinned repository commit",
+      "used_for": "Session-aware prefix retention and eviction semantics"
+    },
+    {
+      "url": "https://docs.sglang.io/docs/advanced_features/observability",
+      "reviewed_on": "2026-11-09",
+      "version": "moving; not asserted to match the pinned repository commit",
+      "used_for": "Prometheus metrics and production request tracing documentation"
+    }
+  ]
+}

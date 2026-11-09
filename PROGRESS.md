@@ -493,3 +493,34 @@ Next: choose a measured backend improvement such as real tensor batching or
 hardware acceleration, or strengthen deployment/observability if sharing the
 service becomes the goal. Compare equivalent real workloads and preserve the
 simulator as a deterministic regression baseline.
+
+## 2026-11-09 — Engine comparison research milestone
+
+- Reviewed primary sources for vLLM, SGLang, llama.cpp, and MLX LM. Recorded
+  four exact upstream commits and SHA-256 hashes of five reviewed source files in
+  research/engine-comparison/sources.json. Moving documentation pages are labeled
+  separately rather than attributed to those commits.
+- Documented the current serial CPU executor, per-request KV ownership, logical
+  reservation limits, and existing small HTTP baseline alongside the comparison.
+  Established engines already offer batching, cache reuse, and observability;
+  no novel feature gap, upstream bug, or performance winner is claimed.
+- Identified benchmark portability work: explicit model selection, configurable
+  readiness/metadata, and preflight for streamed usage/terminal semantics. The
+  current runtime-specific benchmark is not assumed to work unchanged elsewhere.
+- Proposed llama.cpp as a conditional first CPU control, verifying checkpoint
+  conversion, tokenizer/template, float32 weights/KV, and thread/backend settings.
+  MLX acceleration would be a separately labeled deployment profile. Neither
+  engine has been installed, converted, launched, or measured in this milestone.
+- Added an experiment plan covering mixed workloads, closed-loop versus fixed
+  arrivals, cold/warm prefixes, cancellation, bounded memory pressure, repetitions,
+  raw run manifests, and evidence gates before selecting the runtime improvement.
+- Validation: parsed the source manifest, checked commit/hash formats and pinned
+  URLs, verified all five hashes against the pinned upstream files, resolved
+  18 local Markdown links across the README and research documents,
+  and ran `git diff --check`. Runtime code/dependencies were unchanged; the
+  previously recorded 301 Python / 18 JavaScript test results were not rerun.
+
+Next: implement the portable benchmark preflight/adapter and verify the first
+external engine's compatibility before recording comparative measurements. Use
+those results to choose real tensor batching, prefix reuse, or decision traces
+with workload replay. Findings and detailed protocol are linked from README.
