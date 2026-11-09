@@ -524,3 +524,57 @@ Next: implement the portable benchmark preflight/adapter and verify the first
 external engine's compatibility before recording comparative measurements. Use
 those results to choose real tensor batching, prefix reuse, or decision traces
 with workload replay. Findings and detailed protocol are linked from README.
+
+## 2026-11-09 — Portable HTTP benchmark preflight
+
+### Implemented behavior
+
+- Added `runtime` and `portable` measurement profiles. Runtime defaults preserve
+  health metadata/discovery; explicit model selection handles multiple advertised
+  models. Portable mode can use an explicit model without any discovery or health
+  dependency. A configurable local readiness path accepts JSON or text bodies;
+  HTTP success is recorded separately from the generation check, not as liveness.
+- Added one excluded streaming preflight before warmup/measurement, plus
+  `--preflight-only`. Structured failure reports identify readiness, model
+  selection, or stream failure and prevent measured work. No automatic fallback
+  or application retry. Metadata calls and streams have bounded deadlines;
+  redirects are disabled even for an injected client configured to follow them.
+- Added explicit required/optional/disabled usage policies. Optional mode requests
+  usage but permits its absence; disabled mode omits the stream option. Any
+  supplied usage is still validated. Accept usage on a finish chunk or in its
+  own final chunk; reject duplicates and nonterminal usage.
+- Report schema version 2 includes preflight details, usage availability counts,
+  and closed-loop arrival labeling. Token throughput is null if any completed
+  measured stream lacks verified usage or nothing completes; latency remains
+  available. No token estimates from network chunks or partial usage subsets.
+- Preserved strict identity/terminal/error/deadline validation and response
+  draining for connection reuse. Also reject incomplete trailing SSE data after
+  the terminal marker. The preflight uses the workload prompt and may warm a
+  server prefix cache; it is not evidence of a cold-cache workload.
+
+### Verification and limits
+
+- `.venv/bin/python -m pytest -q` — **354 passed**, including **127 HTTP benchmark
+  cases** (53 added). No scheduler, model executor, or browser behavior changed.
+- Real loopback HTTP with the existing pinned SmolLM2 CPU checkpoint verified
+  runtime preflight, portable usage-required concurrency 2, portable usage-disabled
+  latency measurement, and an unknown model rejected with HTTP 404 before any
+  measured workload. Four measured smoke requests completed. Recorded raw samples,
+  command/options, tested module hash, and final health in
+  benchmarks/http-preflight-smoke.json. Server logs showed reused connections
+  across discovery/preflight and across warmup/measurement.
+- Final health had zero queued/active requests and zero logical reserved/used KV
+  slots. The temporary local server was stopped after verification. No engine,
+  dependency, or checkpoint was downloaded.
+- `git diff --check` passed; smoke JSON/module hash validated and 27 local
+  documentation links resolved. Added benchmarks/http-compatibility.md and updated
+  the README, browser measurement guide, benchmark index, and research plan status.
+
+This verifies the portable protocol against this runtime and deterministic alternate
+transport fixtures, not an actual external engine. No cross-engine speed or feature
+gap is claimed. Full comparison manifests/workloads, fixed-arrival replay, and
+external cancellation/memory experiments remain pending.
+
+Next: check/build the pinned llama.cpp revision and convert the existing checkpoint
+faithfully; verify tokenizer/template and CPU/weight/KV precision, then exercise
+the preflight against that server before recording comparative measurements.

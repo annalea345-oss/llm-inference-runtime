@@ -97,8 +97,9 @@ python -m llm_runtime.http_benchmark --base-url http://127.0.0.1:8000 \
 It uses HTTPX from the development extra, discovers the model, and records health
 configuration. It accepts localhost/loopback URLs, not hosted targets. Workload
 clients share a connection pool, send one request at a time per worker, and do
-not retry. Metadata and warmup run before the measured interval; failed warmup
-aborts. Each measured request has a total deadline. After recording `[DONE]`, the client
+not retry. Metadata, one streaming compatibility preflight, and warmup run before
+the measured interval; failed preflight or warmup aborts. Each measured request has
+a total deadline. After recording `[DONE]`, the client
 drains the HTTP ending before returning the connection to the pool; extra SSE
 data after `[DONE]` is an error. Completion latency remains the marker receipt
 time, while the total deadline also bounds response draining.
@@ -120,6 +121,12 @@ metadata, completion/rejection/error/timeout counts, and throughput. Invalid or
 mixed response identities, malformed/truncated streams, server errors, and timeouts
 are excluded from successful latency distributions. Measured failures return
 exit code 1; warmup/setup failures also return nonzero.
+
+The default profile requires final token usage. For other local servers, explicit
+model selection, configurable readiness, portable metadata behavior, and optional
+latency-only modes are documented in
+[HTTP compatibility checks](benchmarks/http-compatibility.md). Preflight-only mode
+checks a single stream without measuring a workload. It may warm a prefix cache.
 
 Recorded real CPU runs and their limitations are in
 [benchmarks/http-local.md](benchmarks/http-local.md). No model speedup or production
