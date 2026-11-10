@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "scope": "Bounded idle-wave memory observations; no long-term leak guarantee",
+  "sessions": {
+    "normal-1": {
+      "waves": 30,
+      "completed_requests": 120,
+      "rss_at_readiness_bytes": 716652544,
+      "rss_after_waves_bytes": {
+        "first": 890372096,
+        "last": 754253824,
+        "min": 727547904,
+        "max": 909869056,
+        "last_minus_first": -136118272
+      },
+      "rss_last_10_waves_bytes": {
+        "first": 737755136,
+        "last": 754253824,
+        "min": 737755136,
+        "max": 754745344,
+        "last_minus_first": 16498688
+      },
+      "rss_after_idle_bytes": 679411712,
+      "final_rss_bytes": 679411712,
+      "all_idle_ownership_counters_zero": true
+    },
+    "normal-2": {
+      "waves": 30,
+      "completed_requests": 120,
+      "rss_at_readiness_bytes": 420347904,
+      "rss_after_waves_bytes": {
+        "first": 901857280,
+        "last": 726679552,
+        "min": 717242368,
+        "max": 928956416,
+        "last_minus_first": -175177728
+      },
+      "rss_last_10_waves_bytes": {
+        "first": 727269376,
+        "last": 726679552,
+        "min": 717242368,
+        "max": 731840512,
+        "last_minus_first": -589824
+      },
+      "rss_after_idle_bytes": 718536704,
+      "final_rss_bytes": 718536704,
+      "all_idle_ownership_counters_zero": true
+    },
+    "diagnostic": {
+      "waves": 30,
+      "completed_requests": 120,
+      "rss_at_readiness_bytes": 504578048,
+      "rss_after_waves_bytes": {
+        "first": 946454528,
+        "last": 733413376,
+        "min": 697712640,
+        "max": 950845440,
+        "last_minus_first": -213041152
+      },
+      "rss_last_10_waves_bytes": {
+        "first": 730365952,
+        "last": 733413376,
+        "min": 720207872,
+        "max": 742178816,
+        "last_minus_first": 3047424
+      },
+      "rss_after_idle_bytes": 733413376,
+      "final_rss_bytes": 911540224,
+      "all_idle_ownership_counters_zero": true,
+      "released_sequence_objects_observed": 120,
+      "released_kv_tensor_wrappers_observed": 7200,
+      "released_cache_objects_alive_at_idle": 0,
+      "completed_request_objects_alive_at_idle": {
+        "first": 1,
+        "last": 1,
+        "min": 1,
+        "max": 1,
+        "last_minus_first": 0
+      },
+      "python_traced_current_bytes": {
+        "first": 1102767,
+        "last": 1639603,
+        "min": 1102767,
+        "max": 1639603,
+        "last_minus_first": 536836
+      },
+      "native_malloc_in_use_bytes": {
+        "first": 678596048,
+        "last": 681489456,
+        "min": 678596048,
+        "max": 682667744,
+        "last_minus_first": 2893408
+      },
+      "gc_probe": {
+        "rss_before_bytes": 733413376,
+        "rss_after_bytes": 882278400,
+        "objects_collected": 502
+      },
+      "allocator_probe": {
+        "reported_released_bytes": 0,
+        "rss_before_bytes": 882278400,
+        "rss_after_bytes": 888504320
+      },
+      "python_allocation_diff": [
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1477",
+          "bytes_delta": 160488,
+          "blocks_delta": 2970
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/models/llama/modeling_llama.py:167",
+          "bytes_delta": 145680,
+          "blocks_delta": 1821
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:808",
+          "bytes_delta": 88776,
+          "blocks_delta": 1233
+        },
+        {
+          "site": "/opt/anaconda3/lib/python3.12/asyncio/base_events.py:815",
+          "bytes_delta": 36360,
+          "blocks_delta": 505
+        },
+        {
+          "site": "/opt/anaconda3/lib/python3.12/tracemalloc.py:558",
+          "bytes_delta": 31640,
+          "blocks_delta": 448
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1228",
+          "bytes_delta": 25208,
+          "blocks_delta": 453
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/masking_utils.py:521",
+          "bytes_delta": 8831,
+          "blocks_delta": 149
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/nn/modules/container.py:505",
+          "bytes_delta": 6778,
+          "blocks_delta": 159
+        },
+        {
+          "site": "/opt/anaconda3/lib/python3.12/asyncio/events.py:88",
+          "bytes_delta": 5546,
+          "blocks_delta": 118
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:990",
+          "bytes_delta": 4739,
+          "blocks_delta": 80
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/src/llm_runtime/local_executor.py:115",
+          "bytes_delta": 4601,
+          "blocks_delta": 85
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/_functorch/apis.py:246",
+          "bytes_delta": 4464,
+          "blocks_delta": 62
+        },
+        {
+          "site": "/opt/anaconda3/lib/python3.12/email/utils.py:278",
+          "bytes_delta": 4400,
+          "blocks_delta": 90
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/_functorch/vmap.py:142",
+          "bytes_delta": -3257,
+          "blocks_delta": -58
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1540",
+          "bytes_delta": 2560,
+          "blocks_delta": 64
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1492",
+          "bytes_delta": 2464,
+          "blocks_delta": 44
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1303",
+          "bytes_delta": 2296,
+          "blocks_delta": 41
+        },
+        {
+          "site": "/opt/anaconda3/lib/python3.12/contextlib.py:482",
+          "bytes_delta": -2280,
+          "blocks_delta": -6
+        },
+        {
+          "site": "/opt/anaconda3/lib/python3.12/asyncio/locks.py:167",
+          "bytes_delta": -1520,
+          "blocks_delta": -4
+        },
+        {
+          "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:2993",
+          "bytes_delta": 1296,
+          "blocks_delta": 18
+        }
+      ],
+      "model_alive_after_shutdown": false,
+      "model_parameter_objects_alive_after_shutdown": 0,
+      "request_objects_alive_after_shutdown": 0,
+      "native_malloc_in_use_after_model_shutdown_bytes": 147320976
+    }
+  },
+  "completed_workload_requests": 364
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "started_at": "2026-11-10T18:03:15.663323+00:00",
+  "project_base_commit": "805006874d446e17b50729d11b681168af0b8748",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "python": "3.12.7",
+  "packages": {
+    "torch": "2.14.1",
+    "transformers": "4.57.6",
+    "uvicorn": "0.54.0",
+    "httpx": "0.28.1"
+  },
+  "source_sha256": {
+    "scripts/profile_runtime_memory.py": "a8a674ef09991722426fa49b82b61444d792d607b96d53040c2689b84f7752cb",
+    "scripts/profile_memory_app.py": "0b1a0eb1d1e22c071c04888c6e2a67a0ecf2412af21ae0052e27f1f830d7951f",
+    "scripts/memory_diagnostics.py": "effb1983fb3bcd3344a6b691d62e6f9ca922fd073d848eada09568dceee59c90",
+    "src/llm_runtime/local_executor.py": "83522622f4fa424235953e71faa91fc99b1e526a0c1c4dbc01ef5612b00bf4b8",
+    "src/llm_runtime/batching.py": "10657a6d520c553f6100f0ffbf35f448a7f163ef7f0edc619e52d6e84de19149",
+    "src/llm_runtime/api.py": "41d5c05479264ce1a93e20cd641b04a694e332147e691a41336b6bf1d0bb15c7",
+    "src/llm_runtime/http_benchmark.py": "5aaf3f32c3b5630254277b42cc999507cc4c90a09c98d19b3b259d86c598aa5c",
+    "src/llm_runtime/comparison.py": "adc01df78b2d3ca4673b1515e1591f169424bd0d5ae36577eca05af7413798ef"
+  },
+  "model_files_sha256": {
+    "README.md": "4f97533ad95b1b2fea15fbc075c01b94578ebdd7c8138888fa43fa3abd530dc4",
+    "config.json": "8eb740e8bbe4cff95ea7b4588d17a2432deb16e8075bc5828ff7ba9be94d982a",
+    "generation_config.json": "87b916edaaab66b3899b9d0dd0752727dff6666686da0504d89ae0a6e055a013",
+    "merges.txt": "0b54e8aa4e53d5383e2e4bc635a56b43f9647f7b13832d5d9ecd8f82dac4f510",
+    "model.safetensors": "5af571cbf074e6d21a03528d2330792e532ca608f24ac70a143f6b369968ab8c",
+    "runtime_model.json": "45cc0e40e9c1d996c578edc209efd5f97a356c66214a4c6efb1c0699809ff762",
+    "special_tokens_map.json": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52",
+    "tokenizer.json": "9ca9acddb6525a194ec8ac7a87f24fbba7232a9a15ffa1af0c1224fcd888e47c",
+    "tokenizer_config.json": "4ec77d44f62efeb38d7e044a1db318f6a939438425312dfa333b8382dbad98df",
+    "vocab.json": "82b84012e3add4d01d12ba14442026e49b8cbbaead1f79ecf3d919784f82dc79"
+  },
+  "workload_sha256": "dcf513e45a21fa2747320b436a5a40300ccf1364310525a1a4f7c0400c08ce09",
+  "waves_per_session": 30,
+  "requests_per_wave": 4,
+  "concurrency": 2,
+  "request_deadline_seconds": 120,
+  "normal_repetitions": 2,
+  "sessions": [
+    "normal-1",
+    "normal-2",
+    "diagnostic"
+  ],
+  "native_api_reference": "https://github.com/apple-oss-distributions/libmalloc/blob/main/include/malloc/malloc.h",
+  "notes": [
+    "Normal sessions have no weak observers, tracemalloc, forced GC, or allocator interventions.",
+    "Diagnostic session is instrumented and cannot be used as a performance comparison.",
+    "malloc_zone_statistics(NULL) sums zones; pressure_relief(NULL,0) is best effort for this child only.",
+    "Python tracing excludes most native tensor allocations; native malloc counters are not RSS.",
+    "Weak tensor wrappers dying does not independently account for all native storage.",
+    "Snapshots are at idle between bounded waves; no claim about transient peak memory."
+  ],
+  "finished_at": "2026-11-10T18:10:12.664146+00:00"
+}

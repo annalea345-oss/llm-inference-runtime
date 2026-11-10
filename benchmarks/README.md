@@ -58,3 +58,8 @@ cleanup in our runtime and a concrete reason to test real tensor batching later.
 
 The [queued-disconnect fix](disconnect-cleanup.md) follows that finding with
 deterministic saturation/FIFO/ownership tests and a targeted real CPU recheck.
+
+The [retained-memory investigation](retained-memory.md) separates idle RSS,
+released cache objects, traced Python allocations, and native allocator counters
+across longer bounded runs. It records the evidence for keeping normal cleanup
+unchanged before the next tensor-batching experiment.

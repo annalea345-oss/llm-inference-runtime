@@ -1,0 +1,4624 @@
+{
+  "label": "diagnostic",
+  "diagnostic": true,
+  "waves": [
+    {
+      "wave": 1,
+      "elapsed_seconds": 6.531757709104568,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.396484375,
+        2.1455078125,
+        2.0224609375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 4,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 4,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 240,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1102767,
+        "python_traced_peak_bytes": 1363496,
+        "tracemalloc_metadata_bytes": 988832,
+        "native_malloc": {
+          "blocks_in_use": 860161,
+          "size_in_use": 678596048,
+          "max_size_in_use": 726686288,
+          "size_allocated": 269172736
+        },
+        "gc_counts": [
+          0,
+          9,
+          2
+        ],
+        "gc_stats": [
+          {
+            "collections": 801,
+            "collected": 41069,
+            "uncollectable": 0
+          },
+          {
+            "collections": 72,
+            "collected": 3190,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 946454528
+    },
+    {
+      "wave": 2,
+      "elapsed_seconds": 6.432340999599546,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.18115234375,
+        2.107421875,
+        2.009765625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 8,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 8,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 480,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1141840,
+        "python_traced_peak_bytes": 1425149,
+        "tracemalloc_metadata_bytes": 1143968,
+        "native_malloc": {
+          "blocks_in_use": 1106814,
+          "size_in_use": 678639776,
+          "max_size_in_use": 728688944,
+          "size_allocated": 277839872
+        },
+        "gc_counts": [
+          0,
+          6,
+          5
+        ],
+        "gc_stats": [
+          {
+            "collections": 831,
+            "collected": 72606,
+            "uncollectable": 0
+          },
+          {
+            "collections": 75,
+            "collected": 6414,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 950845440
+    },
+    {
+      "wave": 3,
+      "elapsed_seconds": 6.984145000111312,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.16650390625,
+        2.10546875,
+        2.00927734375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 12,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 12,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 720,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1206843,
+        "python_traced_peak_bytes": 1507553,
+        "tracemalloc_metadata_bytes": 1172320,
+        "native_malloc": {
+          "blocks_in_use": 1350656,
+          "size_in_use": 680798736,
+          "max_size_in_use": 753426224,
+          "size_allocated": 297811968
+        },
+        "gc_counts": [
+          127,
+          1,
+          8
+        ],
+        "gc_stats": [
+          {
+            "collections": 859,
+            "collected": 103328,
+            "uncollectable": 0
+          },
+          {
+            "collections": 78,
+            "collected": 9587,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 876888064
+    },
+    {
+      "wave": 4,
+      "elapsed_seconds": 7.0637537920847535,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.23291015625,
+        2.1201171875,
+        2.0146484375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 16,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 16,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 960,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1213418,
+        "python_traced_peak_bytes": 1507553,
+        "tracemalloc_metadata_bytes": 1177984,
+        "native_malloc": {
+          "blocks_in_use": 1596879,
+          "size_in_use": 680640720,
+          "max_size_in_use": 775227248,
+          "size_allocated": 297828352
+        },
+        "gc_counts": [
+          0,
+          9,
+          10
+        ],
+        "gc_stats": [
+          {
+            "collections": 889,
+            "collected": 136140,
+            "uncollectable": 0
+          },
+          {
+            "collections": 80,
+            "collected": 11905,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 862568448
+    },
+    {
+      "wave": 5,
+      "elapsed_seconds": 6.853935791179538,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.36328125,
+        2.14892578125,
+        2.025390625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 20,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 20,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 1200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1265946,
+        "python_traced_peak_bytes": 1571650,
+        "tracemalloc_metadata_bytes": 1201280,
+        "native_malloc": {
+          "blocks_in_use": 1844443,
+          "size_in_use": 679197664,
+          "max_size_in_use": 781390768,
+          "size_allocated": 297861120
+        },
+        "gc_counts": [
+          0,
+          4,
+          13
+        ],
+        "gc_stats": [
+          {
+            "collections": 917,
+            "collected": 166689,
+            "uncollectable": 0
+          },
+          {
+            "collections": 83,
+            "collected": 15470,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 745078784
+    },
+    {
+      "wave": 6,
+      "elapsed_seconds": 7.305174875073135,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.25390625,
+        2.12939453125,
+        2.01904296875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 24,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 24,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 1440,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1275867,
+        "python_traced_peak_bytes": 1571650,
+        "tracemalloc_metadata_bytes": 1207616,
+        "native_malloc": {
+          "blocks_in_use": 2084210,
+          "size_in_use": 679902528,
+          "max_size_in_use": 794044848,
+          "size_allocated": 297893888
+        },
+        "gc_counts": [
+          0,
+          0,
+          16
+        ],
+        "gc_stats": [
+          {
+            "collections": 946,
+            "collected": 198140,
+            "uncollectable": 0
+          },
+          {
+            "collections": 86,
+            "collected": 19007,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 697712640
+    },
+    {
+      "wave": 7,
+      "elapsed_seconds": 7.173549667000771,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.060546875,
+        2.091796875,
+        2.00634765625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 28,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 28,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 1680,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1309242,
+        "python_traced_peak_bytes": 1596864,
+        "tracemalloc_metadata_bytes": 1223264,
+        "native_malloc": {
+          "blocks_in_use": 2330292,
+          "size_in_use": 679296736,
+          "max_size_in_use": 794537712,
+          "size_allocated": 297926656
+        },
+        "gc_counts": [
+          0,
+          8,
+          18
+        ],
+        "gc_stats": [
+          {
+            "collections": 976,
+            "collected": 230208,
+            "uncollectable": 0
+          },
+          {
+            "collections": 88,
+            "collected": 21409,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 714457088
+    },
+    {
+      "wave": 8,
+      "elapsed_seconds": 6.574057249817997,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.0556640625,
+        2.08984375,
+        2.005859375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 32,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 32,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 1920,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1342298,
+        "python_traced_peak_bytes": 1629214,
+        "tracemalloc_metadata_bytes": 1239328,
+        "native_malloc": {
+          "blocks_in_use": 2574046,
+          "size_in_use": 679162624,
+          "max_size_in_use": 794670320,
+          "size_allocated": 297975808
+        },
+        "gc_counts": [
+          0,
+          4,
+          21
+        ],
+        "gc_stats": [
+          {
+            "collections": 1005,
+            "collected": 261093,
+            "uncollectable": 0
+          },
+          {
+            "collections": 91,
+            "collected": 25072,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 724303872
+    },
+    {
+      "wave": 9,
+      "elapsed_seconds": 7.026709666941315,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.05078125,
+        2.087890625,
+        2.00537109375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 36,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 36,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 2160,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1374361,
+        "python_traced_peak_bytes": 1664105,
+        "tracemalloc_metadata_bytes": 1254752,
+        "native_malloc": {
+          "blocks_in_use": 2819349,
+          "size_in_use": 680428528,
+          "max_size_in_use": 794699904,
+          "size_allocated": 297992192
+        },
+        "gc_counts": [
+          0,
+          0,
+          24
+        ],
+        "gc_stats": [
+          {
+            "collections": 1034,
+            "collected": 292105,
+            "uncollectable": 0
+          },
+          {
+            "collections": 94,
+            "collected": 28608,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 723173376
+    },
+    {
+      "wave": 10,
+      "elapsed_seconds": 6.459354874677956,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.04248046875,
+        2.0849609375,
+        2.00439453125
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 40,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 40,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 2400,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1408505,
+        "python_traced_peak_bytes": 1695261,
+        "tracemalloc_metadata_bytes": 1270112,
+        "native_malloc": {
+          "blocks_in_use": 3063512,
+          "size_in_use": 680195600,
+          "max_size_in_use": 794761344,
+          "size_allocated": 297992192
+        },
+        "gc_counts": [
+          0,
+          8,
+          26
+        ],
+        "gc_stats": [
+          {
+            "collections": 1064,
+            "collected": 324172,
+            "uncollectable": 0
+          },
+          {
+            "collections": 96,
+            "collected": 31012,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 724156416
+    },
+    {
+      "wave": 11,
+      "elapsed_seconds": 6.472795667126775,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.958984375,
+        2.06689453125,
+        1.998046875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 44,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 44,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 2640,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1428633,
+        "python_traced_peak_bytes": 1745952,
+        "tracemalloc_metadata_bytes": 1542304,
+        "native_malloc": {
+          "blocks_in_use": 3310145,
+          "size_in_use": 681115440,
+          "max_size_in_use": 794787584,
+          "size_allocated": 298008576
+        },
+        "gc_counts": [
+          0,
+          4,
+          29
+        ],
+        "gc_stats": [
+          {
+            "collections": 1093,
+            "collected": 355447,
+            "uncollectable": 0
+          },
+          {
+            "collections": 99,
+            "collected": 34505,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 726335488
+    },
+    {
+      "wave": 12,
+      "elapsed_seconds": 7.0372840841300786,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.9619140625,
+        2.0654296875,
+        1.998046875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 48,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 48,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 2880,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1469283,
+        "python_traced_peak_bytes": 1775146,
+        "tracemalloc_metadata_bytes": 1560736,
+        "native_malloc": {
+          "blocks_in_use": 3557142,
+          "size_in_use": 680963344,
+          "max_size_in_use": 795237952,
+          "size_allocated": 298008576
+        },
+        "gc_counts": [
+          0,
+          0,
+          32
+        ],
+        "gc_stats": [
+          {
+            "collections": 1122,
+            "collected": 386189,
+            "uncollectable": 0
+          },
+          {
+            "collections": 102,
+            "collected": 38098,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 734363648
+    },
+    {
+      "wave": 13,
+      "elapsed_seconds": 6.5408076252788305,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.88720703125,
+        2.0458984375,
+        1.9921875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 52,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 52,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 3120,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1495288,
+        "python_traced_peak_bytes": 1809831,
+        "tracemalloc_metadata_bytes": 1573312,
+        "native_malloc": {
+          "blocks_in_use": 3803380,
+          "size_in_use": 680984720,
+          "max_size_in_use": 795237952,
+          "size_allocated": 298008576
+        },
+        "gc_counts": [
+          0,
+          8,
+          34
+        ],
+        "gc_stats": [
+          {
+            "collections": 1152,
+            "collected": 418469,
+            "uncollectable": 0
+          },
+          {
+            "collections": 104,
+            "collected": 40509,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 737886208
+    },
+    {
+      "wave": 14,
+      "elapsed_seconds": 6.723104415927082,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.81591796875,
+        2.0283203125,
+        1.986328125
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 56,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 56,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 3360,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1526270,
+        "python_traced_peak_bytes": 1821289,
+        "tracemalloc_metadata_bytes": 1587232,
+        "native_malloc": {
+          "blocks_in_use": 4044799,
+          "size_in_use": 680021072,
+          "max_size_in_use": 795237952,
+          "size_allocated": 298024960
+        },
+        "gc_counts": [
+          0,
+          4,
+          37
+        ],
+        "gc_stats": [
+          {
+            "collections": 1181,
+            "collected": 449142,
+            "uncollectable": 0
+          },
+          {
+            "collections": 107,
+            "collected": 44185,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 707362816
+    },
+    {
+      "wave": 15,
+      "elapsed_seconds": 6.822505000047386,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.91064453125,
+        2.04443359375,
+        1.9921875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 60,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 60,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 3600,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1555819,
+        "python_traced_peak_bytes": 1882816,
+        "tracemalloc_metadata_bytes": 1600384,
+        "native_malloc": {
+          "blocks_in_use": 4290475,
+          "size_in_use": 680044000,
+          "max_size_in_use": 795237952,
+          "size_allocated": 298041344
+        },
+        "gc_counts": [
+          0,
+          11,
+          39
+        ],
+        "gc_stats": [
+          {
+            "collections": 1210,
+            "collected": 480690,
+            "uncollectable": 0
+          },
+          {
+            "collections": 109,
+            "collected": 46675,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 724533248
+    },
+    {
+      "wave": 16,
+      "elapsed_seconds": 6.525649624876678,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.93017578125,
+        2.04296875,
+        1.9921875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 64,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 64,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 3840,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1533040,
+        "python_traced_peak_bytes": 1882816,
+        "tracemalloc_metadata_bytes": 1592768,
+        "native_malloc": {
+          "blocks_in_use": 4536497,
+          "size_in_use": 681016640,
+          "max_size_in_use": 795483712,
+          "size_allocated": 298041344
+        },
+        "gc_counts": [
+          0,
+          7,
+          42
+        ],
+        "gc_stats": [
+          {
+            "collections": 1239,
+            "collected": 512534,
+            "uncollectable": 0
+          },
+          {
+            "collections": 112,
+            "collected": 50038,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 714768384
+    },
+    {
+      "wave": 17,
+      "elapsed_seconds": 6.719416792038828,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.255859375,
+        2.1083984375,
+        2.015625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 68,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 68,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 4080,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1548449,
+        "python_traced_peak_bytes": 1882816,
+        "tracemalloc_metadata_bytes": 1600160,
+        "native_malloc": {
+          "blocks_in_use": 4783571,
+          "size_in_use": 682667744,
+          "max_size_in_use": 795520576,
+          "size_allocated": 298041344
+        },
+        "gc_counts": [
+          0,
+          3,
+          45
+        ],
+        "gc_stats": [
+          {
+            "collections": 1268,
+            "collected": 543507,
+            "uncollectable": 0
+          },
+          {
+            "collections": 115,
+            "collected": 53392,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 738377728
+    },
+    {
+      "wave": 18,
+      "elapsed_seconds": 6.683603334240615,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.3955078125,
+        2.1396484375,
+        2.02685546875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 72,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 72,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 4320,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1557834,
+        "python_traced_peak_bytes": 1882816,
+        "tracemalloc_metadata_bytes": 1605312,
+        "native_malloc": {
+          "blocks_in_use": 5027889,
+          "size_in_use": 679935392,
+          "max_size_in_use": 795520576,
+          "size_allocated": 298057728
+        },
+        "gc_counts": [
+          0,
+          11,
+          47
+        ],
+        "gc_stats": [
+          {
+            "collections": 1298,
+            "collected": 575641,
+            "uncollectable": 0
+          },
+          {
+            "collections": 117,
+            "collected": 55729,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 727302144
+    },
+    {
+      "wave": 19,
+      "elapsed_seconds": 6.586083707865328,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.3408203125,
+        2.134765625,
+        2.02587890625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 76,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 76,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 4560,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1583354,
+        "python_traced_peak_bytes": 1902104,
+        "tracemalloc_metadata_bytes": 1616544,
+        "native_malloc": {
+          "blocks_in_use": 5274026,
+          "size_in_use": 679883040,
+          "max_size_in_use": 795520576,
+          "size_allocated": 298057728
+        },
+        "gc_counts": [
+          0,
+          6,
+          50
+        ],
+        "gc_stats": [
+          {
+            "collections": 1326,
+            "collected": 606649,
+            "uncollectable": 0
+          },
+          {
+            "collections": 120,
+            "collected": 58836,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733937664
+    },
+    {
+      "wave": 20,
+      "elapsed_seconds": 6.761543833184987,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.2333984375,
+        2.11572265625,
+        2.01953125
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 80,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 80,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 4800,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1559429,
+        "python_traced_peak_bytes": 1902104,
+        "tracemalloc_metadata_bytes": 1608736,
+        "native_malloc": {
+          "blocks_in_use": 5516914,
+          "size_in_use": 680563760,
+          "max_size_in_use": 795864640,
+          "size_allocated": 298074112
+        },
+        "gc_counts": [
+          0,
+          2,
+          53
+        ],
+        "gc_stats": [
+          {
+            "collections": 1355,
+            "collected": 638816,
+            "uncollectable": 0
+          },
+          {
+            "collections": 123,
+            "collected": 61883,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 738590720
+    },
+    {
+      "wave": 21,
+      "elapsed_seconds": 6.991199707612395,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.21435546875,
+        2.11376953125,
+        2.01904296875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 84,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 84,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 5040,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1568835,
+        "python_traced_peak_bytes": 1902104,
+        "tracemalloc_metadata_bytes": 1614144,
+        "native_malloc": {
+          "blocks_in_use": 5754982,
+          "size_in_use": 679743328,
+          "max_size_in_use": 795864640,
+          "size_allocated": 298074112
+        },
+        "gc_counts": [
+          0,
+          10,
+          55
+        ],
+        "gc_stats": [
+          {
+            "collections": 1385,
+            "collected": 670517,
+            "uncollectable": 0
+          },
+          {
+            "collections": 125,
+            "collected": 64653,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 730365952
+    },
+    {
+      "wave": 22,
+      "elapsed_seconds": 6.814706124830991,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.40185546875,
+        2.15869140625,
+        2.03564453125
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 88,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 88,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 5280,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1585525,
+        "python_traced_peak_bytes": 1902104,
+        "tracemalloc_metadata_bytes": 1622400,
+        "native_malloc": {
+          "blocks_in_use": 5998665,
+          "size_in_use": 679796640,
+          "max_size_in_use": 796086848,
+          "size_allocated": 298074112
+        },
+        "gc_counts": [
+          0,
+          6,
+          58
+        ],
+        "gc_stats": [
+          {
+            "collections": 1414,
+            "collected": 701525,
+            "uncollectable": 0
+          },
+          {
+            "collections": 128,
+            "collected": 67972,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 737591296
+    },
+    {
+      "wave": 23,
+      "elapsed_seconds": 6.482131915632635,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.28955078125,
+        2.13916015625,
+        2.029296875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 92,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 92,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 5520,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1591604,
+        "python_traced_peak_bytes": 1902104,
+        "tracemalloc_metadata_bytes": 1626240,
+        "native_malloc": {
+          "blocks_in_use": 6243530,
+          "size_in_use": 679376976,
+          "max_size_in_use": 796086848,
+          "size_allocated": 298074112
+        },
+        "gc_counts": [
+          0,
+          2,
+          61
+        ],
+        "gc_stats": [
+          {
+            "collections": 1443,
+            "collected": 733056,
+            "uncollectable": 0
+          },
+          {
+            "collections": 131,
+            "collected": 70995,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 742178816
+    },
+    {
+      "wave": 24,
+      "elapsed_seconds": 6.4964633751660585,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.26611328125,
+        2.13671875,
+        2.02880859375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 96,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 96,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 5760,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1621876,
+        "python_traced_peak_bytes": 1940248,
+        "tracemalloc_metadata_bytes": 1639776,
+        "native_malloc": {
+          "blocks_in_use": 6489299,
+          "size_in_use": 679781456,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298074112
+        },
+        "gc_counts": [
+          0,
+          9,
+          63
+        ],
+        "gc_stats": [
+          {
+            "collections": 1472,
+            "collected": 764565,
+            "uncollectable": 0
+          },
+          {
+            "collections": 133,
+            "collected": 73530,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 728530944
+    },
+    {
+      "wave": 25,
+      "elapsed_seconds": 6.425235083792359,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.1513671875,
+        2.115234375,
+        2.02197265625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 100,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 100,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 6000,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1607110,
+        "python_traced_peak_bytes": 1940248,
+        "tracemalloc_metadata_bytes": 1635488,
+        "native_malloc": {
+          "blocks_in_use": 6736651,
+          "size_in_use": 679677616,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          0,
+          5,
+          66
+        ],
+        "gc_stats": [
+          {
+            "collections": 1501,
+            "collected": 796117,
+            "uncollectable": 0
+          },
+          {
+            "collections": 136,
+            "collected": 76965,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 729399296
+    },
+    {
+      "wave": 26,
+      "elapsed_seconds": 6.470162958838046,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.13916015625,
+        2.11328125,
+        2.021484375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 104,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 104,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 6240,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1633372,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1647072,
+        "native_malloc": {
+          "blocks_in_use": 6980276,
+          "size_in_use": 679675040,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          0,
+          0,
+          69
+        ],
+        "gc_stats": [
+          {
+            "collections": 1529,
+            "collected": 826740,
+            "uncollectable": 0
+          },
+          {
+            "collections": 139,
+            "collected": 80456,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 720207872
+    },
+    {
+      "wave": 27,
+      "elapsed_seconds": 6.477650875225663,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.1279296875,
+        2.111328125,
+        2.02099609375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 108,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 108,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 6480,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1622243,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1644064,
+        "native_malloc": {
+          "blocks_in_use": 7228463,
+          "size_in_use": 681538256,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          0,
+          8,
+          71
+        ],
+        "gc_stats": [
+          {
+            "collections": 1559,
+            "collected": 859246,
+            "uncollectable": 0
+          },
+          {
+            "collections": 141,
+            "collected": 82860,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 728694784
+    },
+    {
+      "wave": 28,
+      "elapsed_seconds": 6.435243958141655,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.11767578125,
+        2.109375,
+        2.0205078125
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 112,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 112,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 6720,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1629064,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1648128,
+        "native_malloc": {
+          "blocks_in_use": 7473020,
+          "size_in_use": 681840752,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          0,
+          4,
+          74
+        ],
+        "gc_stats": [
+          {
+            "collections": 1588,
+            "collected": 890137,
+            "uncollectable": 0
+          },
+          {
+            "collections": 144,
+            "collected": 86517,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 732512256
+    },
+    {
+      "wave": 29,
+      "elapsed_seconds": 6.425871207844466,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.01904296875,
+        2.0888671875,
+        2.013671875
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 116,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 116,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 6960,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1631244,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1649472,
+        "native_malloc": {
+          "blocks_in_use": 7719375,
+          "size_in_use": 681943120,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          0,
+          0,
+          77
+        ],
+        "gc_stats": [
+          {
+            "collections": 1617,
+            "collected": 921157,
+            "uncollectable": 0
+          },
+          {
+            "collections": 147,
+            "collected": 90045,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733315072
+    },
+    {
+      "wave": 30,
+      "elapsed_seconds": 6.448292624671012,
+      "requests": [
+        {
+          "case_id": "prefill",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 562,
+            "completion_tokens": 24,
+            "total_tokens": 586
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        },
+        {
+          "case_id": "decode",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 56,
+            "completion_tokens": 96,
+            "total_tokens": 152
+          },
+          "requested_max_tokens": 96
+        },
+        {
+          "case_id": "short",
+          "status": "completed",
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 8,
+            "total_tokens": 48
+          },
+          "requested_max_tokens": 24
+        }
+      ],
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.01708984375,
+        2.0869140625,
+        2.01318359375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 120,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 120,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 7200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1639603,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1653888,
+        "native_malloc": {
+          "blocks_in_use": 7962208,
+          "size_in_use": 681489456,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          0,
+          8,
+          79
+        ],
+        "gc_stats": [
+          {
+            "collections": 1647,
+            "collected": 953224,
+            "uncollectable": 0
+          },
+          {
+            "collections": 149,
+            "collected": 92448,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733413376
+    }
+  ],
+  "idle_observations": [
+    {
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.01708984375,
+        2.0869140625,
+        2.01318359375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 120,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 120,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 7200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1617540,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1653792,
+        "native_malloc": {
+          "blocks_in_use": 7962212,
+          "size_in_use": 681323744,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          72,
+          8,
+          79
+        ],
+        "gc_stats": [
+          {
+            "collections": 1647,
+            "collected": 953224,
+            "uncollectable": 0
+          },
+          {
+            "collections": 149,
+            "collected": 92448,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733429760
+    },
+    {
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        2.01708984375,
+        2.0869140625,
+        2.01318359375
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 120,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 120,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 7200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1617872,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1653888,
+        "native_malloc": {
+          "blocks_in_use": 7962222,
+          "size_in_use": 681518624,
+          "max_size_in_use": 796114352,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          75,
+          8,
+          79
+        ],
+        "gc_stats": [
+          {
+            "collections": 1647,
+            "collected": 953224,
+            "uncollectable": 0
+          },
+          {
+            "collections": 149,
+            "collected": 92448,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733151232
+    },
+    {
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.85546875,
+        2.05224609375,
+        2.0009765625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 120,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 120,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 7200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1618272,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1653984,
+        "native_malloc": {
+          "blocks_in_use": 7962231,
+          "size_in_use": 680240144,
+          "max_size_in_use": 796115344,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          78,
+          8,
+          79
+        ],
+        "gc_stats": [
+          {
+            "collections": 1647,
+            "collected": 953224,
+            "uncollectable": 0
+          },
+          {
+            "collections": 149,
+            "collected": 92448,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733184000
+    },
+    {
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.85546875,
+        2.05224609375,
+        2.0009765625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 120,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 120,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 7200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1618665,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1654112,
+        "native_malloc": {
+          "blocks_in_use": 7962241,
+          "size_in_use": 680240336,
+          "max_size_in_use": 796115344,
+          "size_allocated": 298090496
+        },
+        "gc_counts": [
+          81,
+          8,
+          79
+        ],
+        "gc_stats": [
+          {
+            "collections": 1647,
+            "collected": 953224,
+            "uncollectable": 0
+          },
+          {
+            "collections": 149,
+            "collected": 92448,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733184000
+    },
+    {
+      "state": {
+        "active": 0,
+        "queued": 0,
+        "registered": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      "host_load_average": [
+        1.85546875,
+        2.05224609375,
+        2.0009765625
+      ],
+      "diagnostic": {
+        "requests_registered": 0,
+        "active_sequences": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0,
+        "weak_objects": {
+          "requests": {
+            "observed": 120,
+            "alive": 1
+          },
+          "released_sequences": {
+            "observed": 120,
+            "alive": 0
+          },
+          "released_kv_tensors": {
+            "observed": 7200,
+            "alive": 0
+          }
+        },
+        "model_alive": true,
+        "model_parameters_alive": 272,
+        "python_traced_current_bytes": 1604700,
+        "python_traced_peak_bytes": 1948709,
+        "tracemalloc_metadata_bytes": 1650752,
+        "native_malloc": {
+          "blocks_in_use": 7962026,
+          "size_in_use": 680233216,
+          "max_size_in_use": 796115344,
+          "size_allocated": 298106880
+        },
+        "gc_counts": [
+          72,
+          8,
+          79
+        ],
+        "gc_stats": [
+          {
+            "collections": 1647,
+            "collected": 953224,
+            "uncollectable": 0
+          },
+          {
+            "collections": 149,
+            "collected": 92448,
+            "uncollectable": 0
+          },
+          {
+            "collections": 6,
+            "collected": 265,
+            "uncollectable": 0
+          }
+        ],
+        "gc_collected_by_probe": 0
+      },
+      "rss_bytes": 733413376
+    }
+  ],
+  "command": [
+    "/Users/anastasiyalillelund/llm-inference-runtime/.venv/bin/python",
+    "-m",
+    "uvicorn",
+    "scripts.profile_memory_app:create_profile_app",
+    "--factory",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8021",
+    "--no-access-log"
+  ],
+  "at_readiness": {
+    "state": {
+      "active": 0,
+      "queued": 0,
+      "registered": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "host_load_average": [
+      2.34423828125,
+      2.13134765625,
+      2.01708984375
+    ],
+    "diagnostic": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 0,
+          "alive": 0
+        },
+        "released_sequences": {
+          "observed": 0,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 0,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": null,
+      "python_traced_peak_bytes": null,
+      "tracemalloc_metadata_bytes": null,
+      "native_malloc": {
+        "blocks_in_use": 579913,
+        "size_in_use": 675921648,
+        "max_size_in_use": 658771472,
+        "size_allocated": 259211264
+      },
+      "gc_counts": [
+        467,
+        9,
+        14
+      ],
+      "gc_stats": [
+        {
+          "collections": 768,
+          "collected": 9268,
+          "uncollectable": 0
+        },
+        {
+          "collections": 69,
+          "collected": 987,
+          "uncollectable": 0
+        },
+        {
+          "collections": 5,
+          "collected": 205,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 0
+    },
+    "rss_bytes": 504578048
+  },
+  "before_gc": {
+    "state": {
+      "active": 0,
+      "queued": 0,
+      "registered": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "host_load_average": [
+      1.85546875,
+      2.05224609375,
+      2.0009765625
+    ],
+    "diagnostic": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 120,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 120,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7200,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1605076,
+      "python_traced_peak_bytes": 1948709,
+      "tracemalloc_metadata_bytes": 1650848,
+      "native_malloc": {
+        "blocks_in_use": 7962036,
+        "size_in_use": 680396352,
+        "max_size_in_use": 796115344,
+        "size_allocated": 298106880
+      },
+      "gc_counts": [
+        75,
+        8,
+        79
+      ],
+      "gc_stats": [
+        {
+          "collections": 1647,
+          "collected": 953224,
+          "uncollectable": 0
+        },
+        {
+          "collections": 149,
+          "collected": 92448,
+          "uncollectable": 0
+        },
+        {
+          "collections": 6,
+          "collected": 265,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 0
+    },
+    "rss_bytes": 733413376
+  },
+  "trace_diff": {
+    "python_allocation_diff": [
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1477",
+        "bytes_delta": 160488,
+        "blocks_delta": 2970
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/models/llama/modeling_llama.py:167",
+        "bytes_delta": 145680,
+        "blocks_delta": 1821
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:808",
+        "bytes_delta": 88776,
+        "blocks_delta": 1233
+      },
+      {
+        "site": "/opt/anaconda3/lib/python3.12/asyncio/base_events.py:815",
+        "bytes_delta": 36360,
+        "blocks_delta": 505
+      },
+      {
+        "site": "/opt/anaconda3/lib/python3.12/tracemalloc.py:558",
+        "bytes_delta": 31640,
+        "blocks_delta": 448
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1228",
+        "bytes_delta": 25208,
+        "blocks_delta": 453
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/masking_utils.py:521",
+        "bytes_delta": 8831,
+        "blocks_delta": 149
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/nn/modules/container.py:505",
+        "bytes_delta": 6778,
+        "blocks_delta": 159
+      },
+      {
+        "site": "/opt/anaconda3/lib/python3.12/asyncio/events.py:88",
+        "bytes_delta": 5546,
+        "blocks_delta": 118
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:990",
+        "bytes_delta": 4739,
+        "blocks_delta": 80
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/src/llm_runtime/local_executor.py:115",
+        "bytes_delta": 4601,
+        "blocks_delta": 85
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/_functorch/apis.py:246",
+        "bytes_delta": 4464,
+        "blocks_delta": 62
+      },
+      {
+        "site": "/opt/anaconda3/lib/python3.12/email/utils.py:278",
+        "bytes_delta": 4400,
+        "blocks_delta": 90
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/_functorch/vmap.py:142",
+        "bytes_delta": -3257,
+        "blocks_delta": -58
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1540",
+        "bytes_delta": 2560,
+        "blocks_delta": 64
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1492",
+        "bytes_delta": 2464,
+        "blocks_delta": 44
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/torch/utils/_pytree.py:1303",
+        "bytes_delta": 2296,
+        "blocks_delta": 41
+      },
+      {
+        "site": "/opt/anaconda3/lib/python3.12/contextlib.py:482",
+        "bytes_delta": -2280,
+        "blocks_delta": -6
+      },
+      {
+        "site": "/opt/anaconda3/lib/python3.12/asyncio/locks.py:167",
+        "bytes_delta": -1520,
+        "blocks_delta": -4
+      },
+      {
+        "site": "/Users/anastasiyalillelund/llm-inference-runtime/.venv/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:2993",
+        "bytes_delta": 1296,
+        "blocks_delta": 18
+      }
+    ],
+    "snapshot": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 120,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 120,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7200,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1549631,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1640032,
+      "native_malloc": {
+        "blocks_in_use": 7961414,
+        "size_in_use": 680171840,
+        "max_size_in_use": 796115344,
+        "size_allocated": 298516480
+      },
+      "gc_counts": [
+        0,
+        5,
+        80
+      ],
+      "gc_stats": [
+        {
+          "collections": 1655,
+          "collected": 953527,
+          "uncollectable": 0
+        },
+        {
+          "collections": 150,
+          "collected": 92504,
+          "uncollectable": 0
+        },
+        {
+          "collections": 6,
+          "collected": 265,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 0
+    }
+  },
+  "gc_action": {
+    "snapshot": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 120,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 120,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7200,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1005358,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1363392,
+      "native_malloc": {
+        "blocks_in_use": 7944128,
+        "size_in_use": 679970032,
+        "max_size_in_use": 796115344,
+        "size_allocated": 298237952
+      },
+      "gc_counts": [
+        9,
+        0,
+        0
+      ],
+      "gc_stats": [
+        {
+          "collections": 1655,
+          "collected": 953527,
+          "uncollectable": 0
+        },
+        {
+          "collections": 150,
+          "collected": 92504,
+          "uncollectable": 0
+        },
+        {
+          "collections": 7,
+          "collected": 767,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 502
+    }
+  },
+  "after_gc": {
+    "state": {
+      "active": 0,
+      "queued": 0,
+      "registered": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "host_load_average": [
+      1.85546875,
+      2.05224609375,
+      2.0009765625
+    ],
+    "diagnostic": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 120,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 120,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7200,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1013426,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1366560,
+      "native_malloc": {
+        "blocks_in_use": 7944327,
+        "size_in_use": 680137920,
+        "max_size_in_use": 796115344,
+        "size_allocated": 298237952
+      },
+      "gc_counts": [
+        93,
+        0,
+        0
+      ],
+      "gc_stats": [
+        {
+          "collections": 1655,
+          "collected": 953527,
+          "uncollectable": 0
+        },
+        {
+          "collections": 150,
+          "collected": 92504,
+          "uncollectable": 0
+        },
+        {
+          "collections": 7,
+          "collected": 767,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 502
+    },
+    "rss_bytes": 882278400
+  },
+  "relief_action": {
+    "allocator_reported_released_bytes": 0,
+    "snapshot": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 120,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 120,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7200,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1014935,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1367488,
+      "native_malloc": {
+        "blocks_in_use": 7805920,
+        "size_in_use": 680140320,
+        "max_size_in_use": 1610612736,
+        "size_allocated": 298237952
+      },
+      "gc_counts": [
+        111,
+        0,
+        0
+      ],
+      "gc_stats": [
+        {
+          "collections": 1655,
+          "collected": 953527,
+          "uncollectable": 0
+        },
+        {
+          "collections": 150,
+          "collected": 92504,
+          "uncollectable": 0
+        },
+        {
+          "collections": 7,
+          "collected": 767,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 502
+    }
+  },
+  "after_relief": {
+    "state": {
+      "active": 0,
+      "queued": 0,
+      "registered": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "host_load_average": [
+      1.85546875,
+      2.05224609375,
+      2.0009765625
+    ],
+    "diagnostic": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 120,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 120,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7200,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1016292,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1368416,
+      "native_malloc": {
+        "blocks_in_use": 7805975,
+        "size_in_use": 679551680,
+        "max_size_in_use": 1323302912,
+        "size_allocated": 279363584
+      },
+      "gc_counts": [
+        130,
+        0,
+        0
+      ],
+      "gc_stats": [
+        {
+          "collections": 1655,
+          "collected": 953527,
+          "uncollectable": 0
+        },
+        {
+          "collections": 150,
+          "collected": 92504,
+          "uncollectable": 0
+        },
+        {
+          "collections": 7,
+          "collected": 767,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 502
+    },
+    "rss_bytes": 888504320
+  },
+  "recovery_wave": {
+    "elapsed_seconds": 6.639298125170171,
+    "requests": [
+      {
+        "case_id": "prefill",
+        "status": "completed",
+        "usage": {
+          "prompt_tokens": 562,
+          "completion_tokens": 24,
+          "total_tokens": 586
+        },
+        "requested_max_tokens": 24
+      },
+      {
+        "case_id": "short",
+        "status": "completed",
+        "usage": {
+          "prompt_tokens": 40,
+          "completion_tokens": 8,
+          "total_tokens": 48
+        },
+        "requested_max_tokens": 24
+      },
+      {
+        "case_id": "decode",
+        "status": "completed",
+        "usage": {
+          "prompt_tokens": 56,
+          "completion_tokens": 96,
+          "total_tokens": 152
+        },
+        "requested_max_tokens": 96
+      },
+      {
+        "case_id": "short",
+        "status": "completed",
+        "usage": {
+          "prompt_tokens": 40,
+          "completion_tokens": 8,
+          "total_tokens": 48
+        },
+        "requested_max_tokens": 24
+      }
+    ],
+    "state": {
+      "active": 0,
+      "queued": 0,
+      "registered": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "host_load_average": [
+      1.72314453125,
+      2.01708984375,
+      1.98876953125
+    ],
+    "diagnostic": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 124,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 124,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7440,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1166804,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1426080,
+      "native_malloc": {
+        "blocks_in_use": 8029946,
+        "size_in_use": 679289040,
+        "max_size_in_use": 1318847488,
+        "size_allocated": 296288256
+      },
+      "gc_counts": [
+        0,
+        9,
+        2
+      ],
+      "gc_stats": [
+        {
+          "collections": 1686,
+          "collected": 985247,
+          "uncollectable": 0
+        },
+        {
+          "collections": 152,
+          "collected": 94710,
+          "uncollectable": 0
+        },
+        {
+          "collections": 7,
+          "collected": 767,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 502
+    },
+    "rss_bytes": 911540224
+  },
+  "final": {
+    "state": {
+      "active": 0,
+      "queued": 0,
+      "registered": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "host_load_average": [
+      1.72314453125,
+      2.01708984375,
+      1.98876953125
+    ],
+    "diagnostic": {
+      "requests_registered": 0,
+      "active_sequences": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0,
+      "weak_objects": {
+        "requests": {
+          "observed": 124,
+          "alive": 1
+        },
+        "released_sequences": {
+          "observed": 124,
+          "alive": 0
+        },
+        "released_kv_tensors": {
+          "observed": 7440,
+          "alive": 0
+        }
+      },
+      "model_alive": true,
+      "model_parameters_alive": 272,
+      "python_traced_current_bytes": 1144788,
+      "python_traced_peak_bytes": 2035087,
+      "tracemalloc_metadata_bytes": 1425952,
+      "native_malloc": {
+        "blocks_in_use": 8029945,
+        "size_in_use": 679287920,
+        "max_size_in_use": 1318847488,
+        "size_allocated": 296288256
+      },
+      "gc_counts": [
+        72,
+        9,
+        2
+      ],
+      "gc_stats": [
+        {
+          "collections": 1686,
+          "collected": 985247,
+          "uncollectable": 0
+        },
+        {
+          "collections": 152,
+          "collected": 94710,
+          "uncollectable": 0
+        },
+        {
+          "collections": 7,
+          "collected": 767,
+          "uncollectable": 0
+        }
+      ],
+      "gc_collected_by_probe": 502
+    },
+    "rss_bytes": 911540224
+  },
+  "server_stopped": true,
+  "after_model_shutdown": {
+    "requests_registered": 0,
+    "active_sequences": 0,
+    "reserved_tokens": 0,
+    "used_tokens": 0,
+    "kv_tensor_bytes": 0,
+    "weak_objects": {
+      "requests": {
+        "observed": 124,
+        "alive": 0
+      },
+      "released_sequences": {
+        "observed": 124,
+        "alive": 0
+      },
+      "released_kv_tensors": {
+        "observed": 7440,
+        "alive": 0
+      }
+    },
+    "model_alive": false,
+    "model_parameters_alive": 0,
+    "python_traced_current_bytes": 1107700,
+    "python_traced_peak_bytes": 2035087,
+    "tracemalloc_metadata_bytes": 1418752,
+    "native_malloc": {
+      "blocks_in_use": 8028143,
+      "size_in_use": 147320976,
+      "max_size_in_use": 1071383552,
+      "size_allocated": 182960128
+    },
+    "gc_counts": [
+      0,
+      9,
+      2
+    ],
+    "gc_stats": [
+      {
+        "collections": 1686,
+        "collected": 985247,
+        "uncollectable": 0
+      },
+      {
+        "collections": 152,
+        "collected": 94710,
+        "uncollectable": 0
+      },
+      {
+        "collections": 7,
+        "collected": 767,
+        "uncollectable": 0
+      }
+    ],
+    "gc_collected_by_probe": 502
+  }
+}

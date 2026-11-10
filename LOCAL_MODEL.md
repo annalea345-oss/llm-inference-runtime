@@ -103,6 +103,11 @@ work settles. This drops per-request caches; shutdown also closes the worker and
 drops the model reference. The allocator or operating system may retain freed
 memory, so zero live tensors does not imply zero process RSS.
 
+The [retained-memory investigation](benchmarks/retained-memory.md) extends that
+distinction with normal/diagnostic runs, released-object weak references, and
+separate Python/native/RSS measurements. It found no accumulating released KV
+objects in the bounded workload; it does not prove long-term leak freedom.
+
 `/health` exposes backend/device/dtype, context size, model parameter bytes, and
 `kv_tensor_bytes_after_last_step` separately from logical cache counters. The
 KV figure is a snapshot after settled worker steps and cleanup, not a live peak

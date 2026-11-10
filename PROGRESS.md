@@ -741,3 +741,55 @@ then choose one runtime improvement from the evidence.
 
 Next: investigate retained RSS separately, then test real tensor batching against
 the larger-output workload while preserving mixed-client responsiveness checks.
+
+## 2026-11-10 — Retained CPU memory investigation
+
+- Added isolated profiling tools without changing normal scheduler/executor/API
+  code. Two normal real-HTTP sessions and a separate private diagnostic factory
+  each ran 30 four-request mixed waves at concurrency 2. All **364 requests**
+  completed, including the diagnostic post-intervention recovery wave. Sampled
+  idle request/registry/reservation/KV counters were zero throughout.
+- Normal sessions used no tracing, weak observers, forced GC, or allocator
+  interventions. Idle RSS rose during warmup, then ended below wave 1: roughly
+  849→719 MiB and 860→693 MiB. This extends the earlier five-wave observation but
+  does not prove a permanent plateau or reconstruct its cancellation/polling and
+  host conditions. Last-window fluctuations and exact raw observations are kept.
+- Diagnostic-only instance hooks used compacted weak references. Across the
+  120-request workload, all 120 released sequence objects and 7,200 released K/V
+  Tensor wrappers were dead at idle. One completed request stayed alive at idle
+  across every wave, consistent with last-iteration scheduler locals, and reached
+  zero after shutdown. This is a bounded observed tail, not cumulative retention.
+- All 272 model parameter objects stayed alive while loaded; model/parameter
+  references were dead after cleanup. After recovery, 124 sequences / 7,440 K/V
+  wrappers had been observed and were dead at shutdown. Wrapper lifetimes do not
+  account for every native allocation or prove that all pages returned to the OS.
+- Traced allocations made after model load rose about 1.05→1.56 MiB. A one-off
+  idle GC collected 502 objects and reduced traced bytes about 1.53→0.97 MiB, but
+  the corresponding RSS snapshot was higher. A best-effort macOS allocator relief
+  probe reported zero released bytes. Neither probe establishes a useful normal
+  request-time cleanup policy. No forced GC/trim was added to production.
+- Checked Apple's primary malloc API documentation and installed SDK declarations;
+  recorded header hash/API semantics and hardware. Native in-use counters, RSS,
+  and post-load Python tracing are reported separately rather than added or
+  treated as equivalent. The private controls require idle scheduler state and
+  are absent from normal factories. Temporary child servers all stopped.
+- Recorded completed manifests, raw normal/diagnostic waves, interventions,
+  shutdown lifetimes, native API provenance, and reproducible summary in
+  benchmarks/retained-memory-v1. Added an optional standard matplotlib chart,
+  visually inspected it, and documented methods, observer effects, limitations,
+  decisions, and reproduction in benchmarks/retained-memory.md. Matplotlib was
+  already available in the base interpreter; no dependency/model was installed.
+- `.venv/bin/python -m pytest -q` — **433 passed**, including weak non-retention,
+  observer compaction, busy-state intervention refusal, normal-route isolation,
+  archived result reproduction, and malformed/incomplete profile rejection.
+- Validated all eight result/provenance JSON files, 90 zero-ownership idle waves,
+  364 completions, source/workload/render hashes, exact summary reproduction,
+  49 local documentation links, and `git diff --check`. Confirmed normal runtime
+  source was unchanged; all three experiment child servers stopped.
+
+Decision: no accumulating released KV objects were observed in this bounded test,
+and RSS fell after warmup in both normal runs. This is not a general
+leak-free guarantee or a unique explanation for every retained byte. Keep normal
+memory cleanup unchanged. Next: prototype real tensor batching and compare
+larger-output throughput, mixed-request latency, cancellation, and memory against
+these baselines; treat earlier release of idle-loop request locals separately.
