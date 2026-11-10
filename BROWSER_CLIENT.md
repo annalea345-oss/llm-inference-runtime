@@ -41,6 +41,9 @@ Static assets are included in the Python wheel, so installed packages work too.
   HTML or interpreted as Markdown.
 - Press Stop to call the existing cancellation endpoint. If response headers have
   not arrived, or cancellation cannot be reached, the page closes the stream.
+  Stream closure also notifies the scheduler, so a queued request releases its
+  waiting place even when both model slots are busy. Active model work still
+  settles at a safe boundary before its cache is released.
   Native work still cleans up cooperatively; Stop cannot interrupt CPU code.
 - New chat clears the messages held by this tab. It is disabled during a request;
   stop or finish generation first. Conversation settings remain available.

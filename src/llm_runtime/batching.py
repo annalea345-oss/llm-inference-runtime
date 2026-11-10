@@ -138,6 +138,21 @@ class ContinuousBatchScheduler:
                         self.queue.task_done()
         return True
 
+    def abandon(self, request_id: str) -> bool:
+        """Notify transport closure without waiting for an admission turn.
+
+        Waiting work follows the existing immediate cancellation path; active
+        work remains owned until its execution barrier settles. Terminal or
+        stopping schedulers are safe to notify from late response finalizers.
+        """
+        request = self._requests.get(request_id)
+        if request is None:
+            return False
+        request.abandoned = True
+        if not self.running:
+            return False
+        return self.cancel(request_id)
+
     async def stop(self) -> None:
         # Keep restart behind both worker termination and shared-state cleanup.
         async with self._lifecycle_lock:

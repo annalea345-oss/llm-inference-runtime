@@ -55,3 +55,6 @@ The [repeated CPU comparison](cpu-comparison.md) records five repetitions of
 short/long/mixed workloads for both engines, with 640 measured completions and
 separate lifecycle/RSS/admission probes. It identifies delayed queued-disconnect
 cleanup in our runtime and a concrete reason to test real tensor batching later.
+
+The [queued-disconnect fix](disconnect-cleanup.md) follows that finding with
+deterministic saturation/FIFO/ownership tests and a targeted real CPU recheck.
