@@ -700,3 +700,44 @@ then choose one runtime improvement from the evidence.
   mixed-request latency checks, and investigate retained RSS. Fixed-arrival
   fairness replay, cache reuse, acceleration, and production-capacity stress are
   not established by this experiment. No scheduler/executor code changed here.
+
+## 2026-11-10 — Immediate queued-disconnect cleanup
+
+- Reproduced the comparison finding deterministically: with two model steps
+  blocked and a full waiting queue, disconnecting the middle waiter left its slot
+  occupied. The test failed before implementation without releasing either step.
+- Added scheduler `abandon(id)`, which marks transport abandonment and reuses
+  explicit cancellation. Waiting requests, including a memory-blocked pending
+  head, are removed immediately. Active resources remain protected until their
+  selected execution barrier settles. Late terminal/shutdown notifications are
+  safe and no event is delivered to an abandoned transport.
+- Wired native/chat streaming cleanup and non-streaming chat collection to their
+  owning scheduler. Response callbacks bind that owner at construction rather
+  than looking up a potentially restarted app state on closure.
+- Found a further ASGI 2.4 case: installed Starlette relies on send errors, so a
+  waiting stream with no new output did not observe the disconnect. A new test
+  timed out before the listener change. Added a concurrent disconnect listener
+  for modern transports; keep the existing listener for older transports and
+  reap stream/listener tasks on completion, error, or external cancellation.
+- `.venv/bin/python -m pytest -q` — **411 passed**, including **28 new cases**.
+  New tests cover both policies, full-active/full-waiting saturation, FIFO,
+  immediate replacement admission, no abandoned execution, single release,
+  balanced join, native/chat/nonstream closures, handler cancellation, header
+  failures, modern ASGI paths, pending memory admission, shutdown settlement,
+  restart/late notifications, and successful response listener cleanup.
+- Added a targeted reusable real-model verifier. Three queued-disconnect probes
+  reclaimed the waiter with both blockers still active, observed at 1.19/1.28/
+  1.24 ms including client/polling overhead. Three active-disconnect probes reached
+  observed idle in about 23 ms. Explicit cancellation still emitted its terminal
+  error/[DONE], all seven follow-ups completed, and final request/KV counters were
+  zero. The temporary model server was stopped; no dependencies/models downloaded.
+- Recorded commands, source/checkpoint hashes, versions, trial states, and final
+  cleanup in benchmarks/disconnect-cleanup.json. Added a report and updated
+  README, chat API, browser, model setup, benchmark index, and comparison follow-up.
+  Previous comparison data is unchanged; no new throughput/RSS claim is made.
+- Verified the live record's source hashes, all seven successful follow-ups,
+  final zero counters/stopped server, 47 local documentation links, and
+  `git diff --check` before committing.
+
+Next: investigate retained RSS separately, then test real tensor batching against
+the larger-output workload while preserving mixed-client responsiveness checks.

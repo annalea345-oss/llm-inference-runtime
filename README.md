@@ -248,12 +248,16 @@ can still retain memory, so this is not a global memory bound. Production servin
 will need admission budgets and an explicit slow-consumer/backpressure policy.
 Replacement executors must obey the generation limit.
 
-Stream cleanup marks disconnected requests as abandoned. Queued abandoned work
-is skipped; active work is removed at iteration boundaries. Results from a step
-that finishes after abandonment are discarded without emitting more events. This is
-cooperative disconnect cleanup, without GPU interruption. Abandoned waiting
-requests retain their queue slot until dequeued; explicit cancellation below
-removes waiting requests immediately. Shutdown cancels the worker, balances queue
+HTTP cleanup marks disconnected requests as abandoned and notifies their owning
+scheduler through the existing cancellation path. Waiting requests release their
+queue slot as soon as the transport closure is handled, even when every active
+slot is busy or the FIFO head is waiting for memory. Surviving waiters keep FIFO
+order. Active work retains its resources until the selected execution barrier
+settles; later results are discarded without emitting more events. This is
+cooperative cleanup, without interruption of native model computation. Directly
+setting a request's abandoned flag is still observed at execution/admission
+boundaries; transport integrations should call the scheduler's `abandon()` method.
+Shutdown cancels the worker, balances queue
 bookkeeping, and places terminal errors on active and waiting request streams
 unless explicit cancellation was already accepted. Delivery still
 depends on the HTTP connection and ASGI server shutdown behavior.
@@ -412,6 +416,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 12 — Portable benchmark preflight (implemented) | Explicit model selection, configurable readiness, portable profile, usage policies, excluded streaming compatibility check | [Protocol and real-model smoke evidence](benchmarks/http-compatibility.md); external engine verification in milestone 13 |
 | 13 — External engine compatibility (verified) | Pinned CPU-only llama.cpp build, float32 conversion, prompt equivalence, real HTTP smoke | [272 tensor checks, four prompt fixtures, eight completed smoke requests](benchmarks/llama-cpp.md); repeated comparison in milestone 14 |
 | 14 — Repeated CPU comparison (complete) | Five repetitions of short/long/mixed workloads at concurrency 1/2; separate disconnect, RSS, and token-admission probes | [640 measured completions, 383 tests, raw data, and a queued-disconnect finding](benchmarks/cpu-comparison.md) |
+| 15 — Queued disconnect cleanup (implemented) | HTTP closure immediately cancels waiting work; active ownership remains protected by its barrier | [411 tests and three real CPU trials reclaiming a waiter with both active slots busy](benchmarks/disconnect-cleanup.md) |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

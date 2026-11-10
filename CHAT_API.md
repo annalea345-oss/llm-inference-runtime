@@ -119,14 +119,20 @@ The `X-Request-ID` response header contains the raw runtime ID. Use it with the
 existing `POST /requests/{id}/cancel` endpoint; the `chatcmpl-...` completion ID
 is a separate wire identifier and is not accepted by that endpoint. Stream headers
 arrive before completion; nonstream headers arrive with the completed response.
-Closing the HTTP request also abandons work, with cooperative cleanup at safe
-boundaries. A disconnected nonstream transport may receive a diagnostic 499
+Closing the HTTP request marks it abandoned and notifies the owning scheduler.
+Waiting requests are removed immediately on that notification, including while
+all active slots are occupied. Active resources remain owned until in-flight
+execution settles. A disconnected nonstream transport may receive a diagnostic 499
 `client_disconnected` response if it can still accept sends.
 
 Both formats share the same bounded queue, active capacity, scheduling policies,
 logical reservations, per-request model caches, and cancellation races as
 `/generate`. Nonstream requests watch for disconnect while collecting output;
-streaming uses the existing response cleanup, including header-send failure.
+streaming uses response cleanup, including header-send failure. On ASGI 2.4+
+transports it also watches disconnect notifications while awaiting output,
+because a queued response may have nothing to send that could fail. Older
+transports use Starlette's existing listener. Listener/stream tasks are reaped
+on completion, errors, or cancellation.
 In-flight model work retains ownership until its thread settles. Completed
 responses do not retain live request registry entries.
 

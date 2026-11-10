@@ -87,7 +87,7 @@ def _usage(request, terminal):
             'total_tokens': request.prompt_token_count + terminal.data['generated_tokens']}
 
 
-async def _complete(request, http_request):
+async def _complete(request, http_request, abandon):
     """Collect before sending headers; listen for nonstream HTTP disconnects."""
     async def consume():
         pieces = []
@@ -114,6 +114,7 @@ async def _complete(request, http_request):
         raise ChatError(499, 'client disconnected', 'client_disconnected')
     finally:
         request.abandoned = True
+        abandon(request.request_id)
         for task in (consume_task, disconnect_task):
             task.cancel()
         await asyncio.gather(consume_task, disconnect_task, return_exceptions=True)
@@ -178,7 +179,7 @@ def install_chat_routes(app: FastAPI, stream_response) -> None:
             return 'stop' if terminal.data['finish_reason'] == 'eos' else 'length'
 
         if not body.stream:
-            text, terminal = await _complete(request, http_request)
+            text, terminal = await _complete(request, http_request, scheduler.abandon)
             error = _terminal_error(terminal)
             if error is not None:
                 raise error

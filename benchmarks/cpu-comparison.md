@@ -4,6 +4,10 @@ This phase compares the current educational runtime with the previously pinned
 llama.cpp CPU build. It also probes disconnect cleanup and observes process RSS.
 Neither engine's inference implementation is changed by the experiment.
 
+Follow-up, 2026-11-10: the [queued-disconnect cleanup fix](disconnect-cleanup.md)
+now reclaims the waiting request while both active slots remain occupied. The
+original comparison data and findings below are preserved unchanged.
+
 In plain language: both servers use the same small model, and we give them the
 same tasks. A longer prompt tests the work of reading the question and building
 its KV cache (prefill). A larger answer limit tests repeated next-token work

@@ -1,3 +1,4 @@
+import asyncio
 import json
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -19,8 +20,10 @@ from llm_runtime.chat import install_chat_routes
 
 
 class GenerationResponse(StreamingResponse):
-    def __init__(self, request: InferenceRequest, content: AsyncIterator[str]) -> None:
+    def __init__(self, request: InferenceRequest, content: AsyncIterator[str],
+                 *, on_close: Callable[[str], bool] | None = None) -> None:
         self.request = request
+        self.on_close = on_close
         super().__init__(
             content, media_type="text/event-stream",
             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no",
@@ -28,11 +31,33 @@ class GenerationResponse(StreamingResponse):
         )
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        tasks = []
         try:
-            await super().__call__(scope, receive, send)
+            spec = tuple(map(int, scope.get('asgi', {}).get('spec_version', '2.0').split('.')))
+            if spec >= (2, 4):
+                # Newer StreamingResponse relies on send failures alone. A
+                # waiting request may have no data to send, so also observe the
+                # server's disconnect notification without waiting for admission.
+                stream = asyncio.create_task(super().__call__(scope, receive, send))
+                listener = asyncio.create_task(self.listen_for_disconnect(receive))
+                tasks = [stream, listener]
+                done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+                (stream if stream in done else listener).result()
+            else:
+                # Older StreamingResponse already runs its disconnect listener.
+                await super().__call__(scope, receive, send)
         finally:
-            # Covers header sends and body sends, even before iteration starts.
-            self.request.abandoned = True
+            try:
+                # Covers failed headers, body sends, and cancellation before
+                # iteration. Notify before any awaited transport cleanup.
+                self.request.abandoned = True
+                if self.on_close is not None:
+                    self.on_close(self.request.request_id)
+            finally:
+                for task in tasks:
+                    task.cancel()
+                if tasks:
+                    await asyncio.gather(*tasks, return_exceptions=True)
 
 
 def create_app(
@@ -65,6 +90,11 @@ def create_app(
     app = FastAPI(title="LLM Inference Runtime", lifespan=lifespan)
     web_directory = Path(__file__).with_name("web")
     app.mount("/assets", StaticFiles(directory=web_directory), name="assets")
+
+    def stream_response(request, content):
+        # Bind the owning scheduler now, rather than looking it up on closure:
+        # a terminal response may outlive this app's lifespan/restart.
+        return GenerationResponse(request, content, on_close=app.state.scheduler.abandon)
 
     @app.get("/", include_in_schema=False)
     async def browser_client():
@@ -118,9 +148,9 @@ def create_app(
                 if event.kind in ("done", "error"):
                     return
 
-        return GenerationResponse(request, stream())
+        return stream_response(request, stream())
 
-    install_chat_routes(app, GenerationResponse)
+    install_chat_routes(app, stream_response)
     return app
 
 

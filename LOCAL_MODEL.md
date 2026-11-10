@@ -84,6 +84,10 @@ curl -X POST http://127.0.0.1:8000/requests/REQUEST_ID/cancel
   cannot terminate native model computation: even repeated shutdown cancellation
   waits for submitted worker operations to finish before releasing state. A stuck
   native operation can therefore delay shutdown.
+- HTTP disconnects notify the scheduler immediately: a request waiting for an
+  active slot or a memory reservation releases its waiting place without waiting
+  for another model step. Already active requests keep their tensors/reservations
+  until their in-flight step settles. See the [targeted regression check](benchmarks/disconnect-cleanup.md).
 
 ## Memory and cleanup
 
