@@ -1,0 +1,104 @@
+{
+  "scope": "real local CPU model; in-process ASGI; no network latency measurement",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "model_manifest": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+  },
+  "config": {
+    "queue_capacity": 64,
+    "max_active_requests": 2,
+    "token_budget": 8,
+    "prefill_delay": 0.05,
+    "token_delay": 0.03,
+    "kv_cache_capacity_tokens": 8192,
+    "scheduling_policy": "round_robin",
+    "prefill_token_budget": 8
+  },
+  "executor": {
+    "backend": "transformers",
+    "device": "cpu",
+    "dtype": "float32",
+    "tokenization": "model",
+    "context_limit": 32768,
+    "model": "qwen2",
+    "parameter_bytes": 1976131072,
+    "kv_tensor_bytes_after_last_step": 0
+  },
+  "load_seconds": 8.63692633388564,
+  "peak_process_rss_bytes": 2276458496,
+  "peak_observed_kv_tensor_bytes": 2260992,
+  "cancellation_verified": true,
+  "final_cache_bytes": 0,
+  "requests": [
+    {
+      "prompt": "What is the capital of France? Answer briefly.",
+      "output": "The capital of France is Paris.",
+      "generated_tokens": 8,
+      "reference_token_ids_match": true,
+      "terminal": {
+        "request_id": "87819d30b7b04fa2b1d0b899e4bee387",
+        "generated_tokens": 8,
+        "finish_reason": "eos",
+        "timings": {
+          "queue_wait_ms": 13.873541727662086,
+          "time_to_first_token_ms": 1053.2457916997373,
+          "inter_token_ms": [
+            157.3976669460535,
+            75.22633299231529,
+            74.85700026154518,
+            75.56783268228173,
+            77.4294170551002,
+            74.87958297133446,
+            38.964834064245224
+          ],
+          "end_to_end_ms": 1627.5800419971347
+        }
+      }
+    },
+    {
+      "prompt": "What color is the sky on a clear day?",
+      "output": "On a clear day, the sky is typically a bright, blue color. This is because the Earth's atmosphere, which",
+      "generated_tokens": 24,
+      "reference_token_ids_match": true,
+      "terminal": {
+        "request_id": "69f58062346d438298ca3d373133f002",
+        "generated_tokens": 24,
+        "finish_reason": "length",
+        "timings": {
+          "queue_wait_ms": 0.22620800882577896,
+          "time_to_first_token_ms": 1197.0052500255406,
+          "inter_token_ms": [
+            75.22358279675245,
+            74.85616719350219,
+            75.56783268228173,
+            77.42862496525049,
+            74.88104235380888,
+            39.34274986386299,
+            43.19166671484709,
+            43.088666163384914,
+            55.04304217174649,
+            39.67083292081952,
+            42.434291914105415,
+            40.82570783793926,
+            38.42316707596183,
+            37.456500343978405,
+            36.848457995802164,
+            37.303374614566565,
+            36.064709071069956,
+            40.47833289951086,
+            41.971000377088785,
+            39.65366678312421,
+            37.8030831925571,
+            37.89520775899291,
+            0.22233417257666588
+          ],
+          "end_to_end_ms": 2262.6857915893197
+        }
+      }
+    }
+  ]
+}

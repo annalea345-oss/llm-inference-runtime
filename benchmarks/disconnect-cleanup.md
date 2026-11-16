@@ -31,6 +31,9 @@ available to the next client while the server continues its current work.
   not interrupt a PyTorch operation or release its live tensors early. No terminal
   events are queued for a transport marked abandoned.
 
+Follow-up: the [retained-memory investigation](retained-memory.md) is complete;
+it records longer normal runs and separate object/native/Python diagnostics.
+
 The server still has the same queue, active limits, policies, token accounting,
 checkpoint, and CPU executor. No dependency, model download, acceleration, or
 physical-memory-cap change is part of this fix.

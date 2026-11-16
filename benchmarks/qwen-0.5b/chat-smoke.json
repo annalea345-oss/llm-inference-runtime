@@ -1,0 +1,64 @@
+{
+  "scope": "real checkpoint chat adapter; buffered in-process ASGI, not network latency",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "model_manifest": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+  },
+  "model_id": "local-model",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant. Answer briefly."
+    },
+    {
+      "role": "user",
+      "content": "My name is Ada."
+    },
+    {
+      "role": "assistant",
+      "content": "Hello, Ada."
+    },
+    {
+      "role": "user",
+      "content": "What is my name?"
+    }
+  ],
+  "reference_text": "Your name is Ada.",
+  "reference_token_ids": [
+    7771,
+    829,
+    374,
+    51149,
+    13,
+    151645
+  ],
+  "json_matches_reference": true,
+  "stream_matches_reference": true,
+  "json_response": {
+    "id": "chatcmpl-d8c2e1fdef954f39aef3bdd86b66ee2d",
+    "object": "chat.completion",
+    "created": 1794838286,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Your name is Ada."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 46,
+      "completion_tokens": 6,
+      "total_tokens": 52
+    }
+  },
+  "stream_chunk_count": 8,
+  "final_live_cache_bytes": 0
+}

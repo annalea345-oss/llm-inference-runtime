@@ -1,0 +1,55 @@
+{
+  "requests_registered": 0,
+  "active_sequences": 0,
+  "reserved_tokens": 0,
+  "used_tokens": 0,
+  "kv_tensor_bytes": 0,
+  "weak_objects": {
+    "requests": {
+      "observed": 124,
+      "alive": 0
+    },
+    "released_sequences": {
+      "observed": 124,
+      "alive": 0
+    },
+    "released_kv_tensors": {
+      "observed": 7440,
+      "alive": 0
+    }
+  },
+  "model_alive": false,
+  "model_parameters_alive": 0,
+  "python_traced_current_bytes": 1107700,
+  "python_traced_peak_bytes": 2035087,
+  "tracemalloc_metadata_bytes": 1418752,
+  "native_malloc": {
+    "blocks_in_use": 8028143,
+    "size_in_use": 147320976,
+    "max_size_in_use": 1071383552,
+    "size_allocated": 182960128
+  },
+  "gc_counts": [
+    0,
+    9,
+    2
+  ],
+  "gc_stats": [
+    {
+      "collections": 1686,
+      "collected": 985247,
+      "uncollectable": 0
+    },
+    {
+      "collections": 152,
+      "collected": 94710,
+      "uncollectable": 0
+    },
+    {
+      "collections": 7,
+      "collected": 767,
+      "uncollectable": 0
+    }
+  ],
+  "gc_collected_by_probe": 502
+}
