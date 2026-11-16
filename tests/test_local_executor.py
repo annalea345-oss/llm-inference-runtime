@@ -11,16 +11,20 @@ from llm_runtime.protocol import ExecutionStep, InferenceRequest
 from llm_runtime.worker import SerialWorker
 
 
-def components(eos=None):
+def components(eos=None, architecture='llama'):
     import torch
-    from transformers import LlamaConfig, LlamaForCausalLM
+    from transformers import LlamaConfig, LlamaForCausalLM, Qwen2Config, Qwen2ForCausalLM
     torch.manual_seed(7)
     torch.set_num_threads(2)
-    config = LlamaConfig(vocab_size=16, hidden_size=16, intermediate_size=32,
+    config_type, model_type = ((LlamaConfig, LlamaForCausalLM) if architecture == 'llama'
+                               else (Qwen2Config, Qwen2ForCausalLM))
+    config = config_type(vocab_size=16, hidden_size=16, intermediate_size=32,
                          num_hidden_layers=2, num_attention_heads=2,
                          num_key_value_heads=2, max_position_embeddings=64,
                          bos_token_id=1, eos_token_id=eos, pad_token_id=0)
-    model = LlamaForCausalLM(config).eval()
+    model = model_type(config).eval()
+    if architecture == 'qwen2':
+        model.generation_config.repetition_penalty = 1.1
 
     class Tokenizer:
         def apply_chat_template(self, messages, **kwargs):
@@ -41,8 +45,9 @@ async def prefill(executor, request, size):
 
 
 @pytest.mark.parametrize('chunk', [1, 2, 32])
-async def test_cached_steps_match_reference_greedy_generation_and_release_real_tensors(chunk):
-    model, tokenizer, torch = components()
+@pytest.mark.parametrize('architecture', ['llama', 'qwen2'])
+async def test_cached_steps_match_reference_greedy_generation_and_release_real_tensors(chunk, architecture):
+    model, tokenizer, torch = components(architecture=architecture)
     executor = LocalModelExecutor(model, tokenizer, torch, SerialWorker())
     request = InferenceRequest('test', 4)
     request.prompt_token_ids = executor.tokenize(request.prompt)
@@ -50,7 +55,8 @@ async def test_cached_steps_match_reference_greedy_generation_and_release_real_t
         with torch.inference_mode():
             expected = model.generate(torch.tensor([request.prompt_token_ids]),
                                       attention_mask=torch.ones(1, 4, dtype=torch.long),
-                                      max_new_tokens=4, do_sample=False, use_cache=True)[0, 4:].tolist()
+                                      max_new_tokens=4, do_sample=False, repetition_penalty=1.0,
+                                      use_cache=True)[0, 4:].tolist()
         await prefill(executor, request, chunk)
         assert executor.active_sequences == 1
         assert executor.cache_bytes == 4 * 256
@@ -60,6 +66,27 @@ async def test_cached_steps_match_reference_greedy_generation_and_release_real_t
         assert executor.cache_bytes == (4 + 3) * 256
         executor.release_request(request.request_id)
         assert executor.cache_bytes == executor.active_sequences == 0
+    finally:
+        await executor.aclose()
+
+
+async def test_qwen_multiple_eos_ids_stop_without_an_extra_forward():
+    model, tokenizer, torch = components(eos=0, architecture='qwen2')
+    model.generation_config.eos_token_id = [0, 2]
+    with torch.no_grad():
+        model.lm_head.weight.zero_()
+    executor = LocalModelExecutor(model, tokenizer, torch, SerialWorker())
+    request = InferenceRequest('test', 8)
+    request.prompt_token_ids = executor.tokenize('test')
+    try:
+        await prefill(executor, request, 2)
+        before = executor.cache_bytes
+        result = await executor.execute(ExecutionStep(request, 'decode', 0, 1))
+        assert executor.eos_ids == {0, 2}
+        assert result.token_id == 0 and result.finish_reason == 'eos'
+        assert executor.cache_bytes == before
+        executor.release_request(request.request_id)
+        assert executor.active_sequences == executor.cache_bytes == 0
     finally:
         await executor.aclose()
 

@@ -47,7 +47,7 @@ async def verify(path):
             with torch.inference_mode():
                 output = executor.model.generate(
                     torch.tensor([ids]), attention_mask=torch.ones(1, len(ids), dtype=torch.long),
-                    max_new_tokens=max_tokens, do_sample=False, use_cache=True,
+                    max_new_tokens=max_tokens, do_sample=False, repetition_penalty=1.0, use_cache=True,
                     pad_token_id=executor.tokenizer.eos_token_id,
                 )[0, len(ids):].tolist()
             return output

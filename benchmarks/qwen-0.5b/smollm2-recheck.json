@@ -1,0 +1,104 @@
+{
+  "scope": "real local CPU model; in-process ASGI; no network latency measurement",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "model_manifest": {
+    "model_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac"
+  },
+  "config": {
+    "queue_capacity": 64,
+    "max_active_requests": 2,
+    "token_budget": 8,
+    "prefill_delay": 0.05,
+    "token_delay": 0.03,
+    "kv_cache_capacity_tokens": 8192,
+    "scheduling_policy": "round_robin",
+    "prefill_token_budget": 8
+  },
+  "executor": {
+    "backend": "transformers",
+    "device": "cpu",
+    "dtype": "float32",
+    "tokenization": "model",
+    "context_limit": 8192,
+    "model": "llama",
+    "parameter_bytes": 538060032,
+    "kv_tensor_bytes_after_last_step": 0
+  },
+  "load_seconds": 2.130790499970317,
+  "peak_process_rss_bytes": 1149714432,
+  "peak_observed_kv_tensor_bytes": 4377600,
+  "cancellation_verified": true,
+  "final_cache_bytes": 0,
+  "requests": [
+    {
+      "prompt": "What is the capital of France? Answer briefly.",
+      "output": "The capital of France is Paris.",
+      "generated_tokens": 8,
+      "reference_token_ids_match": true,
+      "terminal": {
+        "request_id": "1c0c65c2430141f992c8618555ab6aab",
+        "generated_tokens": 8,
+        "finish_reason": "eos",
+        "timings": {
+          "queue_wait_ms": 7.804874796420336,
+          "time_to_first_token_ms": 308.33054101094604,
+          "inter_token_ms": [
+            28.486874885857105,
+            35.49262508749962,
+            31.769999768584967,
+            30.179542023688555,
+            29.342292342334986,
+            28.585582971572876,
+            14.610457699745893
+          ],
+          "end_to_end_ms": 506.8085831589997
+        }
+      }
+    },
+    {
+      "prompt": "What color is the sky on a clear day?",
+      "output": "The sky on a clear day is usually a deep, rich shade of blue, with a faint hint of pink or orange",
+      "generated_tokens": 24,
+      "reference_token_ids_match": true,
+      "terminal": {
+        "request_id": "05ae03355ca440cea72157d3187c4246",
+        "generated_tokens": 24,
+        "finish_reason": "length",
+        "timings": {
+          "queue_wait_ms": 0.1937919296324253,
+          "time_to_first_token_ms": 300.72758300229907,
+          "inter_token_ms": [
+            28.484541922807693,
+            35.49495805054903,
+            31.768416985869408,
+            30.182417016476393,
+            29.33849999681115,
+            28.588583227247,
+            14.64120764285326,
+            14.81741713359952,
+            14.502458274364471,
+            14.2685417085886,
+            14.70804214477539,
+            13.27587477862835,
+            13.565500266849995,
+            14.420040883123875,
+            13.890374917536974,
+            14.811709057539701,
+            13.752125203609467,
+            14.892749954015017,
+            13.880415819585323,
+            14.35916731134057,
+            14.603499788790941,
+            14.052374754101038,
+            0.2010003663599491
+          ],
+          "end_to_end_ms": 713.233333081007
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1177 @@
+{
+  "checked_at": "2026-11-16T14:10:09.278059+00:00",
+  "scope": "Larger-model CPU HTTP compatibility smoke, not an engine speed or answer-quality comparison",
+  "project_base_commit": "0c80c8b9c0d0525f8e3bd2b3c3b35fd7760cf155",
+  "model": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+  },
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "python": "3.12.7",
+  "packages": {
+    "torch": "2.14.1",
+    "transformers": "4.57.6",
+    "httpx": "0.28.1",
+    "uvicorn": "0.54.0"
+  },
+  "model_files_sha256": {
+    ".runtime_download.json": "b85806b6a0b3f6196ff3f7baaa77a754dd336547d773136ef6ed11c60c71b5e6",
+    "LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+    "README.md": "b19c806a904db6dc878a0462e70b551f6b7ac78dfbb88c2eb966ca2b9109ae15",
+    "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+    "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "runtime_model.json": "b85806b6a0b3f6196ff3f7baaa77a754dd336547d773136ef6ed11c60c71b5e6",
+    "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "source_sha256": {
+    "scripts/verify_additional_model.py": "bfab6780b2c1a7a7338266ee744b4e93bb0f71904b368ceaeacedc569644aaaf",
+    "scripts/compare_engines.py": "1cc572ae2832e5efc77515bad031a3e54f26d538abf88b730a4e271f2b67fc75",
+    "scripts/verify_local_model.py": "4d366f40add0f5926c5a88439275bcaa176df674d92032b3ee0335965e6128a0",
+    "scripts/verify_chat_api.py": "4481009dffa9cccbc3132e9698a543d8fc541b922b4dced49d2915e806e86fa7",
+    "src/llm_runtime/download_model.py": "e1b6b63e60252d7c7cb0c99271515b7e8983cee427c0cfc73c50f840b5e3a5e1",
+    "src/llm_runtime/local_executor.py": "83522622f4fa424235953e71faa91fc99b1e526a0c1c4dbc01ef5612b00bf4b8",
+    "src/llm_runtime/api.py": "41d5c05479264ce1a93e20cd641b04a694e332147e691a41336b6bf1d0bb15c7",
+    "src/llm_runtime/chat.py": "98403287c68de4780792f335c3956fcf0fd5bcbcae0e7280b76930310b65d777",
+    "src/llm_runtime/batching.py": "10657a6d520c553f6100f0ffbf35f448a7f163ef7f0edc619e52d6e84de19149",
+    "src/llm_runtime/http_benchmark.py": "5aaf3f32c3b5630254277b42cc999507cc4c90a09c98d19b3b259d86c598aa5c"
+  },
+  "http_runs": [
+    {
+      "schema_version": 2,
+      "scope": "external HTTP streaming; client receipt times, not model token timings",
+      "base_url": "http://127.0.0.1:8020",
+      "profile": "runtime",
+      "model": {
+        "id": "local-model",
+        "object": "model",
+        "created": 1794838210,
+        "owned_by": "llm-runtime"
+      },
+      "health": {
+        "status": "ok",
+        "queued_requests": 0,
+        "config": {
+          "queue_capacity": 64,
+          "max_active_requests": 2,
+          "token_budget": 32,
+          "prefill_delay": 0.05,
+          "token_delay": 0.03,
+          "kv_cache_capacity_tokens": 8192,
+          "scheduling_policy": "round_robin",
+          "prefill_token_budget": 8
+        },
+        "request_states": [],
+        "executor": {
+          "backend": "transformers",
+          "device": "cpu",
+          "dtype": "float32",
+          "tokenization": "model",
+          "context_limit": 32768,
+          "model": "qwen2",
+          "parameter_bytes": 1976131072,
+          "kv_tensor_bytes_after_last_step": 0
+        },
+        "kv_cache": {
+          "capacity_tokens": 8192,
+          "reserved_tokens": 0,
+          "used_tokens": 0,
+          "available_tokens": 8192
+        },
+        "active_request_ids": [],
+        "active_requests": 0,
+        "active_request_id": null
+      },
+      "preflight": {
+        "status": "passed",
+        "stage": "complete",
+        "message": null,
+        "readiness": {
+          "path": "/health",
+          "status": "passed",
+          "http_status": 200,
+          "body": {
+            "status": "ok",
+            "queued_requests": 0,
+            "config": {
+              "queue_capacity": 64,
+              "max_active_requests": 2,
+              "token_budget": 32,
+              "prefill_delay": 0.05,
+              "token_delay": 0.03,
+              "kv_cache_capacity_tokens": 8192,
+              "scheduling_policy": "round_robin",
+              "prefill_token_budget": 8
+            },
+            "request_states": [],
+            "executor": {
+              "backend": "transformers",
+              "device": "cpu",
+              "dtype": "float32",
+              "tokenization": "model",
+              "context_limit": 32768,
+              "model": "qwen2",
+              "parameter_bytes": 1976131072,
+              "kv_tensor_bytes_after_last_step": 0
+            },
+            "kv_cache": {
+              "capacity_tokens": 8192,
+              "reserved_tokens": 0,
+              "used_tokens": 0,
+              "available_tokens": 8192
+            },
+            "active_request_ids": [],
+            "active_requests": 0,
+            "active_request_id": null
+          }
+        },
+        "model": {
+          "id": "local-model",
+          "object": "model",
+          "created": 1794838210,
+          "owned_by": "llm-runtime"
+        },
+        "health": {
+          "status": "ok",
+          "queued_requests": 0,
+          "config": {
+            "queue_capacity": 64,
+            "max_active_requests": 2,
+            "token_budget": 32,
+            "prefill_delay": 0.05,
+            "token_delay": 0.03,
+            "kv_cache_capacity_tokens": 8192,
+            "scheduling_policy": "round_robin",
+            "prefill_token_budget": 8
+          },
+          "request_states": [],
+          "executor": {
+            "backend": "transformers",
+            "device": "cpu",
+            "dtype": "float32",
+            "tokenization": "model",
+            "context_limit": 32768,
+            "model": "qwen2",
+            "parameter_bytes": 1976131072,
+            "kv_tensor_bytes_after_last_step": 0
+          },
+          "kv_cache": {
+            "capacity_tokens": 8192,
+            "reserved_tokens": 0,
+            "used_tokens": 0,
+            "available_tokens": 8192
+          },
+          "active_request_ids": [],
+          "active_requests": 0,
+          "active_request_id": null
+        },
+        "sample": {
+          "index": -1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 19.089958164840937,
+            "first_content": 609.1235829517245,
+            "completion": 830.1939582452178,
+            "content_delta_gaps": [
+              37.634334061294794,
+              38.556375075131655,
+              35.795874893665314,
+              35.52445815876126,
+              37.19470789656043,
+              36.164000164717436
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838213,
+            "last_created": 1794838213,
+            "created_changes": 0
+          },
+          "request_id": "52e097e5590d4c0fb75ff7826d0cb88f",
+          "elapsed_ms": 830.5632080882788
+        },
+        "model_selection": "discovery"
+      },
+      "preflight_only": false,
+      "workload": {
+        "requests": 4,
+        "concurrency": 1,
+        "warmup": 2,
+        "prompt": "What is the capital of France? Answer briefly.",
+        "max_tokens": 32,
+        "timeout_seconds": 60,
+        "arrival_mode": "closed_loop",
+        "usage_mode": "required",
+        "created_policy": "stable"
+      },
+      "connections": "shared client pool; metadata and preflight/warmup connections reused; no retries",
+      "notes": [
+        "Metadata, one preflight stream, and warmups excluded from measured elapsed time.",
+        "Preflight uses the workload prompt and may warm server prefix caches.",
+        "Readiness checks only validate HTTP success; liveness is not measured.",
+        "Content deltas can contain multiple tokens or arrive together in network buffers.",
+        "Token throughput is null if any completed stream lacks verified terminal usage."
+      ],
+      "elapsed_seconds": 2.1992547907866538,
+      "completed": 4,
+      "rejected": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "completed_requests_per_second": 1.818797902251806,
+      "usage_verified_requests": 4,
+      "usage_missing_requests": 0,
+      "completed_tokens_per_second": 14.550383218014447,
+      "latency_ms": {
+        "headers": {
+          "count": 4,
+          "mean": 1.2818854302167892,
+          "p50": 1.0706670582294464,
+          "p95": 1.8042498268187046,
+          "p99": 1.8042498268187046
+        },
+        "first_content": {
+          "count": 4,
+          "mean": 320.03885437734425,
+          "p50": 245.45641662552953,
+          "p95": 509.2608337290585,
+          "p99": 509.2608337290585
+        },
+        "completion": {
+          "count": 4,
+          "mean": 549.5001251110807,
+          "p50": 490.37924967706203,
+          "p95": 742.2677087597549,
+          "p99": 742.2677087597549
+        }
+      },
+      "content_delta_gap_ms": {
+        "count": 24,
+        "mean": 38.201324622302,
+        "p50": 37.39787498489022,
+        "p95": 42.719040997326374,
+        "p99": 43.722833041101694
+      },
+      "samples": [
+        {
+          "index": 0,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.061249990016222,
+            "first_content": 289.831125177443,
+            "completion": 509.82462521642447,
+            "content_delta_gaps": [
+              37.66487492248416,
+              36.08833299949765,
+              36.76720894873142,
+              36.663124803453684,
+              36.076166201382875,
+              36.494291853159666
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838214,
+            "last_created": 1794838214,
+            "created_changes": 0
+          },
+          "request_id": "ed3aba8e379948d0b1a43e38d23519e6",
+          "elapsed_ms": 510.0932498462498
+        },
+        {
+          "index": 1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.0706670582294464,
+            "first_content": 245.45641662552953,
+            "completion": 490.37924967706203,
+            "content_delta_gaps": [
+              39.76795822381973,
+              40.348667185753584,
+              39.86120782792568,
+              40.996375028043985,
+              43.722833041101694,
+              39.95054168626666
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838215,
+            "last_created": 1794838215,
+            "created_changes": 0
+          },
+          "request_id": "14cdebfd75c249399eef86ab1a4218cd",
+          "elapsed_ms": 490.6423748470843
+        },
+        {
+          "index": 2,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.191374845802784,
+            "first_content": 509.2608337290585,
+            "completion": 742.2677087597549,
+            "content_delta_gaps": [
+              42.719040997326374,
+              40.247584227472544,
+              38.67933293804526,
+              36.28495801240206,
+              37.42466727271676,
+              37.39787498489022
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838215,
+            "last_created": 1794838215,
+            "created_changes": 0
+          },
+          "request_id": "c2581e44c80b45fd9100a8f0f8ceb8ea",
+          "elapsed_ms": 742.6166669465601
+        },
+        {
+          "index": 3,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.8042498268187046,
+            "first_content": 235.60704197734594,
+            "completion": 455.52891679108143,
+            "content_delta_gaps": [
+              37.43966715410352,
+              35.95358273014426,
+              37.16449998319149,
+              36.9232501834631,
+              36.11570782959461,
+              36.08004190027714
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838216,
+            "last_created": 1794838216,
+            "created_changes": 0
+          },
+          "request_id": "f60173ebac6a4b8daf8525fc147aa5b1",
+          "elapsed_ms": 455.81437507644296
+        }
+      ]
+    },
+    {
+      "schema_version": 2,
+      "scope": "external HTTP streaming; client receipt times, not model token timings",
+      "base_url": "http://127.0.0.1:8020",
+      "profile": "runtime",
+      "model": {
+        "id": "local-model",
+        "object": "model",
+        "created": 1794838210,
+        "owned_by": "llm-runtime"
+      },
+      "health": {
+        "status": "ok",
+        "queued_requests": 0,
+        "config": {
+          "queue_capacity": 64,
+          "max_active_requests": 2,
+          "token_budget": 32,
+          "prefill_delay": 0.05,
+          "token_delay": 0.03,
+          "kv_cache_capacity_tokens": 8192,
+          "scheduling_policy": "round_robin",
+          "prefill_token_budget": 8
+        },
+        "request_states": [],
+        "executor": {
+          "backend": "transformers",
+          "device": "cpu",
+          "dtype": "float32",
+          "tokenization": "model",
+          "context_limit": 32768,
+          "model": "qwen2",
+          "parameter_bytes": 1976131072,
+          "kv_tensor_bytes_after_last_step": 0
+        },
+        "kv_cache": {
+          "capacity_tokens": 8192,
+          "reserved_tokens": 0,
+          "used_tokens": 0,
+          "available_tokens": 8192
+        },
+        "active_request_ids": [],
+        "active_requests": 0,
+        "active_request_id": null
+      },
+      "preflight": {
+        "status": "passed",
+        "stage": "complete",
+        "message": null,
+        "readiness": {
+          "path": "/health",
+          "status": "passed",
+          "http_status": 200,
+          "body": {
+            "status": "ok",
+            "queued_requests": 0,
+            "config": {
+              "queue_capacity": 64,
+              "max_active_requests": 2,
+              "token_budget": 32,
+              "prefill_delay": 0.05,
+              "token_delay": 0.03,
+              "kv_cache_capacity_tokens": 8192,
+              "scheduling_policy": "round_robin",
+              "prefill_token_budget": 8
+            },
+            "request_states": [],
+            "executor": {
+              "backend": "transformers",
+              "device": "cpu",
+              "dtype": "float32",
+              "tokenization": "model",
+              "context_limit": 32768,
+              "model": "qwen2",
+              "parameter_bytes": 1976131072,
+              "kv_tensor_bytes_after_last_step": 0
+            },
+            "kv_cache": {
+              "capacity_tokens": 8192,
+              "reserved_tokens": 0,
+              "used_tokens": 0,
+              "available_tokens": 8192
+            },
+            "active_request_ids": [],
+            "active_requests": 0,
+            "active_request_id": null
+          }
+        },
+        "model": {
+          "id": "local-model",
+          "object": "model",
+          "created": 1794838210,
+          "owned_by": "llm-runtime"
+        },
+        "health": {
+          "status": "ok",
+          "queued_requests": 0,
+          "config": {
+            "queue_capacity": 64,
+            "max_active_requests": 2,
+            "token_budget": 32,
+            "prefill_delay": 0.05,
+            "token_delay": 0.03,
+            "kv_cache_capacity_tokens": 8192,
+            "scheduling_policy": "round_robin",
+            "prefill_token_budget": 8
+          },
+          "request_states": [],
+          "executor": {
+            "backend": "transformers",
+            "device": "cpu",
+            "dtype": "float32",
+            "tokenization": "model",
+            "context_limit": 32768,
+            "model": "qwen2",
+            "parameter_bytes": 1976131072,
+            "kv_tensor_bytes_after_last_step": 0
+          },
+          "kv_cache": {
+            "capacity_tokens": 8192,
+            "reserved_tokens": 0,
+            "used_tokens": 0,
+            "available_tokens": 8192
+          },
+          "active_request_ids": [],
+          "active_requests": 0,
+          "active_request_id": null
+        },
+        "sample": {
+          "index": -1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 0.8025416173040867,
+            "first_content": 224.94808258488774,
+            "completion": 441.0049580037594,
+            "content_delta_gaps": [
+              35.5489170178771,
+              35.678500309586525,
+              36.956874653697014,
+              35.46933317556977,
+              35.72516702115536,
+              36.46037494763732
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838217,
+            "last_created": 1794838217,
+            "created_changes": 0
+          },
+          "request_id": "0494c181d4414aef82d238e18f57979a",
+          "elapsed_ms": 441.2347078323364
+        },
+        "model_selection": "discovery"
+      },
+      "preflight_only": false,
+      "workload": {
+        "requests": 4,
+        "concurrency": 2,
+        "warmup": 2,
+        "prompt": "What is the capital of France? Answer briefly.",
+        "max_tokens": 32,
+        "timeout_seconds": 60,
+        "arrival_mode": "closed_loop",
+        "usage_mode": "required",
+        "created_policy": "stable"
+      },
+      "connections": "shared client pool; metadata and preflight/warmup connections reused; no retries",
+      "notes": [
+        "Metadata, one preflight stream, and warmups excluded from measured elapsed time.",
+        "Preflight uses the workload prompt and may warm server prefix caches.",
+        "Readiness checks only validate HTTP success; liveness is not measured.",
+        "Content deltas can contain multiple tokens or arrive together in network buffers.",
+        "Token throughput is null if any completed stream lacks verified terminal usage."
+      ],
+      "elapsed_seconds": 1.8363507501780987,
+      "completed": 4,
+      "rejected": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "completed_requests_per_second": 2.178233106944335,
+      "usage_verified_requests": 4,
+      "usage_missing_requests": 0,
+      "completed_tokens_per_second": 17.42586485555468,
+      "latency_ms": {
+        "headers": {
+          "count": 4,
+          "mean": 1.2289994629099965,
+          "p50": 1.113290898501873,
+          "p95": 1.4184578321874142,
+          "p99": 1.4184578321874142
+        },
+        "first_content": {
+          "count": 4,
+          "mean": 469.17165629565716,
+          "p50": 440.1422501541674,
+          "p95": 517.172375228256,
+          "p99": 517.172375228256
+        },
+        "completion": {
+          "count": 4,
+          "mean": 917.7948747528717,
+          "p50": 901.9445418380201,
+          "p95": 934.0338329784572,
+          "p99": 934.0338329784572
+        }
+      },
+      "content_delta_gap_ms": {
+        "count": 24,
+        "mean": 71.71546875421579,
+        "p50": 74.09470900893211,
+        "p95": 82.51129183918238,
+        "p99": 82.5123330578208
+      },
+      "samples": [
+        {
+          "index": 0,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.3834158889949322,
+            "first_content": 421.9169579446316,
+            "completion": 901.406791061163,
+            "content_delta_gaps": [
+              75.68666711449623,
+              74.51191591098905,
+              74.09012503921986,
+              72.0657086931169,
+              74.31166619062424,
+              72.76387512683868
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838218,
+            "last_created": 1794838218,
+            "created_changes": 0
+          },
+          "request_id": "387905f61c8a4c328d1416b04edc4ca2",
+          "elapsed_ms": 901.7490828409791
+        },
+        {
+          "index": 1,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.4184578321874142,
+            "first_content": 497.45504185557365,
+            "completion": 901.9445418380201,
+            "content_delta_gaps": [
+              74.49954096227884,
+              74.09470900893211,
+              72.06954108551145,
+              74.2877502925694,
+              72.7657089009881,
+              35.9485000371933
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838218,
+            "last_created": 1794838218,
+            "created_changes": 0
+          },
+          "request_id": "514e1c1f1a9946b7b1454e73e495b097",
+          "elapsed_ms": 902.107291854918
+        },
+        {
+          "index": 2,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.113290898501873,
+            "first_content": 440.1422501541674,
+            "completion": 934.0338329784572,
+            "content_delta_gaps": [
+              77.54495786502957,
+              82.5123330578208,
+              76.31012471392751,
+              72.72708415985107,
+              74.97466588392854,
+              73.78695905208588
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838219,
+            "last_created": 1794838219,
+            "created_changes": 0
+          },
+          "request_id": "1d6690614c9e48ddac74f5c07b1633f2",
+          "elapsed_ms": 934.2644158750772
+        },
+        {
+          "index": 3,
+          "status": "completed",
+          "http_status": 200,
+          "message": null,
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 8,
+            "total_tokens": 47
+          },
+          "usage_status": "verified",
+          "content_deltas": 7,
+          "finish_reason": "stop",
+          "timings_ms": {
+            "headers": 1.0008332319557667,
+            "first_content": 517.172375228256,
+            "completion": 933.7943331338465,
+            "content_delta_gaps": [
+              82.51129183918238,
+              76.30725018680096,
+              72.7336248382926,
+              74.95633279904723,
+              73.80620809271932,
+              35.90470924973488
+            ]
+          },
+          "stream_metadata": {
+            "created_policy": "stable",
+            "first_created": 1794838219,
+            "last_created": 1794838219,
+            "created_changes": 0
+          },
+          "request_id": "4a3b3c85c85447b1bc1e2732ae4b9b6c",
+          "elapsed_ms": 933.9379169978201
+        }
+      ]
+    }
+  ],
+  "server_command": [
+    "/Users/anastasiyalillelund/llm-inference-runtime/.venv/bin/python",
+    "-m",
+    "uvicorn",
+    "llm_runtime.local:create_local_app",
+    "--factory",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8020",
+    "--no-access-log"
+  ],
+  "model_path_environment": "/Users/anastasiyalillelund/llm-inference-runtime/.models/qwen2.5-0.5b",
+  "initial_health": {
+    "status": "ok",
+    "queued_requests": 0,
+    "config": {
+      "queue_capacity": 64,
+      "max_active_requests": 2,
+      "token_budget": 32,
+      "prefill_delay": 0.05,
+      "token_delay": 0.03,
+      "kv_cache_capacity_tokens": 8192,
+      "scheduling_policy": "round_robin",
+      "prefill_token_budget": 8
+    },
+    "request_states": [],
+    "executor": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 0
+    },
+    "kv_cache": {
+      "capacity_tokens": 8192,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "available_tokens": 8192
+    },
+    "active_request_ids": [],
+    "active_requests": 0,
+    "active_request_id": null
+  },
+  "rss_at_readiness_bytes": 980172800,
+  "unicode_example": {
+    "id": "chatcmpl-3c712313c604411abc625a498404c6de",
+    "object": "chat.completion",
+    "created": 1794838220,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Bl\u00e5b\u00e6r is a Norwegian word that translates to \"blue whale\" in English. It refers to a large, slow-moving whale species."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 42,
+      "completion_tokens": 30,
+      "total_tokens": 72
+    }
+  },
+  "one_token_limit": {
+    "id": "chatcmpl-0921f048f6d14c209ba05cf5375f7842",
+    "object": "chat.completion",
+    "created": 1794838221,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "The"
+        },
+        "finish_reason": "length"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 36,
+      "completion_tokens": 1,
+      "total_tokens": 37
+    }
+  },
+  "oversized_input": {
+    "http_status": 422,
+    "body": {
+      "error": {
+        "message": "request exceeds KV-cache token capacity",
+        "type": "invalid_request_error",
+        "param": null,
+        "code": "context_capacity_exceeded"
+      }
+    },
+    "content": "U+10348 repeated 4096 times"
+  },
+  "queued_disconnect": {
+    "queued_before_disconnect": {
+      "elapsed_ms": 24.027791805565357,
+      "active": 2,
+      "queued": 1,
+      "reserved_tokens": 1134,
+      "used_tokens": 32,
+      "kv_tensor_bytes": 786432
+    },
+    "queue_removal_observed": true,
+    "removal_observations": [
+      {
+        "elapsed_ms": 0.9504579938948154,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 786432
+      }
+    ],
+    "blockers_still_active_at_removal": 2,
+    "observed_queue_removal_after_ms": 1.249833032488823,
+    "idle_observations_after_all_disconnects": [
+      {
+        "elapsed_ms": 1.1366670951247215,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 786432
+      },
+      {
+        "elapsed_ms": 23.559375200420618,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 786432
+      },
+      {
+        "elapsed_ms": 46.218084171414375,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 786432
+      },
+      {
+        "elapsed_ms": 68.68795910850167,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 786432
+      },
+      {
+        "elapsed_ms": 91.04879200458527,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 1351680
+      },
+      {
+        "elapsed_ms": 113.47241699695587,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 1351680
+      },
+      {
+        "elapsed_ms": 135.95129223540425,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 1351680
+      },
+      {
+        "elapsed_ms": 158.4032503888011,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1134,
+        "used_tokens": 32,
+        "kv_tensor_bytes": 1351680
+      },
+      {
+        "elapsed_ms": 180.43166724964976,
+        "active": 0,
+        "queued": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "followup": {
+      "index": 0,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 34,
+        "completion_tokens": 24,
+        "total_tokens": 58
+      },
+      "usage_status": "verified",
+      "content_deltas": 24,
+      "finish_reason": "length",
+      "timings_ms": {
+        "headers": 1.0093748569488525,
+        "first_content": 226.2447909452021,
+        "completion": 1026.553750038147,
+        "content_delta_gaps": [
+          36.87179181724787,
+          37.76754206046462,
+          37.65262523666024,
+          37.792499642819166,
+          35.75266618281603,
+          35.07791692391038,
+          35.99550016224384,
+          36.68625000864267,
+          35.616541747003794,
+          35.61187535524368,
+          35.42550001293421,
+          36.173374857753515,
+          37.32862509787083,
+          36.6564579308033,
+          37.36149985343218,
+          36.38566704466939,
+          35.450332798063755,
+          35.44475045055151,
+          35.952082835137844,
+          37.69720904529095,
+          35.46345792710781,
+          35.91937478631735,
+          0.1509580761194229
+        ]
+      },
+      "stream_metadata": {
+        "created_policy": "stable",
+        "first_created": 1794838222,
+        "last_created": 1794838222,
+        "created_changes": 0
+      },
+      "request_id": "24d0a0a1bdec49d0a4d9adeea13ff646",
+      "elapsed_ms": 1026.7796660773456
+    }
+  },
+  "active_disconnect": {
+    "action": "close_stream_after_first_content",
+    "before": {
+      "active": 1,
+      "queued": 0,
+      "reserved_tokens": 567,
+      "used_tokens": 56,
+      "kv_tensor_bytes": 1376256
+    },
+    "observed_idle_after_ms": 46.32520908489823,
+    "state_observations": [
+      {
+        "elapsed_ms": 1.2105000205338001,
+        "active": 1,
+        "queued": 0,
+        "reserved_tokens": 567,
+        "used_tokens": 56,
+        "kv_tensor_bytes": 1376256
+      },
+      {
+        "elapsed_ms": 23.97395810112357,
+        "active": 1,
+        "queued": 0,
+        "reserved_tokens": 567,
+        "used_tokens": 56,
+        "kv_tensor_bytes": 1376256
+      },
+      {
+        "elapsed_ms": 46.06016678735614,
+        "active": 0,
+        "queued": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "terminal_body_after_cancel": null,
+    "followup": {
+      "index": 0,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 39,
+        "completion_tokens": 8,
+        "total_tokens": 47
+      },
+      "usage_status": "verified",
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 0.9184582158923149,
+        "first_content": 239.7609162144363,
+        "completion": 457.01533323153853,
+        "content_delta_gaps": [
+          35.87745875120163,
+          36.60537535324693,
+          36.555124912410975,
+          36.23079089447856,
+          36.08075017109513,
+          35.67699994891882
+        ]
+      },
+      "stream_metadata": {
+        "created_policy": "stable",
+        "first_created": 1794838223,
+        "last_created": 1794838223,
+        "created_changes": 0
+      },
+      "request_id": "1e0c4cc5d77941e38e6ce74f0c4fd6af",
+      "elapsed_ms": 457.2533331811428
+    }
+  },
+  "explicit_cancel": {
+    "action": "explicit_cancel",
+    "before": {
+      "active": 1,
+      "queued": 0,
+      "reserved_tokens": 567,
+      "used_tokens": 56,
+      "kv_tensor_bytes": 1376256
+    },
+    "observed_idle_after_ms": 37.05566702410579,
+    "state_observations": [
+      {
+        "elapsed_ms": 1.0115839540958405,
+        "active": 0,
+        "queued": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "terminal_body_after_cancel": [
+      {
+        "event": "message",
+        "data": "{\"error\": {\"message\": \"request was cancelled\", \"type\": \"invalid_request_error\", \"param\": null, \"code\": \"request_cancelled\"}}"
+      },
+      {
+        "event": "message",
+        "data": "[DONE]"
+      }
+    ],
+    "followup": {
+      "index": 0,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 39,
+        "completion_tokens": 8,
+        "total_tokens": 47
+      },
+      "usage_status": "verified",
+      "content_deltas": 7,
+      "finish_reason": "stop",
+      "timings_ms": {
+        "headers": 0.851375050842762,
+        "first_content": 241.63549998775125,
+        "completion": 462.55100006237626,
+        "content_delta_gaps": [
+          38.38237514719367,
+          37.77312487363815,
+          36.38337505981326,
+          36.446332931518555,
+          35.51241708919406,
+          36.169791128486395
+        ]
+      },
+      "stream_metadata": {
+        "created_policy": "stable",
+        "first_created": 1794838224,
+        "last_created": 1794838224,
+        "created_changes": 0
+      },
+      "request_id": "3b69f8ff4ae54f80abf31cc041536830",
+      "elapsed_ms": 462.8013330511749
+    }
+  },
+  "final_state": {
+    "active": 0,
+    "queued": 0,
+    "reserved_tokens": 0,
+    "used_tokens": 0,
+    "kv_tensor_bytes": 0
+  },
+  "rss_after_checks_bytes": 2163572736,
+  "server_stopped": true
+}

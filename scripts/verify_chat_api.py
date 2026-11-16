@@ -14,13 +14,15 @@ from llm_runtime.config import RuntimeConfig
 from llm_runtime.local_executor import LocalModelExecutor
 
 
-async def verify(path):
+async def verify(path, *, unicode_example=False):
     executor = await LocalModelExecutor.load(path)
     app = create_app(RuntimeConfig(max_active_requests=2, token_budget=8), executor)
     messages = [dict(role='system', content='You are a helpful assistant. Answer briefly.'),
                 dict(role='user', content='My name is Ada.'),
                 dict(role='assistant', content='Hello, Ada.'),
                 dict(role='user', content='What is my name?')]
+    if unicode_example:
+        messages = [dict(role='user', content='What does blåbær mean in English? Answer briefly.')]
     limit = 32
     async with app.router.lifespan_context(app):
         def reference():
@@ -29,7 +31,7 @@ async def verify(path):
             with torch.inference_mode():
                 output = executor.model.generate(
                     torch.tensor([inputs]), attention_mask=torch.ones(1, len(inputs), dtype=torch.long),
-                    max_new_tokens=limit, do_sample=False, use_cache=True,
+                    max_new_tokens=limit, do_sample=False, repetition_penalty=1.0, use_cache=True,
                     pad_token_id=tokenizer.eos_token_id,
                 )[0, len(inputs):].tolist()
             text = tokenizer.decode(output, skip_special_tokens=True, clean_up_tokenization_spaces=False)
@@ -78,8 +80,9 @@ async def verify(path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--model-path', default='.models/smollm2')
+    parser.add_argument('--unicode-example', action='store_true', help='check the fixed Norwegian Unicode fixture')
     args = parser.parse_args()
-    print(json.dumps(asyncio.run(verify(args.model_path)), indent=2))
+    print(json.dumps(asyncio.run(verify(args.model_path, unicode_example=args.unicode_example)), indent=2))
 
 
 if __name__ == '__main__':

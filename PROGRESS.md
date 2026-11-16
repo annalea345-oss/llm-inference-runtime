@@ -793,3 +793,56 @@ leak-free guarantee or a unique explanation for every retained byte. Keep normal
 memory cleanup unchanged. Next: prototype real tensor batching and compare
 larger-output throughput, mixed-request latency, cancellation, and memory against
 these baselines; treat earlier release of idle-loop request locals separately.
+
+## 2026-11-16 — Larger-model compatibility before tensor batching
+
+- Selected Qwen/Qwen2.5-0.5B-Instruct at pinned revision
+  `7ae557604adf67be50417f59c2c2f167def9a775` after reviewing its model card,
+  license, configuration, generation defaults, size, and installed Transformers
+  support. Downloaded approximately 1 GB into ignored .models/qwen2.5-0.5b;
+  preserved the original SmolLM2 checkpoint and installed no dependency.
+- Added explicit pinned model selection to the download helper, preserving the
+  original default. Separate model directories and identity/resume checks prevent
+  accidental replacement of another selected model/revision or unknown contents.
+- Existing float32 CPU executor worked with Qwen2 architecture without a new
+  execution algorithm. Parameter count is 494,032,768, about 3.7 times SmolLM2;
+  float32 parameter storage is 1,976,131,072 bytes. Model context is 32,768, while
+  default logical KV capacity remains 8,192. No quantization/GPU/tensor batching.
+- Neutralized reference-only repetition penalties explicitly: Qwen's generation
+  defaults include sampling and repetition_penalty=1.1, while our executor is
+  plain greedy argmax. Direct .generate references use do_sample=False and
+  repetition_penalty=1.0 to match intended runtime behavior.
+- Native output token IDs matched direct Transformers for both prompt cases;
+  EOS/output-cap termination and in-flight cancellation passed. Multi-turn
+  JSON/streamed chat matched direct reference and remembered Ada. Reran the
+  original SmolLM2 native/reference smoke successfully after reference changes.
+- Eight measured real-HTTP smoke requests completed at concurrency 1/2. Verified
+  Unicode transport, one-token cap, oversized-token KV rejection, queued removal
+  with two active blockers, active disconnect, explicit cancel, follow-ups, and
+  zero final request/KV state. Temporary HTTP server stopped.
+- Qwen correctly answered the France example, but called blåbær a blue whale.
+  Added the exact Unicode reference fixture: direct Transformers, JSON, and SSE
+  all produced the same incorrect answer. This is a reproduced model-quality
+  limitation, not a passing factual test or evidence of a serving corruption.
+- Native/reference smoke peak RSS was about 2.12 GiB. Final HTTP readiness/after-
+  checks RSS samples were about 0.91/2.01 GiB. These are separate scopes, not a
+  physical-memory cap or arbitrary-workload capacity. Four-request per-setting
+  timing samples are recorded but not treated as a speed/scaling comparison.
+- `.venv/bin/python -m pytest -q` — **444 passed**, including seven model-download
+  selection/default/identity/resume cases and four additional tiny Qwen2 greedy
+  reference/multi-EOS cases. Real verification uses the downloaded checkpoint;
+  routine optional model tests remain offline and use tiny random weights.
+- Added reusable HTTP verifier and recorded native, history, Unicode reference,
+  HTTP, and original-model recheck JSON under benchmarks/qwen-0.5b. Documented
+  exact model/decoding settings, hashes, versions, memory observations, quality
+  limits, downloads, and browser switching commands. Model weights stay local.
+- Validated the pinned model/source hashes, all original SmolLM2 file hashes,
+  eight live HTTP completions, direct/native/chat/Unicode reference agreement,
+  zero final KV state, server shutdown, 39 local documentation links, and
+  `git diff --check` before committing.
+
+The new branch preserves the completed profiling commit, which was not yet on
+origin/main when this phase began. Next: implement optional real tensor batching
+and evaluate each model against its own unbatched baseline, retaining memory and
+cancellation correctness. Broader factual-quality tests and long-context/larger-
+model sustained-memory tests remain separate future work.

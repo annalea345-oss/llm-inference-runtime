@@ -4,11 +4,20 @@ The runtime can now generate real text with a local CPU model. Simulation remain
 the default and requires none of the model dependencies. This is a small serving
 integration, not a full chatbot or a production model server.
 
-The tested checkpoint is [HuggingFaceTB/SmolLM2-135M-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct),
+The default checkpoint is [HuggingFaceTB/SmolLM2-135M-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct),
 a 135M-parameter instruction model published under Apache-2.0. The download helper
 pins revision `12fd25f77366fa6b3b4b768ec3050bf629380bac` for reproducibility.
 It downloads only configuration, tokenizer, safetensors weights, and the model
 card, excluding ONNX variants and training artifacts.
+
+An additional verified checkpoint is **Qwen2.5-0.5B-Instruct**, revision
+`7ae557604adf67be50417f59c2c2f167def9a775`, with approximately 494M parameters.
+Download it separately with `python -m llm_runtime.download_model --model qwen2.5-0.5b`
+and start the factory with `LLM_MODEL_PATH=.models/qwen2.5-0.5b`. It uses the same
+float32 CPU executor and `local-model` API alias. See the
+[larger-model verification and browser commands](benchmarks/qwen-0.5b/README.md)
+for memory samples, reference agreement, limits, and a reproduced wrong answer.
+The original download command/model remains the default.
 
 ## Install and run
 

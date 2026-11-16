@@ -63,3 +63,8 @@ The [retained-memory investigation](retained-memory.md) separates idle RSS,
 released cache objects, traced Python allocations, and native allocator counters
 across longer bounded runs. It records the evidence for keeping normal cleanup
 unchanged before the next tensor-batching experiment.
+
+The [Qwen2.5-0.5B check](qwen-0.5b/README.md) verifies the same engine with a larger,
+different model architecture before batching. It records direct-reference and
+live HTTP agreement, cleanup, RAM samples, and an incorrect answer reproduced by
+the reference model; no general quality or cross-model speed ranking is claimed.

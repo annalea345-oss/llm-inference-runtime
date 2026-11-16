@@ -418,6 +418,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 14 — Repeated CPU comparison (complete) | Five repetitions of short/long/mixed workloads at concurrency 1/2; separate disconnect, RSS, and token-admission probes | [640 measured completions, 383 tests, raw data, and a queued-disconnect finding](benchmarks/cpu-comparison.md) |
 | 15 — Queued disconnect cleanup (implemented) | HTTP closure immediately cancels waiting work; active ownership remains protected by its barrier | [411 tests and three real CPU trials reclaiming a waiter with both active slots busy](benchmarks/disconnect-cleanup.md) |
 | 16 — Retained-memory profiling (complete) | Two normal 30-wave runs and a separate weak-reference/Python/native diagnostic session | [364 completed requests, 433 tests, memory chart, and limits](benchmarks/retained-memory.md); no per-request GC/allocator policy added |
+| 17 — Larger-model compatibility (verified) | Pinned Qwen2.5-0.5B selection; reference/HTTP/concurrency/cancellation checks using the existing CPU executor | [444 tests, two model architectures, raw samples, and quality limits](benchmarks/qwen-0.5b/README.md); tensor batching remains next |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

@@ -1,0 +1,76 @@
+{
+  "scope": "real checkpoint chat adapter; buffered in-process ASGI, not network latency",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "model_manifest": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+  },
+  "model_id": "local-model",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What does bl\u00e5b\u00e6r mean in English? Answer briefly."
+    }
+  ],
+  "reference_text": "Bl\u00e5b\u00e6r is a Norwegian word that translates to \"blue whale\" in English. It refers to a large, slow-moving whale species.",
+  "reference_token_ids": [
+    4923,
+    3785,
+    65,
+    33471,
+    374,
+    264,
+    44621,
+    3409,
+    429,
+    46918,
+    311,
+    330,
+    12203,
+    50019,
+    1,
+    304,
+    6364,
+    13,
+    1084,
+    19257,
+    311,
+    264,
+    3460,
+    11,
+    6301,
+    85472,
+    50019,
+    9419,
+    13,
+    151645
+  ],
+  "json_matches_reference": true,
+  "stream_matches_reference": true,
+  "json_response": {
+    "id": "chatcmpl-a04e4fadd0c14452a568b7d20b91efa7",
+    "object": "chat.completion",
+    "created": 1794837600,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Bl\u00e5b\u00e6r is a Norwegian word that translates to \"blue whale\" in English. It refers to a large, slow-moving whale species."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 42,
+      "completion_tokens": 30,
+      "total_tokens": 72
+    }
+  },
+  "stream_chunk_count": 32,
+  "final_live_cache_bytes": 0
+}
