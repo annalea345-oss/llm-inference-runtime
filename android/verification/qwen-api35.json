@@ -1,0 +1,162 @@
+{
+  "backend": {
+    "backend": "transformers",
+    "device": "cpu",
+    "dtype": "float32",
+    "tokenization": "model",
+    "context_limit": 32768,
+    "model": "qwen2",
+    "parameter_bytes": 1976131072,
+    "kv_tensor_bytes_after_last_step": 0
+  },
+  "checks": [
+    "model discovery",
+    "streamed follow-up matches direct API with exact history",
+    "rotation preserves completed history and controls",
+    "two simultaneous clients admitted",
+    "Stop and peer completion leave zero request/KV state",
+    "new chat clears displayed conversation",
+    "offline server shows connection error",
+    "reconnect succeeds"
+  ],
+  "model_alias": "local-model",
+  "first_reply_ui": "\n\n\n\nRuntime Chat\nYour phone chats. Your Mac runs the model.\nhttp://10.0.2.2:8000\n\nCONNECT\nNEW CHAT\n7 output tokens · complete\n\n\nYOU\nMy name is Ada. Reply with my name.\n\nASSISTANT\nMy name is Qwen.\nOutput limit (tokens, 1–512)\n64\nMessage\n\nSEND\nSTOP",
+  "followup_ui": "\n\n\n\nRuntime Chat\nYour phone chats. Your Mac runs the model.\nhttp://10.0.2.2:8000\n\nCONNECT\nNEW CHAT\n7 output tokens · complete\n\n\nYOU\nMy name is Ada. Reply with my name.\n\nASSISTANT\nMy name is Qwen.\nYOU\nWhat is my name?\n\nASSISTANT\nYour name is Qwen.\nOutput limit (tokens, 1–512)\n64\nMessage\n\nSEND\nSTOP",
+  "followup_direct_reference": {
+    "id": "chatcmpl-ecfb825be87a452787de403000616272",
+    "object": "chat.completion",
+    "created": 1795528421,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Your name is Qwen."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 60,
+      "completion_tokens": 7,
+      "total_tokens": 67
+    }
+  },
+  "concurrent_health": {
+    "status": "ok",
+    "queued_requests": 0,
+    "config": {
+      "queue_capacity": 64,
+      "max_active_requests": 2,
+      "token_budget": 32,
+      "prefill_delay": 0.05,
+      "token_delay": 0.03,
+      "kv_cache_capacity_tokens": 8192,
+      "scheduling_policy": "round_robin",
+      "prefill_token_budget": 8
+    },
+    "request_states": [
+      {
+        "request_id": "fe74180d45a44824840d5d1e7b051eb3",
+        "phase": "prefill",
+        "prompt_tokens": 90,
+        "prefilled_tokens": 32,
+        "generated_tokens": 0,
+        "max_tokens": 512,
+        "cancel_requested": false,
+        "reserved_tokens": 602,
+        "used_tokens": 32
+      },
+      {
+        "request_id": "8810bede898f49af8a9f1d477ea7deb7",
+        "phase": "prefill",
+        "prompt_tokens": 43,
+        "prefilled_tokens": 0,
+        "generated_tokens": 0,
+        "max_tokens": 128,
+        "cancel_requested": false,
+        "reserved_tokens": 171,
+        "used_tokens": 0
+      }
+    ],
+    "executor": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 786432
+    },
+    "kv_cache": {
+      "capacity_tokens": 8192,
+      "reserved_tokens": 773,
+      "used_tokens": 32,
+      "available_tokens": 7419
+    },
+    "active_request_ids": [
+      "8810bede898f49af8a9f1d477ea7deb7",
+      "fe74180d45a44824840d5d1e7b051eb3"
+    ],
+    "active_requests": 2,
+    "active_request_id": "8810bede898f49af8a9f1d477ea7deb7"
+  },
+  "stopped_ui": "\n\n\n\nRuntime Chat\nYour phone chats. Your Mac runs the model.\nhttp://10.0.2.2:8000\n\nCONNECT\nNEW CHAT\nStopped · partial reply excluded from history\n\n\nYOU\nMy name is Ada. Reply with my name.\n\nASSISTANT\nMy name is Qwen.\nYOU\nWhat is my name?\n\nASSISTANT\nYour name is Qwen.\nYOU\nCount from 1 to 500. Include every number.\n\nASSISTANT\n\n[Stopped; this turn is excluded from history]\n\nOutput limit (tokens, 1–512)\n512\nMessage\n\nSEND\nSTOP",
+  "second_client_usage": {
+    "prompt_tokens": 43,
+    "completion_tokens": 128,
+    "total_tokens": 171
+  },
+  "final_health": {
+    "status": "ok",
+    "queued_requests": 0,
+    "config": {
+      "queue_capacity": 64,
+      "max_active_requests": 2,
+      "token_budget": 32,
+      "prefill_delay": 0.05,
+      "token_delay": 0.03,
+      "kv_cache_capacity_tokens": 8192,
+      "scheduling_policy": "round_robin",
+      "prefill_token_budget": 8
+    },
+    "request_states": [],
+    "executor": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 0
+    },
+    "kv_cache": {
+      "capacity_tokens": 8192,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "available_tokens": 8192
+    },
+    "active_request_ids": [],
+    "active_requests": 0,
+    "active_request_id": null
+  },
+  "verification": {
+    "date": "2026-11-24",
+    "base_commit": "997fc5d",
+    "emulator": "Medium Phone API 35, Android 15, ARM64, read-only/no saved snapshot",
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "decoding": "greedy, temperature=0",
+    "android_unit_tests": 26,
+    "python_tests": 444,
+    "debug_lint_errors": 0,
+    "debug_lint_warnings": 7,
+    "debug_apk_sha256": "d3cdb6b97158de85e08fc614737dde15217c4c60f0386fa286f976e3de51d880",
+    "debug_apk_bytes": 2267973,
+    "command": ".venv/bin/python scripts/verify_android_client.py --adb /Users/anastasiyalillelund/Library/Android/sdk/platform-tools/adb",
+    "limits": "One emulator/one model smoke; no physical-device, performance, or factual-quality claim."
+  }
+}

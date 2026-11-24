@@ -7,3 +7,6 @@ __pycache__/
 .DS_Store
 .models/
 .experiments/
+android/.gradle/
+android/**/build/
+android/local.properties

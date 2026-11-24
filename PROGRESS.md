@@ -846,3 +846,64 @@ origin/main when this phase began. Next: implement optional real tensor batching
 and evaluate each model against its own unbatched baseline, retaining memory and
 cancellation correctness. Broader factual-quality tests and long-context/larger-
 model sustained-memory tests remain separate future work.
+
+## 2026-11-24 — Native Android chat client
+
+- Started from merged `origin/main` (`997fc5d`). Added a standalone native Kotlin
+  app under `android/`; the existing Python scheduler, executor, API endpoints,
+  browser client, and model weights are unchanged. Android is another client;
+  the Mac still owns model execution and KV state.
+- Added configurable server address, model discovery, streamed text, multi-turn
+  history, output limits, New chat, Stop, offline errors, and reconnect. Network
+  operations run off the main thread. A ViewModel retains the transcript and
+  active operation across Activity recreation; chat is not persisted to disk.
+- Stop sends the raw request ID to the existing cancellation endpoint and closes
+  the stream as fallback. Failed/stopped turns remain visible but are excluded
+  from later history. Stream completion requires stable identity, valid finish
+  and usage events, and `[DONE]`; premature EOF cannot become a successful turn.
+- Added bounded SSE/discovery/error parsing, strict UTF-8 decoding, Unicode-aware
+  history limits, and no automatic generation retries. Debug alone permits HTTP
+  for local development; merged release manifest has cleartext disabled. The
+  only app permission is Internet; no credentials or model files are packaged.
+- Used the existing Android SDK 35, Build Tools 35.0.0, JBR 21, and cached
+  AGP 8.8.0/Kotlin 2.0.0 toolchain. Committed the Gradle 8.10.2 wrapper with its
+  official distribution checksum. First sync may download Gradle/library
+  dependencies; no new language model was downloaded. MockWebServer/OkHttp and
+  the JVM JSON implementation are test dependencies, not Android app dependencies.
+- **26 Android JVM tests passed**: 20 protocol/history/input cases and six real
+  HTTP cases, including one-byte chunks, Unicode, truncation, server rejection,
+  raw-ID cancellation, Stop before start, and Stop before response headers.
+- Debug APK and unsigned release APK built successfully. Android debug lint and
+  release vital lint passed with no errors; debug lint retains seven warnings
+  for newer dependency versions, backup configuration guidance, and English
+  strings. This is an English development client, not a published/localized app.
+- The existing Python suite remains **444 passed**. No Python runtime changes
+  or new model downloads were needed for Android.
+- Ran an Android 15/API 35 ARM64 emulator against the existing pinned
+  Qwen2.5-0.5B-Instruct CPU/float32 checkpoint. Verified discovery, streamed
+  answers, follow-up agreement with a direct JSON API request using exactly the
+  same history, portrait/landscape controls and retained history, two admitted
+  clients, explicit cancellation, successful peer completion, zero final active/
+  queued requests and zero reserved/used KV slots, New chat, offline error, and
+  reconnect. Inspected portrait and landscape screenshots. Recorded fixture
+  evidence in `android/verification/qwen-api35.json`; screenshots/build outputs
+  remain ignored under `.experiments/` and `android/app/build/`.
+- The prompt `My name is Ada. Reply with my name.` elicited `My name is Qwen.`,
+  and the follow-up `What is my name?` elicited `Your name is Qwen.`. The follow-up
+  matched a separate direct API request with the same history. This establishes
+  client agreement; it does not establish factual correctness or independently
+  compare this case with direct Transformers. Model quality remains a separate
+  concern, as documented in the previous Qwen milestone.
+- Added [ANDROID_CLIENT.md](ANDROID_CLIENT.md), linked from README, with Android
+  Studio/build steps, emulator networking, USB reverse and trusted-Wi-Fi phone
+  instructions, privacy/state behavior, tests, and limits. Added the opt-in
+  `scripts/verify_android_client.py` smoke for a dedicated idle server/emulator.
+- Stopped the temporary loopback Qwen server, no-save emulator, and Gradle daemon
+  after verification. Preserved the existing untracked `error.log`; model weights,
+  local SDK/Gradle caches, APKs, and experiment screenshots are not committed.
+
+Physical phones, Android versions other than API 35, process-death/background
+durability, release signing, HTTPS hosting/authentication, app-store distribution,
+and on-device inference were not verified or implemented. The next engine
+performance milestone remains optional real tensor batching, compared against
+each model's unbatched baseline while preserving cancellation and memory safety.
