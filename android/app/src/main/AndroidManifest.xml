@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:label="Runtime Chat" android:icon="@drawable/ic_runtime" android:theme="@android:style/Theme.Material.Light.NoActionBar"
+    <application android:label="@string/app_name" android:icon="@drawable/ic_runtime" android:theme="@style/RuntimeTheme"
         android:allowBackup="false" android:usesCleartextTraffic="false" android:supportsRtl="true">
         <activity android:name=".MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize">
             <intent-filter>

@@ -1,0 +1,4 @@
+<resources>
+    <item name="assistant_reply" type="id" />
+    <item name="user_message" type="id" />
+</resources>

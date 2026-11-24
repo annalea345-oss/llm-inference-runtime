@@ -8,7 +8,8 @@ model; see [local model setup](LOCAL_MODEL.md). A text-only
 streamed and complete assistant responses. A [built-in browser client](BROWSER_CLIENT.md)
 now provides local chat and live runtime activity at `/`.
 An optional [native Android client](ANDROID_CLIENT.md) connects to the same API
-with streamed replies, conversation history, and Stop; inference stays on the Mac.
+with message bubbles, streamed replies, conversation history, and Stop. Connection
+and reply-length controls live in Settings; inference stays on the Mac.
 
 ## Run it
 
@@ -422,6 +423,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 16 — Retained-memory profiling (complete) | Two normal 30-wave runs and a separate weak-reference/Python/native diagnostic session | [364 completed requests, 433 tests, memory chart, and limits](benchmarks/retained-memory.md); no per-request GC/allocator policy added |
 | 17 — Larger-model compatibility (verified) | Pinned Qwen2.5-0.5B selection; reference/HTTP/concurrency/cancellation checks using the existing CPU executor | [444 tests, two model architectures, raw samples, and quality limits](benchmarks/qwen-0.5b/README.md); tensor batching remains next |
 | 18 — Native Android client (implemented) | Kotlin chat app using existing model discovery, streamed chat, history, and cancellation endpoints | [Build/run guide and verification](ANDROID_CLIENT.md); no model or inference framework on the phone |
+| 19 — Android chat presentation (implemented) | Message bubbles, bottom Send/Stop composer, welcome prompts, Settings, and system light/dark themes | [Interface guide](ANDROID_CLIENT.md#chat-screen-and-settings); inference and API behavior unchanged |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded
