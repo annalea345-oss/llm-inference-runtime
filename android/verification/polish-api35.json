@@ -1,0 +1,181 @@
+{
+  "backend": {
+    "backend": "transformers",
+    "device": "cpu",
+    "dtype": "float32",
+    "tokenization": "model",
+    "context_limit": 32768,
+    "model": "qwen2",
+    "parameter_bytes": 1976131072,
+    "kv_tensor_bytes_after_last_step": 0
+  },
+  "checks": [
+    "welcome hides server address and exact token controls",
+    "model discovery",
+    "streamed follow-up matches direct API with exact history",
+    "rotation preserves completed history and controls",
+    "dark theme retains conversation",
+    "large text layout inspected",
+    "Long reply preset saved through Settings",
+    "two simultaneous clients admitted",
+    "Stop and peer completion leave zero request/KV state",
+    "new chat clears displayed conversation",
+    "offline server shows connection error",
+    "reconnect succeeds"
+  ],
+  "model_alias": "local-model",
+  "first_reply_ui": "\n\n\n\n\nRuntime Chat\nNew chat\nSettings\nConnected to your Mac\n\n\n\n\n\nYou\n\nMy name is Ada. Reply with my name.\n\n\nAssistant\n\nMy name is Qwen.\n\nAsk anything…\nSend\nChat history stays in this session.",
+  "followup_ui": "\n\n\n\n\nRuntime Chat\nNew chat\nSettings\nConnected to your Mac\n\n\n\n\n\nYou\n\nMy name is Ada. Reply with my name.\n\n\nAssistant\n\nMy name is Qwen.\n\n\nYou\n\nWhat is my name?\n\n\nAssistant\n\nYour name is Qwen.\n\nAsk anything…\nSend\nChat history stays in this session.",
+  "followup_direct_reference": {
+    "id": "chatcmpl-73e9d5c27a1049c5bc9f81fada82abf4",
+    "object": "chat.completion",
+    "created": 1795530921,
+    "model": "local-model",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Your name is Qwen."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 60,
+      "completion_tokens": 7,
+      "total_tokens": 67
+    }
+  },
+  "concurrent_health": {
+    "status": "ok",
+    "queued_requests": 0,
+    "config": {
+      "queue_capacity": 64,
+      "max_active_requests": 2,
+      "token_budget": 32,
+      "prefill_delay": 0.05,
+      "token_delay": 0.03,
+      "kv_cache_capacity_tokens": 8192,
+      "scheduling_policy": "round_robin",
+      "prefill_token_budget": 8
+    },
+    "request_states": [
+      {
+        "request_id": "cd867bdef308468d89b32be75a27b03e",
+        "phase": "prefill",
+        "prompt_tokens": 90,
+        "prefilled_tokens": 32,
+        "generated_tokens": 0,
+        "max_tokens": 512,
+        "cancel_requested": false,
+        "reserved_tokens": 602,
+        "used_tokens": 32
+      },
+      {
+        "request_id": "4a59ab9292414fb387ac6d326163eea0",
+        "phase": "prefill",
+        "prompt_tokens": 43,
+        "prefilled_tokens": 0,
+        "generated_tokens": 0,
+        "max_tokens": 128,
+        "cancel_requested": false,
+        "reserved_tokens": 171,
+        "used_tokens": 0
+      }
+    ],
+    "executor": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 786432
+    },
+    "kv_cache": {
+      "capacity_tokens": 8192,
+      "reserved_tokens": 773,
+      "used_tokens": 32,
+      "available_tokens": 7419
+    },
+    "active_request_ids": [
+      "4a59ab9292414fb387ac6d326163eea0",
+      "cd867bdef308468d89b32be75a27b03e"
+    ],
+    "active_requests": 2,
+    "active_request_id": "4a59ab9292414fb387ac6d326163eea0"
+  },
+  "stopped_ui": "\n\n\n\n\nRuntime Chat\nNew chat\nSettings\nReply stopped\n\n\n\n\n\nYou\n\nMy name is Ada. Reply with my name.\n\n\nAssistant\n\nMy name is Qwen.\n\n\nYou\n\nWhat is my name?\n\n\nAssistant\n\nYour name is Qwen.\n\n\nYou\n\nCount from 1 to 500. Include every number.\n\n\nAssistant\n\nNo reply text was returned.\nStopped. This reply won’t be used in your next message.\n\nAsk anything…\nSend\nChat history stays in this session.",
+  "second_client_usage": {
+    "prompt_tokens": 43,
+    "completion_tokens": 128,
+    "total_tokens": 171
+  },
+  "final_health": {
+    "status": "ok",
+    "queued_requests": 0,
+    "config": {
+      "queue_capacity": 64,
+      "max_active_requests": 2,
+      "token_budget": 32,
+      "prefill_delay": 0.05,
+      "token_delay": 0.03,
+      "kv_cache_capacity_tokens": 8192,
+      "scheduling_policy": "round_robin",
+      "prefill_token_budget": 8
+    },
+    "request_states": [],
+    "executor": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 0
+    },
+    "kv_cache": {
+      "capacity_tokens": 8192,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "available_tokens": 8192
+    },
+    "active_request_ids": [],
+    "active_requests": 0,
+    "active_request_id": null
+  },
+  "verification": {
+    "date": "2026-11-24",
+    "base_commit": "bfc1d4b87c7e9c6b7fc06fc79626dbbc08ca50d8",
+    "device": "Android 15/API 35 ARM64 emulator",
+    "backend": "existing pinned Qwen2.5-0.5B-Instruct CPU/float32, greedy",
+    "android_unit_tests": 26,
+    "python_tests": 444,
+    "debug_lint_errors": 0,
+    "debug_lint_warnings": 3,
+    "inference_and_transport_diff": "No changes against base commit to src/, RuntimeClient.kt, ChatProtocol.kt, or dependency declarations",
+    "full_ui_smoke_scope": "Full UI flow preceded the final field-error-clearing adjustment; final APK targeted Settings checks recorded separately.",
+    "visually_inspected": [
+      "welcome",
+      "portrait",
+      "landscape",
+      "dark",
+      "large-text (font scale 1.3)",
+      "Settings"
+    ],
+    "limits": "No physical phone or non-API-35 device test; no model quality or inference performance claim.",
+    "final_settings_apk_sha256": "2ef148e52c3398b0f110c5264918fb4e20a1e18be567828d6c6abc252910a5c7"
+  },
+  "final_apk_settings_checks": {
+    "checks": [
+      "zero token limit cannot be saved",
+      "correcting the invalid value to 192 saves and selects Medium",
+      "Cancel discards an unsaved Long selection",
+      "Short default restored"
+    ],
+    "method": "Final APK, ADB UI with settled focus and keyboard-aware input"
+  }
+}

@@ -6,6 +6,8 @@ loads the model and does inference.** No model weights, Python, Transformers, or
 PyTorch are installed on the phone. The browser and Android app can use the same
 running server independently.
 
+<img src="android/verification/polish-welcome.png" width="280" alt="Runtime Chat welcome screen with connection help and a bottom message bar" />
+
 ## Run it with Android Studio
 
 1. Start the server from the repository root. For real answers with the model
@@ -27,12 +29,33 @@ running server independently.
    These versions match the installed toolchain; they are not claimed as latest.
 3. Create or select an Android emulator (Android 8/API 26 or newer; API 35 was
    tested), select the **app** configuration and **debug** build variant, and Run.
-4. Leave the server address as **`http://10.0.2.2:8000`** and tap **Connect**.
-   This special emulator address reaches the Mac's loopback interface. The
-   emulator's `127.0.0.1` refers to the emulator itself.
-5. Send a message. Text appears as it arrives. **Stop** cancels generation;
-   **New chat** clears this client's conversation. The output limit is a maximum
-   number of generated tokens, not words. An answer may finish sooner.
+4. Tap **Connect to Mac** on the welcome screen. The default address is
+   **`http://10.0.2.2:8000`**, available under **Settings**. This special emulator
+   address reaches the Mac's loopback interface. The emulator's `127.0.0.1`
+   refers to the emulator itself.
+5. Type in the bottom message bar and tap **Send**. Replies appear in message
+   bubbles as they arrive. Send becomes **Stop** while the model writes;
+   **New chat** clears this client's conversation. Example prompts on the welcome
+   screen fill the message box without sending anything automatically.
+
+## Chat screen and Settings
+
+The main screen shows the conversation and a simple connection status. Tap that
+status to inspect the server/model and detailed errors. Server addresses, model
+aliases, and token counts stay out of the main chat view.
+
+**Settings → Maximum reply length** offers **Short (64 tokens)**,
+**Medium (192)**, and **Long (512)**. Short preserves the original default.
+**Advanced** exposes the exact token limit from 1 to 512; these are maximum
+output lengths, not word counts, and answers can finish sooner. A reply that
+reaches its limit gets an explanatory note. Changing the connected server starts
+a new chat; changing reply length keeps the current conversation.
+
+Light and dark colors follow Android's system theme. The message bar stays at the
+bottom above the keyboard. Rotation retains messages, drafts, and saved settings;
+the view follows the latest reply when already at the bottom and lets you scroll
+back to read earlier messages. Unsaved Settings edits are discarded when that
+dialog is cancelled or the Activity is recreated.
 
 The first Gradle sync can download build tools and library dependencies into
 Gradle/Android SDK caches on your Mac. It does not download another language
@@ -47,7 +70,7 @@ milestone:
 - **USB, without exposing the server on Wi-Fi:** enable Android developer options
   and USB debugging, connect and authorize the phone, then run
   `adb -s PHONE_SERIAL reverse tcp:8000 tcp:8000`. Install/run the debug app and
-  connect to `http://127.0.0.1:8000` inside the app. Remove the forwarding afterward
+  set `http://127.0.0.1:8000` under Settings and save/connect. Remove the forwarding afterward
   with `adb -s PHONE_SERIAL reverse --remove tcp:8000`.
 - **Trusted Wi-Fi:** put both devices on the same network, start Uvicorn with
   `--host 0.0.0.0` instead of `127.0.0.1`, and enter
@@ -73,16 +96,21 @@ Android screen → POST /v1/chat/completions → existing queue/scheduler
 Stop           → POST /requests/{raw request ID}/cancel
 ```
 
-- `MainActivity.kt` builds the native form, applies system/keyboard insets, and
-  provides compact landscape controls. Networking runs off the UI thread.
+- `MainActivity.kt` presents native message bubbles, a bottom composer,
+  connection details, and a scrollable Settings dialog. System/keyboard insets,
+  accessible button labels, selectable reply text, and light/dark resources are
+  handled in the Android presentation layer. Networking runs off the UI thread.
 - `ChatModel.kt` owns conversation state and background work. A ViewModel keeps
-  the current request and transcript across rotation. Finishing the Activity
+  the current request, structured display turns, and draft across rotation.
+  `ChatTurn.kt` holds display-only reply/finish notes; the separate `Conversation`
+  still owns accepted API history. Finishing the Activity
   cancels active work; moving the app to the background alone does not cancel it.
   Android can kill a background process, so generation is not a durable job.
 - `RuntimeClient.kt` discovers the model and sends the complete accepted history
   with greedy settings. It reads UTF-8 incrementally and requires the server's
   completion metadata and `[DONE]` before treating a reply as successful. HTTP
-  errors and connection failures are shown in the status line; there are no
+  errors and connection failures get simple status messages with details on tap;
+  there are no
   automatic generation retries that might create duplicate requests.
 - `ChatProtocol.kt` handles SSE framing, request identity, finish/usage validation,
   request JSON, and history limits. A truncated stream is a failure, even if some
@@ -135,7 +163,8 @@ emulator against a **dedicated idle runtime**, with no other requests:
 
 Run that from the repository root with a real model server on port 8000. The
 script resets this app's in-memory chat, sends model requests, temporarily changes
-emulator rotation (restoring its previous settings), checks two simultaneous
+emulator rotation, system theme, and font scale (restoring their previous settings),
+checks message widths and retained history, exercises Settings, checks two simultaneous
 clients and cancellation/zero KV state, checks offline/reconnect behavior, and
 writes screenshots plus `smoke.json` under ignored `.experiments/android-client/`.
 It accepts explicit server addresses and emulator serials; it refuses physical
@@ -144,11 +173,13 @@ a separate greedy JSON API request with the exact same accepted history; use the
 verified Qwen checkpoint for this smoke. This checks client agreement, not whether
 the model's answer is factually correct. It is not a performance benchmark.
 
-Recorded verification: **26 Android tests and 444 Python tests passed**; debug
-and unsigned release builds passed, with zero lint errors (seven debug warnings).
-The [API 35/Qwen emulator record](android/verification/qwen-api35.json) includes
+The initial client verification recorded **26 Android tests and 444 Python tests
+passed**; debug and unsigned release builds passed. The
+[original API 35/Qwen emulator record](android/verification/qwen-api35.json) includes
 direct-response agreement, two-client admission, cancellation, and final zero
-request/KV state. A physical phone has not been tested.
+request/KV state. The interface update is recorded separately in
+[the polished-client record](android/verification/polish-api35.json) and
+[PROGRESS.md](PROGRESS.md). A physical phone has not been tested.
 
 The Python runtime remains independently checked with `.venv/bin/python -m pytest -q`.
 See [PROGRESS.md](PROGRESS.md) for further details and remaining limits.

@@ -907,3 +907,57 @@ durability, release signing, HTTPS hosting/authentication, app-store distributio
 and on-device inference were not verified or implemented. The next engine
 performance milestone remains optional real tensor batching, compared against
 each model's unbatched baseline while preserving cancellation and memory safety.
+
+## 2026-11-24 — Friendlier Android chat interface
+
+- Started from merged Android-client main (`bfc1d4b`). Replaced the technical
+  form with labelled message bubbles, a bottom message bar, a single Send/Stop
+  control, a welcome screen, and example prompts that fill the draft without
+  submitting it. Added rounded controls, consistent colors/spacing, and system
+  light/dark resources. User messages and replies have separate, selectable
+  views rather than being parsed out of a combined transcript.
+- Moved the server address and reply-length controls into Settings. Short=64
+  tokens preserves the previous default, Medium=192, and Long=512; Advanced
+  retains exact 1–512 limits. Save validates inputs; Cancel discards edits.
+  Connection status uses simple wording, with raw server/model/error details
+  available on tap. Limit, failed, and stopped replies have plain-language notes.
+- Added display-only `ChatTurn` state; accepted conversation history still uses
+  the same `Conversation` logic. Rotation/theme changes retain turns, drafts,
+  saved settings, and reading position. A reader already at the bottom follows
+  new text; scrolling back does not force a jump on each token. Settings/detail
+  dialogs are dismissed on Activity destruction. Settings and New chat remain
+  disabled during generation; Stop retains existing cancellation semantics.
+- No changes to Python runtime/inference, model files, generation settings,
+  scheduler, KV ownership, endpoints, `RuntimeClient.kt`, `ChatProtocol.kt`, or
+  dependency versions. No downloads or new permissions were added. Ignored the
+  user's local Android Studio `.idea/` directory without deleting it.
+- Android debug and unsigned release builds passed. All **26 Android JVM tests**
+  and **444 Python tests** passed. Android debug lint has **zero errors and three
+  warnings** (two newer dependency versions and backup-rule guidance); release
+  vital lint passed. Navigation-bar theme flags are qualified for API 27+ while
+  retaining API 26 support in the manifest; only API 35 was exercised on a device.
+- Extended the opt-in emulator smoke for the new controls. The API 35/Qwen run
+  checked hidden technical fields on the welcome screen, model discovery,
+  streamed history agreement with a direct JSON request, noncollapsed bubble
+  widths, portrait/landscape retained history, dark mode, font scale 1.3, Long
+  reply selection, two simultaneous clients, Stop, zero final request/KV state,
+  New chat, offline errors, and reconnect. Visually inspected light/dark,
+  landscape, larger-text, and Settings screenshots. The smoke restores previous
+  rotation, theme, and font-scale settings.
+- Final-APK Settings checks confirmed zero is rejected, correcting it to 192
+  saves and selects Medium, Cancel discards an unsaved Long choice, and Short
+  can be restored. Validation errors clear while editing. The full UI smoke
+  preceded that final error-feedback adjustment; targeted Settings checks and
+  the Android build/test/lint checks passed afterward. Recorded both scopes.
+- Recorded the UI run separately in `android/verification/polish-api35.json` and
+  a welcome-screen preview in `android/verification/polish-welcome.png`. Original
+  Android verification and engine benchmark records remain unchanged. Updated
+  README and [ANDROID_CLIENT.md](ANDROID_CLIENT.md) for the new flow.
+- Stopped the temporary Qwen server, no-save emulator, and task Gradle daemon
+  after verification. Preserved the user's local IDE files, models, and
+  untracked `error.log`.
+
+This phase improves presentation and usability, not model intelligence or
+inference performance. Physical phones, other Android releases, very large font
+scales, localization, and persistent conversation storage remain outside the
+verified scope. Optional tensor batching remains the next engine milestone.

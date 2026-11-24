@@ -18,7 +18,9 @@ class ChatModel : ViewModel() {
     var model: String? = null
     var busy = false
     var status = "Connect to your Mac to begin."
-    var transcript = ""
+    val turns = mutableListOf<ChatTurn>()
+    var scrollPosition = 0
+    var followLatest = true
     var draft = ""
     var limit = "64"
     private fun update(action: () -> Unit) {
@@ -29,7 +31,7 @@ class ChatModel : ViewModel() {
         val address = try { serverUrl(value) } catch (e: Exception) {
             status = e.message ?: "Invalid address"; changed?.invoke(); return
         }
-        if (base != address) { conversation.messages.clear(); transcript = "" }
+        if (base != address) { conversation.messages.clear(); turns.clear(); scrollPosition = 0 }
         base = address; model = null; busy = true; status = "Connecting…"; changed?.invoke()
         network.execute {
             try {
@@ -49,7 +51,8 @@ class ChatModel : ViewModel() {
         } catch (e: Exception) { status = e.message ?: "Invalid message"; changed?.invoke(); return }
         limit = outputLimit; draft = ""
         busy = true; status = "Generating…"
-        transcript += "\nYOU\n$user\n\nASSISTANT\n"
+        val turn = ChatTurn(user)
+        turns += turn
         val job = Generation(base, cancellation)
         generation = job
         val selected = model!!
@@ -59,15 +62,16 @@ class ChatModel : ViewModel() {
             try {
                 val result = job.run(selected, messages, tokens) { piece ->
                     answer.append(piece)
-                    update { if (generation === job && !job.stopped.get()) transcript += piece }
+                    update { if (generation === job && !job.stopped.get()) turn.reply += piece }
                 }
                 update {
                     if (!job.stopped.get()) {
                         if (answer.isNotBlank()) conversation.complete(user, answer.toString())
+                        turn.state = if (answer.isBlank()) ReplyState.EMPTY else if (result.reason == "length") ReplyState.LIMIT else ReplyState.COMPLETE
                         status = "${result.tokens} output tokens · ${if (result.reason == "length") "output limit reached" else "complete"}"
                     } else {
                         status = "Stopped · partial reply excluded from history"
-                        transcript += "\n[Stopped; this turn is excluded from history]\n"
+                        turn.state = ReplyState.STOPPED
                     }
                     generation = null; busy = false
                 }
@@ -75,7 +79,7 @@ class ChatModel : ViewModel() {
                 update {
                     status = if (job.stopped.get()) "Stopped · partial reply excluded from history"
                         else "Request failed: ${e.message}"
-                    transcript += "\n[${if (job.stopped.get()) "Stopped" else "Failed"}; this turn is excluded from history]\n"
+                    turn.state = if (job.stopped.get()) ReplyState.STOPPED else ReplyState.FAILED
                     generation = null; busy = false
                 }
             }
@@ -84,7 +88,7 @@ class ChatModel : ViewModel() {
     fun stop() { generation?.stop(); status = "Stopping…"; changed?.invoke() }
     fun clear() {
         if (busy) return
-        conversation.messages.clear(); transcript = ""; draft = ""
+        conversation.messages.clear(); turns.clear(); scrollPosition = 0; draft = ""
         status = model?.let { "Connected · $it" } ?: "Connect to your Mac to begin."
         changed?.invoke()
     }
