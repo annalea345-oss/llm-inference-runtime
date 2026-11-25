@@ -1,0 +1,914 @@
+{
+  "scope": "fixed pair, budget-32 prefill then steady decode; CPU diagnostic only",
+  "results": {
+    "smollm2": [
+      {
+        "tensor_batching": false,
+        "steps": 24,
+        "warmup_decode_rounds": 4,
+        "prompt_tokens": 44,
+        "initial_decode_offsets": [
+          0,
+          0
+        ],
+        "model_forward_includes": "entire CPU model.forward, including attention and its KV updates",
+        "other_includes": "token decoding, cache pack/split, input assembly, counters, worker/async overhead",
+        "mean_ms": {
+          "executor_wall_ms": 29.473522581004847,
+          "model_forward_wall_ms": 28.910996625199914,
+          "other_executor_wall_ms": 0.5625259558049341
+        },
+        "generated_ids_sha256": "85f68befe995c216e1008d182a214e9b48d864c06e3fc73e683481b685578455",
+        "samples": [
+          {
+            "executor_wall_ms": 28.21237500756979,
+            "model_forward_wall_ms": 27.653167489916086,
+            "other_executor_wall_ms": 0.5592075176537037,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.728959314525127,
+            "model_forward_wall_ms": 29.157834127545357,
+            "other_executor_wall_ms": 0.5711251869797707,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.314040672034025,
+            "model_forward_wall_ms": 28.70104182511568,
+            "other_executor_wall_ms": 0.6129988469183445,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 31.394625082612038,
+            "model_forward_wall_ms": 30.793999787420034,
+            "other_executor_wall_ms": 0.6006252951920033,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 28.65750016644597,
+            "model_forward_wall_ms": 28.08400010690093,
+            "other_executor_wall_ms": 0.5735000595450401,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.5672919601202,
+            "model_forward_wall_ms": 28.978082817047834,
+            "other_executor_wall_ms": 0.5892091430723667,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.97512463480234,
+            "model_forward_wall_ms": 29.446874745190144,
+            "other_executor_wall_ms": 0.5282498896121979,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 27.275291737169027,
+            "model_forward_wall_ms": 26.75762539729476,
+            "other_executor_wall_ms": 0.5176663398742676,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 28.90304196625948,
+            "model_forward_wall_ms": 28.366541024297476,
+            "other_executor_wall_ms": 0.5365009419620037,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.53958371654153,
+            "model_forward_wall_ms": 29.016957618296146,
+            "other_executor_wall_ms": 0.5226260982453823,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 28.126417193561792,
+            "model_forward_wall_ms": 27.636459097266197,
+            "other_executor_wall_ms": 0.48995809629559517,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 30.252582859247923,
+            "model_forward_wall_ms": 29.685082845389843,
+            "other_executor_wall_ms": 0.5675000138580799,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 28.769374825060368,
+            "model_forward_wall_ms": 28.229583520442247,
+            "other_executor_wall_ms": 0.5397913046181202,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 28.298332821577787,
+            "model_forward_wall_ms": 27.78462413698435,
+            "other_executor_wall_ms": 0.5137086845934391,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 27.989457827061415,
+            "model_forward_wall_ms": 27.514833956956863,
+            "other_executor_wall_ms": 0.4746238701045513,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.958416242152452,
+            "model_forward_wall_ms": 29.373124707490206,
+            "other_executor_wall_ms": 0.5852915346622467,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.22087488695979,
+            "model_forward_wall_ms": 28.678250033408403,
+            "other_executor_wall_ms": 0.5426248535513878,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.781084042042494,
+            "model_forward_wall_ms": 29.22487584874034,
+            "other_executor_wall_ms": 0.5562081933021545,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 30.49629181623459,
+            "model_forward_wall_ms": 29.869459103792906,
+            "other_executor_wall_ms": 0.6268327124416828,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 32.79008297249675,
+            "model_forward_wall_ms": 32.03799994662404,
+            "other_executor_wall_ms": 0.7520830258727074,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 29.84991716220975,
+            "model_forward_wall_ms": 29.271624982357025,
+            "other_executor_wall_ms": 0.5782921798527241,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 30.491792131215334,
+            "model_forward_wall_ms": 29.89545790478587,
+            "other_executor_wall_ms": 0.5963342264294624,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 30.13824997469783,
+            "model_forward_wall_ms": 29.58079194650054,
+            "other_executor_wall_ms": 0.5574580281972885,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 28.633832931518555,
+            "model_forward_wall_ms": 28.125626035034657,
+            "other_executor_wall_ms": 0.5082068964838982,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          }
+        ],
+        "final_cache_bytes": 0
+      },
+      {
+        "tensor_batching": true,
+        "steps": 24,
+        "warmup_decode_rounds": 4,
+        "prompt_tokens": 44,
+        "initial_decode_offsets": [
+          0,
+          0
+        ],
+        "model_forward_includes": "entire CPU model.forward, including attention and its KV updates",
+        "other_includes": "token decoding, cache pack/split, input assembly, counters, worker/async overhead",
+        "mean_ms": {
+          "executor_wall_ms": 48.88851220797127,
+          "model_forward_wall_ms": 45.54884560639039,
+          "other_executor_wall_ms": 3.3396666015808782
+        },
+        "generated_ids_sha256": "85f68befe995c216e1008d182a214e9b48d864c06e3fc73e683481b685578455",
+        "samples": [
+          {
+            "executor_wall_ms": 53.16304229199886,
+            "model_forward_wall_ms": 50.464124884456396,
+            "other_executor_wall_ms": 2.698917407542467,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 42.09975013509393,
+            "model_forward_wall_ms": 39.26866687834263,
+            "other_executor_wall_ms": 2.831083256751299,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 54.18312503024936,
+            "model_forward_wall_ms": 50.267957616597414,
+            "other_executor_wall_ms": 3.915167413651943,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 45.50749994814396,
+            "model_forward_wall_ms": 41.95345798507333,
+            "other_executor_wall_ms": 3.554041963070631,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 48.0510420165956,
+            "model_forward_wall_ms": 44.693959411233664,
+            "other_executor_wall_ms": 3.3570826053619385,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 44.88120833411813,
+            "model_forward_wall_ms": 42.07108402624726,
+            "other_executor_wall_ms": 2.810124307870865,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 43.3584158308804,
+            "model_forward_wall_ms": 40.08466703817248,
+            "other_executor_wall_ms": 3.27374879270792,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 44.85008306801319,
+            "model_forward_wall_ms": 42.157667223364115,
+            "other_executor_wall_ms": 2.6924158446490765,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 46.647833194583654,
+            "model_forward_wall_ms": 43.54045819491148,
+            "other_executor_wall_ms": 3.1073749996721745,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 45.547207817435265,
+            "model_forward_wall_ms": 42.34141670167446,
+            "other_executor_wall_ms": 3.2057911157608032,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 53.33637539297342,
+            "model_forward_wall_ms": 49.967207945883274,
+            "other_executor_wall_ms": 3.369167447090149,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 52.63016698881984,
+            "model_forward_wall_ms": 48.64458413794637,
+            "other_executor_wall_ms": 3.9855828508734703,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 48.292750027030706,
+            "model_forward_wall_ms": 44.95887504890561,
+            "other_executor_wall_ms": 3.3338749781250954,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 52.94991610571742,
+            "model_forward_wall_ms": 49.506666138768196,
+            "other_executor_wall_ms": 3.4432499669492245,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 50.44099967926741,
+            "model_forward_wall_ms": 46.99304234236479,
+            "other_executor_wall_ms": 3.4479573369026184,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 41.628750041127205,
+            "model_forward_wall_ms": 38.22891693562269,
+            "other_executor_wall_ms": 3.399833105504513,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 51.69258313253522,
+            "model_forward_wall_ms": 48.00916602835059,
+            "other_executor_wall_ms": 3.6834171041846275,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 50.429499708116055,
+            "model_forward_wall_ms": 47.41604207083583,
+            "other_executor_wall_ms": 3.0134576372802258,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 47.66895808279514,
+            "model_forward_wall_ms": 43.68008300662041,
+            "other_executor_wall_ms": 3.988875076174736,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 54.91825006902218,
+            "model_forward_wall_ms": 51.201832946389914,
+            "other_executor_wall_ms": 3.716417122632265,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 51.37258395552635,
+            "model_forward_wall_ms": 47.52633394673467,
+            "other_executor_wall_ms": 3.846250008791685,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 49.81283424422145,
+            "model_forward_wall_ms": 46.5685841627419,
+            "other_executor_wall_ms": 3.2442500814795494,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 51.37508362531662,
+            "model_forward_wall_ms": 48.30224998295307,
+            "other_executor_wall_ms": 3.0728336423635483,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 48.48633427172899,
+            "model_forward_wall_ms": 45.32524989917874,
+            "other_executor_wall_ms": 3.161084372550249,
+            "model_call_rows": [
+              2
+            ]
+          }
+        ],
+        "final_cache_bytes": 0
+      }
+    ],
+    "qwen": [
+      {
+        "tensor_batching": false,
+        "steps": 24,
+        "warmup_decode_rounds": 4,
+        "prompt_tokens": 43,
+        "initial_decode_offsets": [
+          0,
+          0
+        ],
+        "model_forward_includes": "entire CPU model.forward, including attention and its KV updates",
+        "other_includes": "token decoding, cache pack/split, input assembly, counters, worker/async overhead",
+        "mean_ms": {
+          "executor_wall_ms": 72.71214054586987,
+          "model_forward_wall_ms": 72.0592915895395,
+          "other_executor_wall_ms": 0.6528489563303689
+        },
+        "generated_ids_sha256": "a23a89a61e7400e3cc0762ddf236d1bd75e11cf4945f0a7324aae3e2c37724ef",
+        "samples": [
+          {
+            "executor_wall_ms": 71.92800007760525,
+            "model_forward_wall_ms": 71.28941733390093,
+            "other_executor_wall_ms": 0.638582743704319,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 72.55583396181464,
+            "model_forward_wall_ms": 71.91816624253988,
+            "other_executor_wall_ms": 0.6376677192747593,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 72.38241704180837,
+            "model_forward_wall_ms": 71.7542921192944,
+            "other_executor_wall_ms": 0.6281249225139618,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.80524989962578,
+            "model_forward_wall_ms": 71.1899995803833,
+            "other_executor_wall_ms": 0.6152503192424774,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 74.05349984765053,
+            "model_forward_wall_ms": 73.42837518081069,
+            "other_executor_wall_ms": 0.625124666839838,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.042540948838,
+            "model_forward_wall_ms": 70.42854093015194,
+            "other_executor_wall_ms": 0.6140000186860561,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 73.25162459164858,
+            "model_forward_wall_ms": 72.58816715329885,
+            "other_executor_wall_ms": 0.6634574383497238,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.9895837828517,
+            "model_forward_wall_ms": 71.35766744613647,
+            "other_executor_wall_ms": 0.6319163367152214,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 70.84204070270061,
+            "model_forward_wall_ms": 70.22154191508889,
+            "other_executor_wall_ms": 0.620498787611723,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 73.75662494450808,
+            "model_forward_wall_ms": 73.11920775100589,
+            "other_executor_wall_ms": 0.6374171935021877,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 72.34245864674449,
+            "model_forward_wall_ms": 71.729457937181,
+            "other_executor_wall_ms": 0.6130007095634937,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 73.31724977120757,
+            "model_forward_wall_ms": 72.59216578677297,
+            "other_executor_wall_ms": 0.7250839844346046,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.87941716983914,
+            "model_forward_wall_ms": 71.18191570043564,
+            "other_executor_wall_ms": 0.6975014694035053,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 72.50616699457169,
+            "model_forward_wall_ms": 71.85854343697429,
+            "other_executor_wall_ms": 0.6476235575973988,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.98024960234761,
+            "model_forward_wall_ms": 71.34941685944796,
+            "other_executor_wall_ms": 0.6308327428996563,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.47462526336312,
+            "model_forward_wall_ms": 70.83041733130813,
+            "other_executor_wall_ms": 0.6442079320549965,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 72.3408330231905,
+            "model_forward_wall_ms": 71.53391698375344,
+            "other_executor_wall_ms": 0.8069160394370556,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 73.39833257719874,
+            "model_forward_wall_ms": 72.72704085335135,
+            "other_executor_wall_ms": 0.6712917238473892,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 72.65666732564569,
+            "model_forward_wall_ms": 72.02570792287588,
+            "other_executor_wall_ms": 0.630959402769804,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.48250006139278,
+            "model_forward_wall_ms": 70.83095796406269,
+            "other_executor_wall_ms": 0.6515420973300934,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 78.03504075855017,
+            "model_forward_wall_ms": 77.37612398341298,
+            "other_executor_wall_ms": 0.658916775137186,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 74.82550013810396,
+            "model_forward_wall_ms": 74.1434576921165,
+            "other_executor_wall_ms": 0.682042445987463,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 73.59995786100626,
+            "model_forward_wall_ms": 72.94470816850662,
+            "other_executor_wall_ms": 0.6552496924996376,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          },
+          {
+            "executor_wall_ms": 71.64495810866356,
+            "model_forward_wall_ms": 71.00379187613726,
+            "other_executor_wall_ms": 0.6411662325263023,
+            "model_call_rows": [
+              1,
+              1
+            ]
+          }
+        ],
+        "final_cache_bytes": 0
+      },
+      {
+        "tensor_batching": true,
+        "steps": 24,
+        "warmup_decode_rounds": 4,
+        "prompt_tokens": 43,
+        "initial_decode_offsets": [
+          0,
+          0
+        ],
+        "model_forward_includes": "entire CPU model.forward, including attention and its KV updates",
+        "other_includes": "token decoding, cache pack/split, input assembly, counters, worker/async overhead",
+        "mean_ms": {
+          "executor_wall_ms": 87.20681760072087,
+          "model_forward_wall_ms": 85.0425329990685,
+          "other_executor_wall_ms": 2.164284601652374
+        },
+        "generated_ids_sha256": "a23a89a61e7400e3cc0762ddf236d1bd75e11cf4945f0a7324aae3e2c37724ef",
+        "samples": [
+          {
+            "executor_wall_ms": 91.45183302462101,
+            "model_forward_wall_ms": 89.58033379167318,
+            "other_executor_wall_ms": 1.8714992329478264,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 84.43879196420312,
+            "model_forward_wall_ms": 82.72616704925895,
+            "other_executor_wall_ms": 1.712624914944172,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 83.8955002836883,
+            "model_forward_wall_ms": 82.08195772022009,
+            "other_executor_wall_ms": 1.8135425634682178,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 89.64812522754073,
+            "model_forward_wall_ms": 86.70749980956316,
+            "other_executor_wall_ms": 2.9406254179775715,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 87.47616689652205,
+            "model_forward_wall_ms": 85.44524991884828,
+            "other_executor_wall_ms": 2.030916977673769,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.16825039684772,
+            "model_forward_wall_ms": 85.55487543344498,
+            "other_executor_wall_ms": 2.613374963402748,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 86.86362486332655,
+            "model_forward_wall_ms": 84.94404191151261,
+            "other_executor_wall_ms": 1.9195829518139362,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 89.30391678586602,
+            "model_forward_wall_ms": 87.29033311828971,
+            "other_executor_wall_ms": 2.013583667576313,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.19066593423486,
+            "model_forward_wall_ms": 85.7168328948319,
+            "other_executor_wall_ms": 2.4738330394029617,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.0518751218915,
+            "model_forward_wall_ms": 85.26849979534745,
+            "other_executor_wall_ms": 2.7833753265440464,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 89.42879177629948,
+            "model_forward_wall_ms": 86.91324992105365,
+            "other_executor_wall_ms": 2.5155418552458286,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.94674992188811,
+            "model_forward_wall_ms": 86.95883303880692,
+            "other_executor_wall_ms": 1.9879168830811977,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 90.24454187601805,
+            "model_forward_wall_ms": 88.17883301526308,
+            "other_executor_wall_ms": 2.0657088607549667,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.17237475886941,
+            "model_forward_wall_ms": 86.13474993035197,
+            "other_executor_wall_ms": 2.037624828517437,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 84.2271656729281,
+            "model_forward_wall_ms": 82.32354186475277,
+            "other_executor_wall_ms": 1.9036238081753254,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 89.71920795738697,
+            "model_forward_wall_ms": 87.83791726455092,
+            "other_executor_wall_ms": 1.8812906928360462,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.90341594815254,
+            "model_forward_wall_ms": 86.92383300513029,
+            "other_executor_wall_ms": 1.9795829430222511,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 86.66033297777176,
+            "model_forward_wall_ms": 84.6439590677619,
+            "other_executor_wall_ms": 2.016373910009861,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 83.80037499591708,
+            "model_forward_wall_ms": 81.82216621935368,
+            "other_executor_wall_ms": 1.978208776563406,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 82.60091673582792,
+            "model_forward_wall_ms": 80.507124774158,
+            "other_executor_wall_ms": 2.093791961669922,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 82.69245782867074,
+            "model_forward_wall_ms": 80.54879168048501,
+            "other_executor_wall_ms": 2.14366614818573,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 83.04116688668728,
+            "model_forward_wall_ms": 80.58387506753206,
+            "other_executor_wall_ms": 2.457291819155216,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.28854188323021,
+            "model_forward_wall_ms": 85.94808401539922,
+            "other_executor_wall_ms": 2.3404578678309917,
+            "model_call_rows": [
+              2
+            ]
+          },
+          {
+            "executor_wall_ms": 88.74883269891143,
+            "model_forward_wall_ms": 86.3800416700542,
+            "other_executor_wall_ms": 2.368791028857231,
+            "model_call_rows": [
+              2
+            ]
+          }
+        ],
+        "final_cache_bytes": 0
+      }
+    ]
+  },
+  "runner_sha256": "3309ec2d46e06b1fad636201277834f4b591f97738d22a85d8adaa903ba86491",
+  "model_references": [
+    "raw/smollm2-reference.json",
+    "raw/qwen-reference.json"
+  ]
+}

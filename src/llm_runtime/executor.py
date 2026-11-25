@@ -10,6 +10,19 @@ class ModelExecutor(Protocol):
     async def execute(self, step: ExecutionStep) -> str | DecodeResult | None: ...
 
 
+class BatchModelExecutor(ModelExecutor, Protocol):
+    """Optional ordered batch hook; each result belongs to the matching step.
+
+    Return failures per row, or raise for the whole batch. Cancellation must not
+    finish this await until blocking work has settled and cleanup is safe.
+    Executors without this capability continue to use execute() unchanged.
+    """
+
+    async def execute_batch(self, steps: tuple[ExecutionStep, ...]) -> list[
+        str | DecodeResult | BaseException | None
+    ]: ...
+
+
 class LegacyModelExecutor(Protocol):
     """Run-to-completion interface retained for the FCFS baseline."""
 
