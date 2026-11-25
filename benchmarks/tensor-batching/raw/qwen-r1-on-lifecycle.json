@@ -1,0 +1,170 @@
+{
+  "paired_cancel": {
+    "action": "explicit_cancel",
+    "active_before": 2,
+    "peer_completed": true,
+    "executor_before": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 2187264,
+      "tensor_batching": true,
+      "forward_calls": 1186,
+      "batched_forward_calls": 315,
+      "max_forward_batch_size": 2
+    },
+    "final": {
+      "active": 0,
+      "queued": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    }
+  },
+  "paired_disconnect": {
+    "action": "disconnect",
+    "active_before": 2,
+    "peer_completed": true,
+    "executor_before": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 2187264,
+      "tensor_batching": true,
+      "forward_calls": 1445,
+      "batched_forward_calls": 318,
+      "max_forward_batch_size": 2
+    },
+    "final": {
+      "active": 0,
+      "queued": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    }
+  },
+  "queued_disconnect": {
+    "queued_before_disconnect": {
+      "elapsed_ms": 23.72608333826065,
+      "active": 2,
+      "queued": 1,
+      "reserved_tokens": 1110,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "queue_removal_observed": true,
+    "removal_observations": [
+      {
+        "elapsed_ms": 0.9956248104572296,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "blockers_still_active_at_removal": 2,
+    "observed_queue_removal_after_ms": 1.2645833194255829,
+    "idle_observations_after_all_disconnects": [
+      {
+        "elapsed_ms": 0.8916668593883514,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      {
+        "elapsed_ms": 23.295708931982517,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      {
+        "elapsed_ms": 45.73799995705485,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      {
+        "elapsed_ms": 67.37316679209471,
+        "active": 0,
+        "queued": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "followup": {
+      "index": 0,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 34,
+        "completion_tokens": 24,
+        "total_tokens": 58
+      },
+      "usage_status": "verified",
+      "content_deltas": 24,
+      "finish_reason": "length",
+      "timings_ms": {
+        "headers": 0.9277500212192535,
+        "first_content": 222.4390828050673,
+        "completion": 1001.8231249414384,
+        "content_delta_gaps": [
+          34.876707941293716,
+          35.169792361557484,
+          34.92049966007471,
+          35.74412502348423,
+          35.045250318944454,
+          35.10979190468788,
+          35.336915869265795,
+          35.21787514910102,
+          35.430083982646465,
+          36.73241613432765,
+          35.7397086918354,
+          35.38704104721546,
+          35.039250273257494,
+          35.482166800647974,
+          35.237083211541176,
+          35.09229188784957,
+          35.82633286714554,
+          34.85166700556874,
+          35.409083124250174,
+          36.522749811410904,
+          35.08850000798702,
+          35.92916717752814,
+          0.10854192078113556
+        ]
+      },
+      "stream_metadata": {
+        "created_policy": "stable",
+        "first_created": 1795625564,
+        "last_created": 1795625564,
+        "created_changes": 0
+      },
+      "request_id": "257b979e6d2c46d3ab314f6962c53c0f",
+      "elapsed_ms": 1002.0704157650471
+    }
+  },
+  "final": {
+    "active": 0,
+    "queued": 0,
+    "reserved_tokens": 0,
+    "used_tokens": 0,
+    "kv_tensor_bytes": 0
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-25",
+  "python_tests_passed": 485,
+  "new_test_cases": 41,
+  "primary_measured_runs": 24,
+  "primary_measured_requests": 96,
+  "primary_output_tokens": 9216,
+  "native_reference_checks": 20,
+  "history_reference_checks": 4,
+  "paired_active_lifecycle_checks": 8,
+  "queued_disconnect_checks": 4,
+  "graceful_server_shutdown_logs": 12,
+  "previous_model_file_hashes_unchanged": {
+    "smollm2": 10,
+    "qwen": 11
+  },
+  "published_source_hashes_match": true,
+  "final_ownership_states_all_zero": true,
+  "default_tensor_batching": false,
+  "scope": "CPU full-attention SmolLM2/Llama and Qwen2; no Android/UI or GPU change",
+  "test_source_sha256": {
+    "tests/test_tensor_batching.py": "c2d9ff9791a85870c7e6eff10d55e4a54fd339cb493b7a7f79ce54e0c1ff3c2f",
+    "tests/test_tensor_batch_protocol.py": "666825d372d66dd589aea0f368274072b1497531627380ba7799c74d3e4f8254"
+  }
+}

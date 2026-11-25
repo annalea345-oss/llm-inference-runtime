@@ -44,6 +44,11 @@ at load time. CUDA/MPS, quantization, and device selection are not implemented.
 Use one Uvicorn worker: each process would otherwise load its own weights and own
 separate queues. Startup loads the model before accepting requests.
 
+An [optional tensor-batching path](TENSOR_BATCHING.md) is available with
+`LLM_TENSOR_BATCHING=1`. It combines compatible selected rows into a model forward;
+the original unbatched path remains the default. Read the recorded CPU tradeoffs
+before using it for performance comparisons.
+
 Open **http://127.0.0.1:8000/** for the [browser client](BROWSER_CLIENT.md),
 or use the API from another terminal:
 

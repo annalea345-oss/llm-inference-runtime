@@ -1,0 +1,95 @@
+{
+  "status": "complete",
+  "started_at": "2026-11-25T16:47:09.974006+00:00",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "base_commit": "2195e6353337b716fc97c32f4d50246ed053042b",
+  "source_sha256": {
+    "src/llm_runtime/local_executor.py": "3f3c78c480384b1e55466c9b25483885ffcd30b99b38d88311258bb4fb12aba5",
+    "src/llm_runtime/batching.py": "bb566ce411c3af210c05d82a40e0b89c277b28dcc32bcac686c429b43d396738",
+    "src/llm_runtime/local.py": "8ddb99b62e13c6955c7face65ebd503419294a4a6155f5ef511bb13744a13045",
+    "src/llm_runtime/http_benchmark.py": "5aaf3f32c3b5630254277b42cc999507cc4c90a09c98d19b3b259d86c598aa5c",
+    "scripts/verify_tensor_batching.py": "38bec65e02a42290992699dd0162714efde11987ee400c610c93ca66acc4477e"
+  },
+  "protocol": {
+    "requests_per_run": 4,
+    "max_tokens": 96,
+    "concurrency": [
+      1,
+      2
+    ],
+    "repetitions": 3,
+    "prompt": "Count from 1 to 500. Include every number.",
+    "scope": "loopback HTTP receipt timings; CPU float32/eager, two Torch threads, max active two",
+    "order": "fresh server per mode/repetition; alternate off/on order each repetition",
+    "excluded": "model loading, reference/correctness/lifecycle checks, one preflight and one warmup per timing run",
+    "rss": "readiness and post-run RSS samples only; not peak RSS or a physical memory cap"
+  },
+  "finished_at": "2026-11-25T16:56:17.252786+00:00",
+  "measured_requests": 96,
+  "measured_runs": 24,
+  "summary": [
+    {
+      "model": "smollm2",
+      "concurrency": 1,
+      "off": {
+        "median_tokens_per_second": 68.4985275772036,
+        "median_first_content_p50_ms": 68.40599980205297,
+        "runs": 3
+      },
+      "on": {
+        "median_tokens_per_second": 69.02475636259088,
+        "median_first_content_p50_ms": 68.40099999681115,
+        "runs": 3
+      },
+      "throughput_ratio": 1.0076823371830026
+    },
+    {
+      "model": "smollm2",
+      "concurrency": 2,
+      "off": {
+        "median_tokens_per_second": 68.98568711594804,
+        "median_first_content_p50_ms": 125.49791717901826,
+        "runs": 3
+      },
+      "on": {
+        "median_tokens_per_second": 45.83421334501752,
+        "median_first_content_p50_ms": 146.09549986198545,
+        "runs": 3
+      },
+      "throughput_ratio": 0.6644017804444193
+    },
+    {
+      "model": "qwen",
+      "concurrency": 1,
+      "off": {
+        "median_tokens_per_second": 26.22105113210087,
+        "median_first_content_p50_ms": 225.380124989897,
+        "runs": 3
+      },
+      "on": {
+        "median_tokens_per_second": 26.030783361638743,
+        "median_first_content_p50_ms": 240.14970799908042,
+        "runs": 3
+      },
+      "throughput_ratio": 0.9927437016348595
+    },
+    {
+      "model": "qwen",
+      "concurrency": 2,
+      "off": {
+        "median_tokens_per_second": 26.34042488099057,
+        "median_first_content_p50_ms": 416.3280832581222,
+        "runs": 3
+      },
+      "on": {
+        "median_tokens_per_second": 20.579369267770943,
+        "median_first_content_p50_ms": 378.4183328971267,
+        "runs": 3
+      },
+      "throughput_ratio": 0.7812846360964631
+    }
+  ]
+}

@@ -284,6 +284,25 @@ class ContinuousBatchScheduler:
         select("prefill", min(budget, self.config.prefill_token_budget))
         return steps
 
+    async def _execute_steps(self, steps: list[ExecutionStep]) -> list:
+        """Optional batch hook preserves the same ordered, settled-step barrier.
+
+        An executor must keep ownership until its underlying work has finished,
+        including when this await is cancelled (as execute() already requires).
+        """
+        execute_batch = getattr(self.executor, "execute_batch", None)
+        if callable(execute_batch):
+            try:
+                results = await execute_batch(tuple(steps))
+                if not isinstance(results, (list, tuple)) or len(results) != len(steps):
+                    raise RuntimeError("executor returned an invalid batch result")
+                return list(results)
+            except Exception as exc:
+                return [exc] * len(steps)
+        return await asyncio.gather(
+            *(self.executor.execute(step) for step in steps), return_exceptions=True,
+        )
+
     async def _run(self) -> None:
         try:
             while True:
@@ -302,9 +321,7 @@ class ContinuousBatchScheduler:
                         break
                     self._pending = None
                 steps = self._plan()
-                results = await asyncio.gather(
-                    *(self.executor.execute(step) for step in steps), return_exceptions=True,
-                )
+                results = await self._execute_steps(steps)
                 for step, result in zip(steps, results):
                     request = step.request
                     if request.abandoned or request.cancel_requested:

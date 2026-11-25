@@ -961,3 +961,77 @@ This phase improves presentation and usability, not model intelligence or
 inference performance. Physical phones, other Android releases, very large font
 scales, localization, and persistent conversation storage remain outside the
 verified scope. Optional tensor batching remains the next engine milestone.
+
+## 2026-11-25 — Optional real CPU tensor batching
+
+- Started from merged Android-polish main (`2195e63`). Added an optional ordered
+  `execute_batch()` executor capability. The continuous scheduler retains its
+  existing planner, admission, token budgets, fairness, result handling, and
+  release barrier. Executors without the hook continue to use individual calls.
+- Added `LLM_TENSOR_BATCHING=1` to the local factory; omitted/`0` keeps the
+  original path. Invalid flag values fail startup. Direct Python loaders accept
+  `tensor_batching=True`. Supported targets are full-attention Llama/Qwen2;
+  incompatible architectures and sliding-attention configurations fail explicitly.
+  Maximum active requests stays two in the local factory.
+- Compatible prefill and decode rows now use real multi-row PyTorch forwards on
+  the existing serial model worker. Different cache/input lengths use temporary
+  padding, combined attention masks, and logical position IDs. Split caches remove
+  padding and own independent storage; no peer's storage survives through a row
+  view. Singletons use the original forward. EOS/output-cap rows need no extra
+  forward, and newly admitted rows can join partly cached work.
+- Worker ownership lasts until the entire operation settles, including repeated
+  shutdown cancellation. Waiting work can still be cancelled immediately. Invalid
+  rows are isolated; a failed shared forward fails its participating phase group
+  and leaves cleanup/recovery available. Returned exception frames are detached
+  so failed batches cannot retain tensors through their traceback/log records.
+- Added aggregate attempted-forward counters to executor health, including
+  multi-row call count and maximum observed batch size. Logical token capacity
+  and owned-cache bytes remain separate from temporary padding/copy memory and
+  process RSS. API routes, chat payloads, model aliases, clients, model weights,
+  greedy decoding, two Torch threads, CPU float32/eager attention, and dependency
+  versions are unchanged. No download or installation was needed.
+- **485 Python tests passed**, including 41 new parameterized cases. Tests cover
+  both model architectures, ragged prefill/decode and independent references,
+  genuine multi-row decode, both policies and budgets including one, late/new
+  rows, EOS/caps, independent dense storage, weak-reference collection after
+  failure, recovery, active/waiting cancellation, repeated shutdown while a
+  shared forward is gated, malformed hook results, and strict opt-in configuration.
+- Added a reusable real-model verifier and separate decode diagnostic. The final
+  primary run used the existing pinned SmolLM2-135M and Qwen2.5-0.5B checkpoints;
+  10/11 previously recorded model-file hashes respectively matched unchanged.
+  Twenty native HTTP responses matched independent Transformers token IDs/text,
+  and four multi-turn JSON responses matched reference text and usage.
+- Recorded **96 measured completions in 24 runs**, all with verified 96-token
+  outputs (9,216 measured output tokens): two models × off/on × concurrency 1/2
+  × three repetitions × four requests. Fresh loopback servers, alternating mode
+  order, excluded preflight/warmup/correctness/lifecycle work, and no concurrent
+  project tests/profiling in the published run. Source hashes identify the tested
+  working tree; earlier exploratory trials remain ignored and are not primary data.
+- Two-client median throughput was **68.99→45.83 tokens/s for SmolLM2 (-33.6%)**
+  and **26.34→20.58 for Qwen (-21.9%)**. Single-client throughput was roughly
+  unchanged. Qwen's first-content p50 improved from about 416 to 378 ms while
+  total throughput fell; SmolLM2's increased from about 125 to 146 ms. This is
+  a CPU tradeoff in this implementation/workload, not a general batching/GPU or
+  external-engine ranking. The new path remains experimental and off by default.
+- A separate 24-round fixed-pair diagnostic, after four warmup rounds, found
+  increased time inside the batched `model.forward` as the larger contributor,
+  with additional surrounding executor overhead. SmolLM2 total pair time was
+  29.47→48.89 ms (model calls 28.91→45.55); Qwen was 72.71→87.21 ms (model calls
+  72.06→85.04). This does not identify a specific operator/backend cause. The
+  timing wrapper is removed before model unload to avoid a closure reference cycle.
+- Eight real HTTP paired active-cancel/disconnect scenarios left the peer
+  completing successfully. Four queued disconnect checks removed the waiter
+  while both active slots remained occupied. All correctness/timing/lifecycle
+  cases settled to zero active/queued requests, reserved/used logical tokens,
+  and owned KV bytes. Post-run RSS samples were 0.86–1.05 GiB (SmolLM2) and
+  1.98–2.28 GiB (Qwen); these are neither peaks nor physical memory guarantees.
+- Added [TENSOR_BATCHING.md](TENSOR_BATCHING.md), updated README/local-model
+  instructions, and recorded primary data, source/model hashes, profile samples,
+  and interpretation in [benchmarks/tensor-batching](benchmarks/tensor-batching/README.md).
+  Verified all 12 published server logs end in graceful shutdown. Preserved the
+  user's existing untracked `error.log` and all earlier benchmark datasets.
+
+Real tensor batching is now available as a correct experimental path for the
+tested cases. Current CPU evidence favors the unbatched default. Next useful
+engine work is measured cache-layout/CPU-backend optimization; many-client,
+long-context, GPU/MPS, and repetition/answer-quality work remain separate phases.
