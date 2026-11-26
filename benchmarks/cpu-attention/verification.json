@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-26",
+  "python_tests_passed": 510,
+  "additional_test_cases": 25,
+  "measured_http_runs": 36,
+  "measured_http_requests": 144,
+  "measured_output_tokens": 13824,
+  "native_reference_matches": 40,
+  "history_reference_matches": 8,
+  "paired_candidate_cancel_disconnect_cases": 8,
+  "queued_candidate_disconnect_cases": 4,
+  "screening_samples": 72,
+  "screening_fingerprints_all_match": true,
+  "source_fingerprints_match": true,
+  "model_files_unchanged": {
+    "smollm2": 10,
+    "qwen": 11
+  },
+  "graceful_server_shutdowns": 24,
+  "all_settled_ownership_states_zero": true,
+  "defaults": {
+    "attention": "eager",
+    "tensor_batching": false,
+    "torch_intraop_threads": 2
+  },
+  "scope": "two short-context checkpoints; one counting timing workload; CPU float32; no universal performance or output guarantee",
+  "test_source_sha256": {
+    "tests/test_cpu_attention.py": "00cc44f217287536a018cb8cb08619134a0bc20f366ef7105cb40abb921131ed",
+    "tests/test_tensor_batch_protocol.py": "e722f5a8caf00d86823aaba2b8e80370c8f11429ab48f4c90eea419005efa628",
+    "tests/test_tensor_batching.py": "1a6aca894223a8eae63e6fd1d965b47b8f1edc0aa85243f0ec1181ef4f1930ab"
+  }
+}

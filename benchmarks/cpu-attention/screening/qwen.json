@@ -1,0 +1,1538 @@
+{
+  "model": "qwen",
+  "created_at": "2026-11-26T15:09:01.807193+00:00",
+  "torch": "2.14.1",
+  "scope": "fixed-pair worker-thread CPU diagnostic; not HTTP throughput",
+  "operator_profiles": [
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 4,
+      "mean_pair_ms": null,
+      "generated_ids_sha256": "2d63d6997dd56b12169aaea078e36458783c191f7117dbf0452116e85d14dff3",
+      "operators": [
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              1,
+              896
+            ],
+            [
+              896,
+              4864
+            ]
+          ],
+          "calls": 384,
+          "self_cpu_ms": 102.23366000000058,
+          "inclusive_cpu_ms": 102.2553600000004
+        },
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              1,
+              896
+            ],
+            [
+              896,
+              151936
+            ]
+          ],
+          "calls": 8,
+          "self_cpu_ms": 65.91625000000006,
+          "inclusive_cpu_ms": 65.91675100000002
+        },
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              1,
+              4864
+            ],
+            [
+              4864,
+              896
+            ]
+          ],
+          "calls": 192,
+          "self_cpu_ms": 50.85022900000021,
+          "inclusive_cpu_ms": 50.86228000000011
+        },
+        {
+          "operator": "aten::addmm",
+          "shapes": [
+            [
+              896
+            ],
+            [
+              1,
+              896
+            ],
+            [
+              896,
+              896
+            ],
+            [],
+            []
+          ],
+          "calls": 192,
+          "self_cpu_ms": 10.154712999999399,
+          "inclusive_cpu_ms": 10.503508999999907
+        },
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              1,
+              896
+            ],
+            [
+              896,
+              896
+            ]
+          ],
+          "calls": 192,
+          "self_cpu_ms": 9.755332000000449,
+          "inclusive_cpu_ms": 9.763753999999981
+        },
+        {
+          "operator": "aten::addmm",
+          "shapes": [
+            [
+              128
+            ],
+            [
+              1,
+              896
+            ],
+            [
+              896,
+              128
+            ],
+            [],
+            []
+          ],
+          "calls": 384,
+          "self_cpu_ms": 3.7466500000001997,
+          "inclusive_cpu_ms": 4.207759000000262
+        },
+        {
+          "operator": "aten::cat",
+          "shapes": [
+            [],
+            []
+          ],
+          "calls": 776,
+          "self_cpu_ms": 2.2639410000003664,
+          "inclusive_cpu_ms": 2.934369000000116
+        },
+        {
+          "operator": "aten::select",
+          "shapes": [
+            [
+              14,
+              1,
+              64
+            ],
+            [],
+            []
+          ],
+          "calls": 5376,
+          "self_cpu_ms": 1.8927120000005462,
+          "inclusive_cpu_ms": 2.4763409999994606
+        },
+        {
+          "operator": "aten::silu",
+          "shapes": [
+            [
+              1,
+              1,
+              4864
+            ]
+          ],
+          "calls": 192,
+          "self_cpu_ms": 1.8684680000000253,
+          "inclusive_cpu_ms": 1.8684680000000253
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              1,
+              2,
+              7,
+              51,
+              64
+            ],
+            [
+              1,
+              2,
+              7,
+              51,
+              64
+            ],
+            []
+          ],
+          "calls": 96,
+          "self_cpu_ms": 1.5054159999999392,
+          "inclusive_cpu_ms": 1.5054159999999392
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              1,
+              2,
+              7,
+              50,
+              64
+            ],
+            [
+              1,
+              2,
+              7,
+              50,
+              64
+            ],
+            []
+          ],
+          "calls": 96,
+          "self_cpu_ms": 1.4527420000000566,
+          "inclusive_cpu_ms": 1.4527420000000566
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              1,
+              2,
+              7,
+              48,
+              64
+            ],
+            [
+              1,
+              2,
+              7,
+              48,
+              64
+            ],
+            []
+          ],
+          "calls": 96,
+          "self_cpu_ms": 1.3439189999999959,
+          "inclusive_cpu_ms": 1.3439189999999959
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              1,
+              2,
+              7,
+              49,
+              64
+            ],
+            [
+              1,
+              2,
+              7,
+              49,
+              64
+            ],
+            []
+          ],
+          "calls": 96,
+          "self_cpu_ms": 1.3189519999999466,
+          "inclusive_cpu_ms": 1.3189519999999466
+        },
+        {
+          "operator": "aten::mul",
+          "shapes": [
+            [
+              1,
+              1,
+              4864
+            ],
+            [
+              1,
+              1,
+              4864
+            ]
+          ],
+          "calls": 192,
+          "self_cpu_ms": 1.301215000000124,
+          "inclusive_cpu_ms": 1.301215000000124
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              51
+            ],
+            [
+              14,
+              51,
+              64
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 1.2956329999993323,
+          "inclusive_cpu_ms": 2.278454999999929
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              49
+            ],
+            [
+              14,
+              49,
+              64
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 1.0589529999999068,
+          "inclusive_cpu_ms": 2.0895890000000072
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              64
+            ],
+            [
+              14,
+              64,
+              51
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 1.0585190000014846,
+          "inclusive_cpu_ms": 2.113423999999999
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              48
+            ],
+            [
+              14,
+              48,
+              64
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 1.0350560000001436,
+          "inclusive_cpu_ms": 1.9969179999999769
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              50
+            ],
+            [
+              14,
+              50,
+              64
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 1.0316590000006254,
+          "inclusive_cpu_ms": 1.9990060000000813
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              64
+            ],
+            [
+              14,
+              64,
+              50
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.9043809999996156,
+          "inclusive_cpu_ms": 1.8675840000000317
+        },
+        {
+          "operator": "aten::linear",
+          "shapes": [
+            [
+              1,
+              1,
+              896
+            ],
+            [
+              896,
+              896
+            ],
+            [
+              896
+            ]
+          ],
+          "calls": 192,
+          "self_cpu_ms": 0.8786920000005013,
+          "inclusive_cpu_ms": 11.750498000000064
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              64
+            ],
+            [
+              14,
+              64,
+              49
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.836200999999899,
+          "inclusive_cpu_ms": 1.7973759999999892
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              14,
+              1,
+              64
+            ],
+            [
+              14,
+              64,
+              48
+            ]
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.810451999999874,
+          "inclusive_cpu_ms": 1.829501999999995
+        },
+        {
+          "operator": "aten::argmax",
+          "shapes": [
+            [
+              151936
+            ],
+            [],
+            []
+          ],
+          "calls": 8,
+          "self_cpu_ms": 0.7132129999999742,
+          "inclusive_cpu_ms": 0.7435010000000039
+        },
+        {
+          "operator": "aten::_to_copy",
+          "shapes": [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          "calls": 992,
+          "self_cpu_ms": 0.6755799999994853,
+          "inclusive_cpu_ms": 1.3457199999995468
+        },
+        {
+          "operator": "aten::div_",
+          "shapes": [
+            [
+              1,
+              1,
+              1
+            ],
+            []
+          ],
+          "calls": 392,
+          "self_cpu_ms": 0.6734140000000617,
+          "inclusive_cpu_ms": 1.4749499999997857
+        },
+        {
+          "operator": "aten::pow",
+          "shapes": [
+            [
+              1,
+              1,
+              896
+            ],
+            []
+          ],
+          "calls": 392,
+          "self_cpu_ms": 0.5975390000001315,
+          "inclusive_cpu_ms": 0.6881310000000245
+        },
+        {
+          "operator": "aten::matmul",
+          "shapes": [
+            [
+              1,
+              1,
+              896
+            ],
+            [
+              896,
+              4864
+            ]
+          ],
+          "calls": 384,
+          "self_cpu_ms": 0.5849429999995819,
+          "inclusive_cpu_ms": 103.10390699999986
+        },
+        {
+          "operator": "aten::as_strided",
+          "shapes": [
+            [
+              14,
+              1,
+              64
+            ],
+            [],
+            [],
+            []
+          ],
+          "calls": 5376,
+          "self_cpu_ms": 0.5836289999989144,
+          "inclusive_cpu_ms": 0.5836289999989144
+        },
+        {
+          "operator": "aten::mean",
+          "shapes": [
+            [
+              1,
+              1,
+              896
+            ],
+            [],
+            [],
+            []
+          ],
+          "calls": 392,
+          "self_cpu_ms": 0.5481850000002289,
+          "inclusive_cpu_ms": 2.5206220000003765
+        }
+      ]
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 4,
+      "mean_pair_ms": null,
+      "generated_ids_sha256": "2d63d6997dd56b12169aaea078e36458783c191f7117dbf0452116e85d14dff3",
+      "operators": [
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              2,
+              896
+            ],
+            [
+              896,
+              4864
+            ]
+          ],
+          "calls": 192,
+          "self_cpu_ms": 133.95783200000017,
+          "inclusive_cpu_ms": 133.96837300000004
+        },
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              2,
+              896
+            ],
+            [
+              896,
+              151936
+            ]
+          ],
+          "calls": 4,
+          "self_cpu_ms": 82.84107199999997,
+          "inclusive_cpu_ms": 82.84132200000002
+        },
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              2,
+              4864
+            ],
+            [
+              4864,
+              896
+            ]
+          ],
+          "calls": 96,
+          "self_cpu_ms": 65.10528699999995,
+          "inclusive_cpu_ms": 65.11075099999992
+        },
+        {
+          "operator": "aten::addmm",
+          "shapes": [
+            [
+              896
+            ],
+            [
+              2,
+              896
+            ],
+            [
+              896,
+              896
+            ],
+            [],
+            []
+          ],
+          "calls": 96,
+          "self_cpu_ms": 24.608941000000357,
+          "inclusive_cpu_ms": 24.818188999999947
+        },
+        {
+          "operator": "aten::mm",
+          "shapes": [
+            [
+              2,
+              896
+            ],
+            [
+              896,
+              896
+            ]
+          ],
+          "calls": 96,
+          "self_cpu_ms": 16.76594100000001,
+          "inclusive_cpu_ms": 16.77085699999994
+        },
+        {
+          "operator": "aten::addmm",
+          "shapes": [
+            [
+              128
+            ],
+            [
+              2,
+              896
+            ],
+            [
+              896,
+              128
+            ],
+            [],
+            []
+          ],
+          "calls": 192,
+          "self_cpu_ms": 5.843400000000388,
+          "inclusive_cpu_ms": 6.100831000000104
+        },
+        {
+          "operator": "aten::cat",
+          "shapes": [
+            [],
+            []
+          ],
+          "calls": 1540,
+          "self_cpu_ms": 4.501576000000482,
+          "inclusive_cpu_ms": 5.85690300000068
+        },
+        {
+          "operator": "aten::select",
+          "shapes": [
+            [
+              28,
+              1,
+              64
+            ],
+            [],
+            []
+          ],
+          "calls": 5376,
+          "self_cpu_ms": 1.7619250000000557,
+          "inclusive_cpu_ms": 2.3399020000000395
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              49
+            ],
+            [
+              28,
+              49,
+              64
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.9729269999996177,
+          "inclusive_cpu_ms": 1.8581240000000108
+        },
+        {
+          "operator": "aten::silu",
+          "shapes": [
+            [
+              2,
+              1,
+              4864
+            ]
+          ],
+          "calls": 96,
+          "self_cpu_ms": 0.9709209999999885,
+          "inclusive_cpu_ms": 0.9709209999999885
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              50
+            ],
+            [
+              28,
+              50,
+              64
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.9451299999998882,
+          "inclusive_cpu_ms": 1.8449569999999076
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              51
+            ],
+            [
+              28,
+              51,
+              64
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.9417809999995516,
+          "inclusive_cpu_ms": 1.8495410000000847
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              48
+            ],
+            [
+              28,
+              48,
+              64
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.923739999999897,
+          "inclusive_cpu_ms": 1.863917000000011
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              2,
+              2,
+              7,
+              50,
+              64
+            ],
+            [
+              2,
+              2,
+              7,
+              50,
+              64
+            ],
+            []
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.9103740000000398,
+          "inclusive_cpu_ms": 0.9103740000000398
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              2,
+              2,
+              7,
+              51,
+              64
+            ],
+            [
+              2,
+              2,
+              7,
+              51,
+              64
+            ],
+            []
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.8560800000003074,
+          "inclusive_cpu_ms": 0.8560800000003074
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              2,
+              2,
+              7,
+              49,
+              64
+            ],
+            [
+              2,
+              2,
+              7,
+              49,
+              64
+            ],
+            []
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.8312909999999247,
+          "inclusive_cpu_ms": 0.8312909999999247
+        },
+        {
+          "operator": "aten::copy_",
+          "shapes": [
+            [
+              2,
+              2,
+              7,
+              48,
+              64
+            ],
+            [
+              2,
+              2,
+              7,
+              48,
+              64
+            ],
+            []
+          ],
+          "calls": 48,
+          "self_cpu_ms": 0.8174990000000153,
+          "inclusive_cpu_ms": 0.8174990000000153
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              64
+            ],
+            [
+              28,
+              64,
+              51
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.7779530000003869,
+          "inclusive_cpu_ms": 1.6904560000001803
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              64
+            ],
+            [
+              28,
+              64,
+              48
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.7320320000001725,
+          "inclusive_cpu_ms": 1.6536220000000104
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              64
+            ],
+            [
+              28,
+              64,
+              49
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.7299779999996535,
+          "inclusive_cpu_ms": 1.6637929999999905
+        },
+        {
+          "operator": "aten::bmm",
+          "shapes": [
+            [
+              28,
+              1,
+              64
+            ],
+            [
+              28,
+              64,
+              50
+            ]
+          ],
+          "calls": 24,
+          "self_cpu_ms": 0.727004000000772,
+          "inclusive_cpu_ms": 1.6595810000001512
+        },
+        {
+          "operator": "aten::as_strided",
+          "shapes": [
+            [
+              28,
+              1,
+              64
+            ],
+            [],
+            [],
+            []
+          ],
+          "calls": 5376,
+          "self_cpu_ms": 0.577976999999984,
+          "inclusive_cpu_ms": 0.577976999999984
+        },
+        {
+          "operator": "VmappedVmappedVmappedVmappedModIndex",
+          "shapes": [
+            [
+              2,
+              49
+            ]
+          ],
+          "calls": 1,
+          "self_cpu_ms": 0.5585409999999974,
+          "inclusive_cpu_ms": 0.5804579999999987
+        },
+        {
+          "operator": "VmappedVmappedVmappedVmappedModIndex",
+          "shapes": [
+            [
+              2,
+              48
+            ]
+          ],
+          "calls": 1,
+          "self_cpu_ms": 0.5408750000000002,
+          "inclusive_cpu_ms": 0.568208
+        },
+        {
+          "operator": "VmappedVmappedVmappedVmappedModIndex",
+          "shapes": [
+            [
+              2,
+              50
+            ]
+          ],
+          "calls": 1,
+          "self_cpu_ms": 0.5167489999999816,
+          "inclusive_cpu_ms": 0.5372489999999817
+        },
+        {
+          "operator": "VmappedVmappedVmappedVmappedModIndex",
+          "shapes": [
+            [
+              2,
+              51
+            ]
+          ],
+          "calls": 1,
+          "self_cpu_ms": 0.5049989999999525,
+          "inclusive_cpu_ms": 0.5264579999999842
+        },
+        {
+          "operator": "aten::argmax",
+          "shapes": [
+            [
+              2,
+              151936
+            ],
+            [],
+            []
+          ],
+          "calls": 4,
+          "self_cpu_ms": 0.45787400000002526,
+          "inclusive_cpu_ms": 0.4587080000000278
+        },
+        {
+          "operator": "aten::select",
+          "shapes": [
+            [
+              28,
+              1,
+              51
+            ],
+            [],
+            []
+          ],
+          "calls": 1344,
+          "self_cpu_ms": 0.4544009999986738,
+          "inclusive_cpu_ms": 0.576862999998033
+        },
+        {
+          "operator": "aten::select",
+          "shapes": [
+            [
+              28,
+              1,
+              48
+            ],
+            [],
+            []
+          ],
+          "calls": 1344,
+          "self_cpu_ms": 0.45326200000003203,
+          "inclusive_cpu_ms": 0.5805549999999989
+        },
+        {
+          "operator": "aten::select",
+          "shapes": [
+            [
+              28,
+              1,
+              50
+            ],
+            [],
+            []
+          ],
+          "calls": 1344,
+          "self_cpu_ms": 0.4342840000000724,
+          "inclusive_cpu_ms": 0.5677899999999209
+        }
+      ]
+    }
+  ],
+  "screening": [
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 70.8060781180393,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 90.06843500537798,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 70.01537512405775,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 91.8772135337349,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 75.11241937754676,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 93.94297399558127,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 69.12787479814142,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 92.97854162286967,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 72.1735754632391,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 90.39962757378817,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 67.93075776658952,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 88.24132810696028,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 1
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 89.20137493987568,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 67.96012743143365,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 87.17660675756633,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 68.43767955433577,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 87.29840873274952,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 67.7146406378597,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 90.3910806227941,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 71.46603657747619,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 91.37893508886918,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 70.06174483103678,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 88.58532810700126,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 117.50301832216792,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 2
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 71.61184638971463,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 89.73334633628838,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 69.19478127383627,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 91.54325773124583,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 71.59869518363848,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 90.76804161304608,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 67.54905212437734,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 86.74178121145815,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 66.67899474268779,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 84.50242687831633,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "steps": 16,
+      "mean_pair_ms": 67.7572161948774,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "steps": 16,
+      "mean_pair_ms": 87.8280209726654,
+      "generated_ids_sha256": "69d2f4289d108f5ed14762568cc72b1dae3601fdce10aadec93e1e64517272f6",
+      "operators": null,
+      "matches_baseline_ids": true,
+      "repetition": 3
+    }
+  ],
+  "summary": [
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": false,
+      "median_pair_ms": 71.61184638971463,
+      "all_ids_match": true
+    },
+    {
+      "threads": 2,
+      "attention": "eager",
+      "tensor_batching": true,
+      "median_pair_ms": 89.73334633628838,
+      "all_ids_match": true
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": false,
+      "median_pair_ms": 70.01537512405775,
+      "all_ids_match": true
+    },
+    {
+      "threads": 1,
+      "attention": "eager",
+      "tensor_batching": true,
+      "median_pair_ms": 91.54325773124583,
+      "all_ids_match": true
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": false,
+      "median_pair_ms": 71.59869518363848,
+      "all_ids_match": true
+    },
+    {
+      "threads": 4,
+      "attention": "eager",
+      "tensor_batching": true,
+      "median_pair_ms": 90.76804161304608,
+      "all_ids_match": true
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "median_pair_ms": 67.7146406378597,
+      "all_ids_match": true
+    },
+    {
+      "threads": 2,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "median_pair_ms": 87.29840873274952,
+      "all_ids_match": true
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "median_pair_ms": 68.43767955433577,
+      "all_ids_match": true
+    },
+    {
+      "threads": 1,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "median_pair_ms": 87.17660675756633,
+      "all_ids_match": true
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": false,
+      "median_pair_ms": 67.93075776658952,
+      "all_ids_match": true
+    },
+    {
+      "threads": 4,
+      "attention": "sdpa",
+      "tensor_batching": true,
+      "median_pair_ms": 88.24132810696028,
+      "all_ids_match": true
+    }
+  ]
+}

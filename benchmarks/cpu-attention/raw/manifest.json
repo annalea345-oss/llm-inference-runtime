@@ -1,0 +1,130 @@
+{
+  "status": "complete",
+  "started_at": "2026-11-26T15:24:17.392726+00:00",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "source_sha256": {
+    "src/llm_runtime/local_executor.py": "9ba18547b36c8d74fb67a5c9d0ef12e06bb42f7d39e169c83c4bc5f13d87879b",
+    "src/llm_runtime/local.py": "a887fa3775ea6ceb3d99a41687d8c52f45a899101a95d1a412cc1cb88eaf507d",
+    "src/llm_runtime/batching.py": "bb566ce411c3af210c05d82a40e0b89c277b28dcc32bcac686c429b43d396738",
+    "src/llm_runtime/http_benchmark.py": "5aaf3f32c3b5630254277b42cc999507cc4c90a09c98d19b3b259d86c598aa5c",
+    "scripts/verify_tensor_batching.py": "27803a759646c25c4643073aa11745bd412fcdadb646097a3a24706e35a57cc9",
+    "scripts/verify_cpu_attention.py": "027a5429fa8bd02c8f7a6ff7eaa59a2cd25c20a0f755623e51a6d452731bb3bc"
+  },
+  "protocol": {
+    "threads": 2,
+    "dtype": "float32",
+    "device": "cpu",
+    "requests_per_run": 4,
+    "prompt": "Count from 1 to 500. Include every number.",
+    "max_tokens": 96,
+    "repetitions": 3,
+    "order": "fresh process for each model/repetition/attention/batching; reverse settings each odd repetition",
+    "timing_cases": "unbatched concurrency 1 and 2; batched concurrency 2 only",
+    "excluded": "reference/correctness/lifecycle, loading, one preflight and one warmup per timing case",
+    "rss_scope": "readiness/post-run samples; not peaks"
+  },
+  "finished_at": "2026-11-26T15:37:48.586686+00:00",
+  "measured_requests": 144,
+  "measured_runs": 36,
+  "summary": [
+    {
+      "model": "smollm2",
+      "tensor_batching": false,
+      "concurrency": 1,
+      "eager": {
+        "median_tokens_per_second": 68.75218799576557,
+        "median_first_content_p50_ms": 67.95575004070997,
+        "runs": 3
+      },
+      "sdpa": {
+        "median_tokens_per_second": 77.26391508247151,
+        "median_first_content_p50_ms": 66.15220895037055,
+        "runs": 3
+      },
+      "throughput_ratio": 1.123802999363892
+    },
+    {
+      "model": "smollm2",
+      "tensor_batching": false,
+      "concurrency": 2,
+      "eager": {
+        "median_tokens_per_second": 68.66475439431782,
+        "median_first_content_p50_ms": 123.04279208183289,
+        "runs": 3
+      },
+      "sdpa": {
+        "median_tokens_per_second": 77.77017188105022,
+        "median_first_content_p50_ms": 133.9722080156207,
+        "runs": 3
+      },
+      "throughput_ratio": 1.1326068602014236
+    },
+    {
+      "model": "smollm2",
+      "tensor_batching": true,
+      "concurrency": 2,
+      "eager": {
+        "median_tokens_per_second": 45.702906235348195,
+        "median_first_content_p50_ms": 147.9597077704966,
+        "runs": 3
+      },
+      "sdpa": {
+        "median_tokens_per_second": 42.604678044676355,
+        "median_first_content_p50_ms": 143.2482497766614,
+        "runs": 3
+      },
+      "throughput_ratio": 0.9322093834751461
+    },
+    {
+      "model": "qwen",
+      "tensor_batching": false,
+      "concurrency": 1,
+      "eager": {
+        "median_tokens_per_second": 26.411592584469336,
+        "median_first_content_p50_ms": 224.97595939785242,
+        "runs": 3
+      },
+      "sdpa": {
+        "median_tokens_per_second": 27.876611294578723,
+        "median_first_content_p50_ms": 220.10695794597268,
+        "runs": 3
+      },
+      "throughput_ratio": 1.0554687758954322
+    },
+    {
+      "model": "qwen",
+      "tensor_batching": false,
+      "concurrency": 2,
+      "eager": {
+        "median_tokens_per_second": 26.22398761944771,
+        "median_first_content_p50_ms": 419.71466736868024,
+        "runs": 3
+      },
+      "sdpa": {
+        "median_tokens_per_second": 28.008690680865183,
+        "median_first_content_p50_ms": 406.6731249913573,
+        "runs": 3
+      },
+      "throughput_ratio": 1.0680561281265226
+    },
+    {
+      "model": "qwen",
+      "tensor_batching": true,
+      "concurrency": 2,
+      "eager": {
+        "median_tokens_per_second": 21.18656307424623,
+        "median_first_content_p50_ms": 373.00966726616025,
+        "runs": 3
+      },
+      "sdpa": {
+        "median_tokens_per_second": 21.055831896635294,
+        "median_first_content_p50_ms": 361.3780830055475,
+        "runs": 3
+      },
+      "throughput_ratio": 0.9938295240642476
+    }
+  ]
+}

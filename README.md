@@ -12,6 +12,8 @@ with message bubbles, streamed replies, conversation history, and Stop. Connecti
 and reply-length controls live in Settings; inference stays on the Mac.
 The CPU executor also has [experimental real tensor batching](TENSOR_BATCHING.md),
 with the original unbatched path retained for comparison.
+An [optional SDPA attention path](CPU_TUNING.md) is available independently;
+normal startup retains eager attention.
 
 ## Run it
 
@@ -427,6 +429,7 @@ Work in small milestones, preserving a runnable server and recording results in
 | 18 — Native Android client (implemented) | Kotlin chat app using existing model discovery, streamed chat, history, and cancellation endpoints | [Build/run guide and verification](ANDROID_CLIENT.md); no model or inference framework on the phone |
 | 19 — Android chat presentation (implemented) | Message bubbles, bottom Send/Stop composer, welcome prompts, Settings, and system light/dark themes | [Interface guide](ANDROID_CLIENT.md#chat-screen-and-settings); inference and API behavior unchanged |
 | 20 — Experimental real tensor batching (implemented) | Shared CPU prefill/decode forwards, padded masks/positions, owned per-request cache splits, and the existing cancellation barrier | [Architecture and activation](TENSOR_BATCHING.md); [CPU measurements](benchmarks/tensor-batching/README.md); remains opt-in |
+| 21 — CPU operator profiling and optional SDPA (implemented) | Shape-aware CPU profiles, attention/thread screening, explicit attention selection, and independent eager references | [Guide](CPU_TUNING.md); [recorded comparison](benchmarks/cpu-attention/README.md); eager/unbatched defaults unchanged |
 
 Continuous batching was prioritized before the measurement milestone at user
 request; simulated KV-cache accounting and measurements followed. Recorded

@@ -1,0 +1,16 @@
+{
+  "screening_runtime_base_commit": "1aa0482a04a74d0ec95e421ae4eb3af7cd323d39",
+  "runner_sha256": "5b265d3d14468494efcf2beca9056120e13e748b92dbccb1567e30312ef34871",
+  "scope": "operator profiles and fixed-pair screen preceded optional loader flag; baseline runtime plus new investigation runner",
+  "measured_screening_samples": 72,
+  "measured_rounds_per_sample": 16,
+  "warmup_rounds_per_sample": 4,
+  "profiled_rounds": 4,
+  "settings": [
+    "attention=eager/sdpa",
+    "threads=1/2/4",
+    "batching=off/on"
+  ],
+  "operator_time_scope": "self CPU time from instrumented worker; not HTTP elapsed time",
+  "http_source_hashes_verified": true
+}

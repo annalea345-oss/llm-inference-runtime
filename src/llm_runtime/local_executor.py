@@ -42,6 +42,7 @@ class LocalModelExecutor:
         self._states: dict[str, _Sequence] = {}
         self._cache_bytes = 0
         self._model_type = model.config.model_type
+        self._attention_implementation = model.config._attn_implementation
         self._parameter_bytes = sum(p.numel() * p.element_size() for p in model.parameters())
         if type(tensor_batching) is not bool:
             raise ValueError('tensor_batching must be a boolean')
@@ -56,7 +57,10 @@ class LocalModelExecutor:
         self._max_forward_batch_size = 0
 
     @classmethod
-    async def load(cls, model_path: str, *, tensor_batching: bool = False) -> 'LocalModelExecutor':
+    async def load(cls, model_path: str, *, tensor_batching: bool = False,
+                   attention_implementation: str = 'eager') -> 'LocalModelExecutor':
+        if attention_implementation not in ('eager', 'sdpa'):
+            raise ValueError('attention_implementation must be eager or sdpa')
         worker = SerialWorker()
 
         def load():
@@ -75,8 +79,10 @@ class LocalModelExecutor:
             model = AutoModelForCausalLM.from_pretrained(
                 str(path), local_files_only=True, trust_remote_code=False,
                 use_safetensors=True, dtype=torch.float32,
-                attn_implementation='eager',
+                attn_implementation=attention_implementation,
             ).to('cpu').eval()
+            if model.config._attn_implementation != attention_implementation:
+                raise RuntimeError('model did not select the requested attention implementation')
             return cls(model, tokenizer, torch, worker, tensor_batching=tensor_batching)
 
         try:
@@ -92,6 +98,8 @@ class LocalModelExecutor:
                 'model': self._model_type, 'parameter_bytes': self._parameter_bytes,
                 'kv_tensor_bytes_after_last_step': self.cache_bytes,
                 'tensor_batching': self.tensor_batching,
+                'attention_implementation': (self.model.config._attn_implementation
+                    if self.model is not None else self._attention_implementation),
                 'forward_calls': self._forward_calls,
                 'batched_forward_calls': self._batched_forward_calls,
                 'max_forward_batch_size': self._max_forward_batch_size}

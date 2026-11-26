@@ -1035,3 +1035,75 @@ Real tensor batching is now available as a correct experimental path for the
 tested cases. Current CPU evidence favors the unbatched default. Next useful
 engine work is measured cache-layout/CPU-backend optimization; many-client,
 long-context, GPU/MPS, and repetition/answer-quality work remain separate phases.
+
+## 2026-11-26 — CPU operator profiles and optional SDPA attention
+
+- Started from merged tensor-batching main (`1aa0482`). Profiled real CPU operators
+  inside the serial model worker, recording shapes for four decode rounds after
+  four warmup rounds. Instrumented profiles are kept separate from timing data.
+  The largest operators were `aten::mm` and, for Qwen, `aten::addmm`, with shapes
+  corresponding to MLP projections and the vocabulary output head.
+- Batched matrix entries had higher cumulative self CPU times despite fewer
+  calls. For the gate/up projection entry, SmolLM2 was 27.21→38.91 ms and Qwen
+  102.23→133.96 ms across the profiled pair rounds. These locate an operator
+  family, not a proven BLAS/backend cause or an end-user latency measurement.
+  Shape-based module attribution is inferred from model dimensions; no operator
+  call stacks or hardware-fault diagnosis was collected.
+- Ran 72 unprofiled setting/repetition samples: eager/SDPA × one/two/four Torch
+  threads × batching off/on × three repetitions × two existing models. Each
+  fixed-pair sample measured 16 decode rounds after four warmup rounds; setting
+  order reversed between repetitions. All generated-token fingerprints matched
+  baseline. Thread-only effects were mixed; no thread-count option/default change
+  was added. The small screen favored a standard SDPA experiment.
+- Added `LLM_ATTENTION_IMPLEMENTATION=eager|sdpa` and the corresponding loader
+  keyword. Default remains eager; tensor batching remains off, independent of
+  attention choice. Invalid options fail before model loading. Unexpected
+  Transformers-level fallback fails startup and closes the worker. Health reports
+  the actual loaded attention implementation. PyTorch still selects an available
+  SDPA kernel for the input/device; the flag does not force a GPU/Flash backend.
+- Production changes are confined to loader/configuration/health. Greedy token
+  selection, weights, CPU float32, two Torch threads, cache packing/splitting,
+  scheduling, worker barriers, API payloads/model aliases, browser, and Android
+  are unchanged. The existing tensor-batching verifier now explicitly pins eager
+  attention so exported user flags cannot change its original comparison policy.
+- **510 Python tests passed**, including 25 additional cases. Coverage includes
+  valid/invalid/default attention settings, fallback failure/worker cleanup,
+  SDPA cached/ragged generation against independent eager references for both
+  architectures, both policies and batching modes, and gated cancellation/
+  repeated shutdown under eager and SDPA. No dependency installation or model
+  download occurred; all 10/11 SmolLM2/Qwen file hashes match the previous phase.
+- Recorded **144 measured completions across 36 HTTP runs**, all with verified
+  96-token outputs (13,824 measured tokens). Both models and both attention
+  implementations use unbatched concurrency 1/2 and batched concurrency 2,
+  three repetitions, four requests per run, fresh processes, and reversed setting
+  order between repetitions. Loading, references, correctness/lifecycle checks,
+  one preflight and one warmup per case are excluded. No concurrent project
+  profiling/tests ran during HTTP measurements; host load/thermals remain uncontrolled.
+- Unbatched medians improved with SDPA: SmolLM2 **68.75→77.26 tokens/s at c1
+  (+12.4%)** and **68.66→77.77 at c2 (+13.3%)**; Qwen **26.41→27.88 at c1
+  (+5.5%)** and **26.22→28.01 at c2 (+6.8%)**. These are one checked counting
+  workload's results, not general hardware/model rankings or answer-quality gains.
+- Batched HTTP results did not reproduce the small probe's gain: SmolLM2
+  **45.70→42.60 tokens/s (-6.8%)** and Qwen **21.19→21.06 (-0.6%)**. The
+  difference between a fixed short pair and longer real arrivals/growing caches
+  is documented; its precise contribution was not isolated. SDPA is retained as
+  an explicit useful unbatched option, not presented as fixing the batching
+  regression. The unmodified eager/unbatched path remains the normal default.
+- Forty native HTTP responses matched direct eager Transformers token IDs/text;
+  eight multi-turn JSON responses matched reference text/usage. SDPA additionally
+  passed eight paired active cancel/disconnect scenarios with surviving peers,
+  and four queued disconnect checks while both active slots stayed occupied.
+  All settled checks ended with zero active/queued requests, reserved/used logical
+  tokens, and owned KV bytes. Post-run RSS samples ranged 0.78–0.98 GiB for
+  SmolLM2 and 2.00–2.36 GiB for Qwen; these are not peaks or physical memory caps.
+- Added [CPU_TUNING.md](CPU_TUNING.md), updated README/local-model/tensor-batching
+  guides, and kept the operator screen, primary HTTP data, source/model hashes,
+  and interpretation in [benchmarks/cpu-attention](benchmarks/cpu-attention/README.md).
+  Verified all 24 primary server logs end in graceful shutdown. Existing benchmark
+  data, model files, local IDE settings, and the user's untracked `error.log` are
+  preserved. No test server is left running.
+
+The phase identifies concrete matrix-operator costs and provides an optional
+measured unbatched improvement. The main CPU batching slowdown remains open;
+matrix/projection-kernel and cache-layout investigation is still future work.
+Broader prompt/latency/memory testing is required before changing defaults.
