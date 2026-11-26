@@ -1,0 +1,172 @@
+{
+  "paired_cancel": {
+    "action": "explicit_cancel",
+    "active_before": 2,
+    "peer_completed": true,
+    "executor_before": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 2187264,
+      "tensor_batching": true,
+      "attention_implementation": "sdpa",
+      "forward_calls": 605,
+      "batched_forward_calls": 314,
+      "max_forward_batch_size": 2
+    },
+    "final": {
+      "active": 0,
+      "queued": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    }
+  },
+  "paired_disconnect": {
+    "action": "disconnect",
+    "active_before": 2,
+    "peer_completed": true,
+    "executor_before": {
+      "backend": "transformers",
+      "device": "cpu",
+      "dtype": "float32",
+      "tokenization": "model",
+      "context_limit": 32768,
+      "model": "qwen2",
+      "parameter_bytes": 1976131072,
+      "kv_tensor_bytes_after_last_step": 2187264,
+      "tensor_batching": true,
+      "attention_implementation": "sdpa",
+      "forward_calls": 864,
+      "batched_forward_calls": 317,
+      "max_forward_batch_size": 2
+    },
+    "final": {
+      "active": 0,
+      "queued": 0,
+      "reserved_tokens": 0,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    }
+  },
+  "queued_disconnect": {
+    "queued_before_disconnect": {
+      "elapsed_ms": 23.787042126059532,
+      "active": 2,
+      "queued": 1,
+      "reserved_tokens": 1110,
+      "used_tokens": 0,
+      "kv_tensor_bytes": 0
+    },
+    "queue_removal_observed": true,
+    "removal_observations": [
+      {
+        "elapsed_ms": 1.013999804854393,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "blockers_still_active_at_removal": 2,
+    "observed_queue_removal_after_ms": 1.2436672113835812,
+    "idle_observations_after_all_disconnects": [
+      {
+        "elapsed_ms": 0.8916673250496387,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      {
+        "elapsed_ms": 23.39575020596385,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      {
+        "elapsed_ms": 46.04100016877055,
+        "active": 2,
+        "queued": 0,
+        "reserved_tokens": 1110,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      },
+      {
+        "elapsed_ms": 68.48670821636915,
+        "active": 0,
+        "queued": 0,
+        "reserved_tokens": 0,
+        "used_tokens": 0,
+        "kv_tensor_bytes": 0
+      }
+    ],
+    "followup": {
+      "index": 0,
+      "status": "completed",
+      "http_status": 200,
+      "message": null,
+      "usage": {
+        "prompt_tokens": 34,
+        "completion_tokens": 24,
+        "total_tokens": 58
+      },
+      "usage_status": "verified",
+      "content_deltas": 24,
+      "finish_reason": "length",
+      "timings_ms": {
+        "headers": 1.0594171471893787,
+        "first_content": 275.99670831114054,
+        "completion": 1029.8797502182424,
+        "content_delta_gaps": [
+          33.96074986085296,
+          34.19804200530052,
+          34.27962493151426,
+          33.441083040088415,
+          33.572417218238115,
+          34.04399985447526,
+          33.95091695711017,
+          35.17212485894561,
+          34.097000025212765,
+          34.290583338588476,
+          34.71808275207877,
+          35.11312510818243,
+          34.89816701039672,
+          34.461124800145626,
+          34.06562516465783,
+          34.490750171244144,
+          34.28016696125269,
+          34.069832880049944,
+          33.91491714864969,
+          33.80962461233139,
+          34.74925039336085,
+          34.10958265885711,
+          0.10316725820302963
+        ]
+      },
+      "stream_metadata": {
+        "created_policy": "stable",
+        "first_created": 1795707154,
+        "last_created": 1795707154,
+        "created_changes": 0
+      },
+      "request_id": "ff81475119ec478bbdf1d62f795524f7",
+      "elapsed_ms": 1030.1609174348414
+    }
+  },
+  "final": {
+    "active": 0,
+    "queued": 0,
+    "reserved_tokens": 0,
+    "used_tokens": 0,
+    "kv_tensor_bytes": 0
+  }
+}

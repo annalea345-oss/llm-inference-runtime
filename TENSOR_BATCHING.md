@@ -9,6 +9,9 @@ The feature is **opt-in**. The original unbatched path remains the default and
 the comparison baseline. It uses the same downloaded model, tokenizer, greedy
 argmax, CPU float32 weights, two Torch threads, API, and scheduling limits.
 Batching does not change the model's training or add repetition controls.
+The [later CPU investigation](CPU_TUNING.md) adds optional SDPA attention
+independently of batching; eager attention remains the default and the baseline
+for this milestone's original measurements.
 The measured two-client prototype was slower for both checkpoints on this Mac;
 treat it as experimental. [Recorded results](benchmarks/tensor-batching/README.md)
 explain the throughput and latency tradeoffs.

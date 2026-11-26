@@ -70,7 +70,7 @@ async def reference(path):
 
 
 @asynccontextmanager
-async def server(path, enabled, log_path):
+async def server(path, enabled, log_path, *, attention_implementation='eager'):
     with socket.socket() as probe:
         if probe.connect_ex(('127.0.0.1', 8020)) == 0:
             raise RuntimeError('port 8020 already has a listener; refusing to attach')
@@ -81,6 +81,7 @@ async def server(path, enabled, log_path):
         try:
             process = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
                 env={**os.environ, 'LLM_MODEL_PATH': str(path), 'LLM_TENSOR_BATCHING': str(int(enabled)),
+                     'LLM_ATTENTION_IMPLEMENTATION': attention_implementation,
                      'HF_HUB_OFFLINE': '1', 'TRANSFORMERS_OFFLINE': '1'})
             started = perf_counter()
             async with httpx.AsyncClient(timeout=2, trust_env=False) as client:
@@ -91,6 +92,7 @@ async def server(path, enabled, log_path):
                         response = await client.get(BASE + '/health')
                         if response.status_code == 200:
                             assert response.json()['executor']['tensor_batching'] is enabled
+                            assert response.json()['executor']['attention_implementation'] == attention_implementation
                             break
                     except httpx.TransportError:
                         pass

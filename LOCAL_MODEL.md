@@ -49,6 +49,11 @@ An [optional tensor-batching path](TENSOR_BATCHING.md) is available with
 the original unbatched path remains the default. Read the recorded CPU tradeoffs
 before using it for performance comparisons.
 
+Attention can separately be selected with `LLM_ATTENTION_IMPLEMENTATION=sdpa`;
+the default remains `eager`. See [CPU profiling and attention tuning](CPU_TUNING.md)
+for activation, reference checks, and the measured tradeoffs. Torch threads stay
+at two for both choices.
+
 Open **http://127.0.0.1:8000/** for the [browser client](BROWSER_CLIENT.md),
 or use the API from another terminal:
 

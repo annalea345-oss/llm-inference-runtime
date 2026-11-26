@@ -13,9 +13,13 @@ def create_local_app():
     batching = os.environ.get('LLM_TENSOR_BATCHING', '0')
     if batching not in ('0', '1'):
         raise ValueError('LLM_TENSOR_BATCHING must be 0 or 1')
+    attention = os.environ.get('LLM_ATTENTION_IMPLEMENTATION', 'eager')
+    if attention not in ('eager', 'sdpa'):
+        raise ValueError('LLM_ATTENTION_IMPLEMENTATION must be eager or sdpa')
 
     async def load():
         from llm_runtime.local_executor import LocalModelExecutor
-        return await LocalModelExecutor.load(path, tensor_batching=batching == '1')
+        return await LocalModelExecutor.load(path, tensor_batching=batching == '1',
+                                             attention_implementation=attention)
 
     return create_app(RuntimeConfig(max_active_requests=2), executor_loader=load)

@@ -224,8 +224,10 @@ async def test_batch_failure_does_not_retain_tensor_frames_and_executor_recovers
 
 
 @pytest.mark.parametrize('shutdown', [False, True])
-async def test_cancellation_and_repeated_shutdown_wait_for_shared_forward(shutdown):
+@pytest.mark.parametrize('attention', ['eager', 'sdpa'])
+async def test_cancellation_and_repeated_shutdown_wait_for_shared_forward(shutdown, attention):
     executor = make()
+    executor.model.set_attn_implementation(attention)
     original = executor.model.forward
     started, release = threading.Event(), threading.Event()
     def block(**kwargs):
