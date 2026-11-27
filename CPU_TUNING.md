@@ -70,6 +70,11 @@ at two because the screening did not establish a consistent thread-only benefit
 across both models. Matrix operations remain a separate performance target;
 choosing SDPA is not a claim that every batching bottleneck has been solved.
 
+The following [rowwise CPU projection experiment](ROWWISE_DECODE.md) targets the
+small matrix shapes identified here. It has a separate activation flag and
+[new measurements](benchmarks/rowwise-decode/README.md); the historical results
+in this guide remain the original eager/SDPA comparison.
+
 ## Verification and reproduction
 
 ```bash

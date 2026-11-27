@@ -1107,3 +1107,90 @@ The phase identifies concrete matrix-operator costs and provides an optional
 measured unbatched improvement. The main CPU batching slowdown remains open;
 matrix/projection-kernel and cache-layout investigation is still future work.
 Broader prompt/latency/memory testing is required before changing defaults.
+
+## 2026-11-27 — Experimental rowwise CPU projections
+
+- Started from merged CPU-tuning main (`f120a26`). Investigated whether the
+  expensive two-row projection shapes can be calculated more efficiently as
+  two single-row Linear calls while retaining shared attention/KV/model forwards.
+  An initial short local probe favored this approach for both existing models;
+  the separate HTTP matrix below is the evidence for user-visible throughput.
+- Added opt-in `LLM_ROWWISE_DECODE=1`, requiring `LLM_TENSOR_BATCHING=1`, and the
+  corresponding `rowwise_decode=True` loader keyword. Normal defaults stay eager,
+  unbatched, rowwise disabled, CPU float32, and two Torch threads. Invalid settings
+  fail before loading. The ordinary verifier explicitly pins the new flag off
+  unless requested so an exported environment flag cannot contaminate baselines.
+- A local Linear subclass shares the exact existing Parameter objects/names and
+  uses meta initialization to avoid duplicate weight allocation. It specializes
+  only evaluation/autograd-disabled CPU float32 inputs of shape `[2,1,hidden]`.
+  Single-client, larger-batch, multi-token, other dtype/device, and training/grad
+  inputs use ordinary calculations. One-token prefill pairs can also match;
+  the option is shape-based rather than a distinct scheduler phase. No global
+  Torch monkeypatch or bound-model closure is installed.
+- Attention, RoPE positions/masks, cache pack/split, compact per-request tensor
+  ownership, scheduler/admission logic, worker cancellation barriers, and API/
+  browser/Android behavior are unchanged. Health reports the chosen option and
+  cumulative specialized Linear calls, separately from genuine batched forwards.
+  Shutdown clears the model and projection references, preserving numeric counts.
+- Added independent eager-reference agreement for both architectures/attention
+  implementations and parameter/storage/name/fallback/unload tests. Existing
+  batching tests now also run with rowwise enabled: both policies and multiple
+  budgets, ragged/newly joining/finished rows, independent cache storage, error
+  cleanup/recovery, and cancellation/repeated shutdown. The rowwise cancellation
+  variant gates a shared single-token decode specifically.
+- Added `scripts/verify_rowwise_decode.py` for fresh-process HTTP comparisons and
+  `scripts/profile_rowwise_decode.py` for a separate fixed-pair timing/operator
+  diagnostic. The HTTP matrix covers both models and attention choices, unbatched
+  and rowwise concurrency 1/2, and ordinary tensor batching concurrency 2, with
+  reversed setting order across three repetitions. Loading, correctness/lifecycle,
+  one preflight and one warmup per timing case are excluded. Profiling/tests are
+  kept separate from HTTP timing; host load/thermals remain uncontrolled.
+
+- Final regression suite: **570 Python tests passed**, 60 additional cases. Native
+  syntax checks and staged whitespace checks passed. All runtime/verifier source
+  fingerprints match the measured code. No model or dependency download occurred;
+  all 10/11 SmolLM2/Qwen model-file hashes match the preceding phase.
+- Completed **240 measured requests across 60 HTTP runs**, generating 23,040
+  output tokens. At concurrency two, eager unbatched/ordinary-batch/rowwise medians
+  were **69.16/46.45/68.30 tokens/s** for SmolLM2 and **27.03/21.71/29.22** for
+  Qwen. SDPA medians were **70.88/45.23/72.15** and **28.42/20.79/29.50**.
+  Rowwise improves on ordinary batching by 35–60%, but compared with unbatched
+  execution SmolLM2 is approximately tied (-1.2% eager, +1.8% SDPA), and Qwen
+  gains 8.1% eager / 3.8% SDPA. Defaults stay unchanged; these bounded CPU results
+  are not a general many-client, long-context, or model-quality claim.
+- Single-client medians were also checked: SmolLM2 eager 66.40→64.31 and SDPA
+  72.53→73.96; Qwen eager 26.81→26.46 and SDPA 28.43→28.37 tokens/s. No rowwise
+  projection calls occur at concurrency one. Wrapper fallback overhead and
+  uncontrolled host variation remain part of that comparison.
+- Separate diagnostics recorded **36 unprofiled fixed-pair samples and 12
+  four-round operator profiles**. All corresponding generated-token fingerprints
+  match across settings. Eager model-call wall time falls 35.38→19.69 ms for
+  SmolLM2 and 83.78→61.19 ms for Qwen (ordinary batch→rowwise). Surrounding work
+  remains roughly 2.6–2.7 ms and 1.7–1.8 ms respectively; it includes packing,
+  splitting, token decoding and assembly, so it does not isolate cache copies.
+  Gate/up `aten::mm` self CPU sums change 41.19→16.65 ms (SmolLM2) and
+  129.66→86.84 ms (Qwen), with one-row instead of two-row inputs. This establishes
+  a useful call-shape change, not the identity/cause of an internal BLAS kernel.
+  Short-pair gains do not fully transfer to HTTP; separate context/arrival effects
+  were not isolated. No cache-layout change is made.
+- All 12 model/attention/variant configurations passed reference checks: **60
+  native exact token-ID/text matches and 12 multi-turn JSON text/usage matches**.
+  The rowwise candidate passed eight paired explicit-cancel/disconnect scenarios
+  with a surviving peer, and four queued disconnects with both active slots busy.
+  All settled correctness/timing/lifecycle states end with zero active/queued
+  requests, reserved/used logical tokens, and owned KV bytes. Post-run RSS samples
+  were 0.64–1.01 GiB for SmolLM2 and 1.96–2.30 GiB for Qwen, not peak bounds.
+- Added [ROWWISE_DECODE.md](ROWWISE_DECODE.md), updated local-model/attention/
+  batching guides and roadmap, and recorded source/model hashes, raw HTTP runs,
+  references/lifecycle checks, operator profiles, interpretation, and final
+  verification in [benchmarks/rowwise-decode](benchmarks/rowwise-decode/README.md).
+  All 36 temporary HTTP servers shut down gracefully; no test server remains.
+  Earlier benchmark data, models, client/IDE files, and the user's untracked
+  `error.log` are preserved.
+
+This phase substantially reduces the ordinary two-client batching penalty and
+provides a modest Qwen gain over the original unbatched executor. The next useful
+performance work is broader prompt/context/arrival testing and isolated cache-copy
+measurement before cache-layout changes or any default promotion. GPU/MPS and
+quantization would be separate backend milestones, with their own references and
+memory/cancellation verification.

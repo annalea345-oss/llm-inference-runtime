@@ -54,6 +54,7 @@ async def test_loader_rejects_silent_attention_fallback_and_closes_worker(monkey
 @pytest.mark.parametrize('batched', [False, True])
 async def test_factory_passes_selected_attention_and_batching(monkeypatch, attention, batched):
     from test_tensor_batch_protocol import BatchExecutor
+    monkeypatch.delenv('LLM_ROWWISE_DECODE', raising=False)
     monkeypatch.setenv('LLM_MODEL_PATH', '/test-model')
     monkeypatch.setenv('LLM_TENSOR_BATCHING', str(int(batched)))
     if attention is None:
@@ -68,7 +69,7 @@ async def test_factory_passes_selected_attention_and_batching(monkeypatch, atten
     app = create_local_app()
     async with app.router.lifespan_context(app):
         assert seen == [('/test-model', {'tensor_batching': batched,
-                                      'attention_implementation': attention or 'eager'})]
+                                      'attention_implementation': attention or 'eager', 'rowwise_decode': False})]
 
 
 @pytest.mark.parametrize('architecture', ['llama', 'qwen2'])

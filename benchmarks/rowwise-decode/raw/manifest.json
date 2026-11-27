@@ -1,0 +1,215 @@
+{
+  "status": "complete",
+  "started_at": "2026-11-27T12:05:11.666953+00:00",
+  "python": "3.12.7",
+  "platform": "macOS-15.7.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "4.57.6",
+  "source_sha256": {
+    "src/llm_runtime/local_executor.py": "6ac94e3469712bf12fa52644b72e8c2d0bf07eb6ee18347921ad4564bd69557a",
+    "src/llm_runtime/local.py": "8c96a30bbd10c1a9df612d01e819815846bd5c6f5122f107d2ab53e38ed752ee",
+    "src/llm_runtime/cpu_linear.py": "ecb3cabab69e591e83bef64b1979c553b1c108c6e81af2320ae14761a24db661",
+    "src/llm_runtime/batching.py": "bb566ce411c3af210c05d82a40e0b89c277b28dcc32bcac686c429b43d396738",
+    "src/llm_runtime/http_benchmark.py": "5aaf3f32c3b5630254277b42cc999507cc4c90a09c98d19b3b259d86c598aa5c",
+    "scripts/verify_tensor_batching.py": "0bd2488e162bd7eecdfc7fe7ce02db151da4c0619870e87615a6826f670b04af",
+    "scripts/verify_rowwise_decode.py": "8ede8484b1797c8ed4df913c4faebc3a3e13b0bd3ca30412423f85bc7baa1433"
+  },
+  "protocol": {
+    "threads": 2,
+    "dtype": "float32",
+    "device": "cpu",
+    "requests_per_run": 4,
+    "prompt": "Count from 1 to 500. Include every number.",
+    "max_tokens": 96,
+    "repetitions": 3,
+    "order": "fresh process per model/repetition/attention/variant; reverse setting order on alternate repetitions",
+    "timing_cases": "unbatched and rowwise c1/c2; ordinary tensor batching c2",
+    "excluded": "loading, references, correctness/lifecycle, one preflight and one warmup per timing case",
+    "rss_scope": "readiness and post-run samples, not peaks"
+  },
+  "finished_at": "2026-11-27T12:25:57.091230+00:00",
+  "measured_requests": 240,
+  "measured_runs": 60,
+  "summary": [
+    {
+      "model": "smollm2",
+      "attention": "eager",
+      "variant": "single",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 66.3952893753207,
+      "median_first_content_p50_ms": 72.02770793810487
+    },
+    {
+      "model": "smollm2",
+      "attention": "eager",
+      "variant": "single",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 69.15815213371417,
+      "median_first_content_p50_ms": 127.37483298406005
+    },
+    {
+      "model": "smollm2",
+      "attention": "eager",
+      "variant": "batch",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 46.449540236010755,
+      "median_first_content_p50_ms": 149.3566669523716
+    },
+    {
+      "model": "smollm2",
+      "attention": "eager",
+      "variant": "rowwise",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 64.31104528193427,
+      "median_first_content_p50_ms": 82.10579212754965
+    },
+    {
+      "model": "smollm2",
+      "attention": "eager",
+      "variant": "rowwise",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 68.29818805959036,
+      "median_first_content_p50_ms": 143.0771672166884
+    },
+    {
+      "model": "smollm2",
+      "attention": "sdpa",
+      "variant": "single",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 72.53415455531577,
+      "median_first_content_p50_ms": 74.3595827370882
+    },
+    {
+      "model": "smollm2",
+      "attention": "sdpa",
+      "variant": "single",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 70.87642646675761,
+      "median_first_content_p50_ms": 141.39545802026987
+    },
+    {
+      "model": "smollm2",
+      "attention": "sdpa",
+      "variant": "batch",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 45.23437591215008,
+      "median_first_content_p50_ms": 156.32112510502338
+    },
+    {
+      "model": "smollm2",
+      "attention": "sdpa",
+      "variant": "rowwise",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 73.95937272934935,
+      "median_first_content_p50_ms": 72.17837497591972
+    },
+    {
+      "model": "smollm2",
+      "attention": "sdpa",
+      "variant": "rowwise",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 72.14653637943753,
+      "median_first_content_p50_ms": 176.661207806319
+    },
+    {
+      "model": "qwen",
+      "attention": "eager",
+      "variant": "single",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 26.810612972067883,
+      "median_first_content_p50_ms": 220.38433281704783
+    },
+    {
+      "model": "qwen",
+      "attention": "eager",
+      "variant": "single",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 27.034410528954098,
+      "median_first_content_p50_ms": 407.66445780172944
+    },
+    {
+      "model": "qwen",
+      "attention": "eager",
+      "variant": "batch",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 21.713115629641486,
+      "median_first_content_p50_ms": 364.61662501096725
+    },
+    {
+      "model": "qwen",
+      "attention": "eager",
+      "variant": "rowwise",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 26.46344927591668,
+      "median_first_content_p50_ms": 224.3148754350841
+    },
+    {
+      "model": "qwen",
+      "attention": "eager",
+      "variant": "rowwise",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 29.21500554582767,
+      "median_first_content_p50_ms": 361.42929177731276
+    },
+    {
+      "model": "qwen",
+      "attention": "sdpa",
+      "variant": "single",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 28.425340335766883,
+      "median_first_content_p50_ms": 219.0095828846097
+    },
+    {
+      "model": "qwen",
+      "attention": "sdpa",
+      "variant": "single",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 28.42041489466678,
+      "median_first_content_p50_ms": 400.80112498253584
+    },
+    {
+      "model": "qwen",
+      "attention": "sdpa",
+      "variant": "batch",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 20.788069816142908,
+      "median_first_content_p50_ms": 372.2635409794748
+    },
+    {
+      "model": "qwen",
+      "attention": "sdpa",
+      "variant": "rowwise",
+      "concurrency": 1,
+      "runs": 3,
+      "median_tokens_per_second": 28.374566643590107,
+      "median_first_content_p50_ms": 219.14033265784383
+    },
+    {
+      "model": "qwen",
+      "attention": "sdpa",
+      "variant": "rowwise",
+      "concurrency": 2,
+      "runs": 3,
+      "median_tokens_per_second": 29.503338948120444,
+      "median_first_content_p50_ms": 352.16787504032254
+    }
+  ]
+}
