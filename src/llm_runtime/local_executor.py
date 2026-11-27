@@ -31,7 +31,7 @@ class LocalModelExecutor:
     model_id = 'local-model'
 
     def __init__(self, model, tokenizer, torch_module, worker: SerialWorker, *,
-                 tensor_batching: bool = False) -> None:
+                 tensor_batching: bool = False, rowwise_decode: bool = False) -> None:
         self.model = model
         self.tokenizer = tokenizer
         self.torch = torch_module
@@ -52,13 +52,26 @@ class LocalModelExecutor:
                 (self._model_type == 'llama' and getattr(model.config, 'sliding_window', None))):
             raise ValueError('tensor batching supports full-attention Llama and Qwen2 models only')
         self.tensor_batching = tensor_batching
+        if type(rowwise_decode) is not bool or (rowwise_decode and not tensor_batching):
+            raise ValueError('rowwise_decode must be a boolean and requires tensor_batching')
+        self.rowwise_decode = rowwise_decode
+        self._rowwise_layers = []
+        if rowwise_decode:
+            from llm_runtime.cpu_linear import install_rowwise_decode
+            self._rowwise_layers = install_rowwise_decode(model)
+            if not self._rowwise_layers:
+                raise ValueError('rowwise_decode requires plain Linear projections')
+        self._closed_rowwise_calls = 0
         self._forward_calls = 0
         self._batched_forward_calls = 0
         self._max_forward_batch_size = 0
 
     @classmethod
     async def load(cls, model_path: str, *, tensor_batching: bool = False,
-                   attention_implementation: str = 'eager') -> 'LocalModelExecutor':
+                   attention_implementation: str = 'eager',
+                   rowwise_decode: bool = False) -> 'LocalModelExecutor':
+        if type(rowwise_decode) is not bool or (rowwise_decode and not tensor_batching):
+            raise ValueError('rowwise_decode must be a boolean and requires tensor_batching')
         if attention_implementation not in ('eager', 'sdpa'):
             raise ValueError('attention_implementation must be eager or sdpa')
         worker = SerialWorker()
@@ -83,7 +96,8 @@ class LocalModelExecutor:
             ).to('cpu').eval()
             if model.config._attn_implementation != attention_implementation:
                 raise RuntimeError('model did not select the requested attention implementation')
-            return cls(model, tokenizer, torch, worker, tensor_batching=tensor_batching)
+            return cls(model, tokenizer, torch, worker, tensor_batching=tensor_batching,
+                       rowwise_decode=rowwise_decode)
 
         try:
             return await worker.run(load)
@@ -98,6 +112,9 @@ class LocalModelExecutor:
                 'model': self._model_type, 'parameter_bytes': self._parameter_bytes,
                 'kv_tensor_bytes_after_last_step': self.cache_bytes,
                 'tensor_batching': self.tensor_batching,
+                'rowwise_decode': self.rowwise_decode,
+                'rowwise_decode_linear_calls': self._closed_rowwise_calls + sum(
+                    layer.rowwise_calls for layer in self._rowwise_layers),
                 'attention_implementation': (self.model.config._attn_implementation
                     if self.model is not None else self._attention_implementation),
                 'forward_calls': self._forward_calls,
@@ -329,4 +346,6 @@ class LocalModelExecutor:
         finally:
             self._states.clear()
             self._cache_bytes = 0
+            self._closed_rowwise_calls += sum(layer.rowwise_calls for layer in self._rowwise_layers)
+            self._rowwise_layers.clear()
             self.model = None

@@ -16,6 +16,10 @@ The measured two-client prototype was slower for both checkpoints on this Mac;
 treat it as experimental. [Recorded results](benchmarks/tensor-batching/README.md)
 explain the throughput and latency tradeoffs.
 
+The subsequent [rowwise CPU projection experiment](ROWWISE_DECODE.md) targets
+the small matrix operations inside two-request forwards. It requires a separate
+flag; the original tensor-batching measurements remain unchanged.
+
 ## Run
 
 With an already downloaded checkpoint and the existing virtual environment:

@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-27",
+  "python_tests_passed": 570,
+  "additional_test_cases": 60,
+  "measured_runs": 60,
+  "measured_requests": 240,
+  "measured_output_tokens": 23040,
+  "native_reference_matches": 60,
+  "history_reference_matches": 12,
+  "paired_candidate_cancel_disconnect_cases": 8,
+  "queued_candidate_disconnect_cases": 4,
+  "source_fingerprints_match": true,
+  "model_files_unchanged": {
+    "smollm2": 10,
+    "qwen": 11
+  },
+  "graceful_server_shutdowns": 36,
+  "all_settled_ownership_states_zero": true,
+  "diagnostic_unprofiled_samples": 36,
+  "diagnostic_operator_profiles": 12,
+  "diagnostic_fingerprints_all_match": true,
+  "defaults": {
+    "attention": "eager",
+    "tensor_batching": false,
+    "rowwise_decode": false,
+    "torch_intraop_threads": 2
+  },
+  "scope": "bounded two-client CPU counting workload on the two existing checkpoints; not a peak RSS or universal performance claim",
+  "test_source_sha256": {
+    "tests/test_rowwise_decode.py": "b3550c28beda4009fbd68c92a205d95a688aaa641666bddbf56c2ec2f76039c8",
+    "tests/test_tensor_batching.py": "90dfda10043b8f53ce933d2bc5989337e0a06141f126eb9a89b9efece231c9f7",
+    "tests/test_cpu_attention.py": "2c48edd920603438d3b16ecae495d98e2364d1ca7ea6c387e761679d84af1dfb",
+    "tests/test_tensor_batch_protocol.py": "695921a002357d75fd2ef16df0395534a89cc4bdde99218bb45b712a0e358614"
+  }
+}

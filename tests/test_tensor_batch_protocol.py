@@ -65,6 +65,7 @@ def test_factory_rejects_ambiguous_tensor_batching_configuration(monkeypatch, va
 @pytest.mark.parametrize('value,enabled', [(None, False), ('0', False), ('1', True)])
 async def test_factory_opt_in_preserves_original_default(monkeypatch, value, enabled):
     monkeypatch.delenv('LLM_ATTENTION_IMPLEMENTATION', raising=False)
+    monkeypatch.delenv('LLM_ROWWISE_DECODE', raising=False)
     pytest.importorskip('torch')
     from llm_runtime.local import create_local_app
     from llm_runtime.local_executor import LocalModelExecutor
@@ -80,4 +81,4 @@ async def test_factory_opt_in_preserves_original_default(monkeypatch, value, ena
     monkeypatch.setattr(LocalModelExecutor, 'load', load)
     app = create_local_app()
     async with app.router.lifespan_context(app):
-        assert seen == [('/model-path', {'tensor_batching': enabled, 'attention_implementation': 'eager'})]
+        assert seen == [('/model-path', {'tensor_batching': enabled, 'attention_implementation': 'eager', 'rowwise_decode': False})]

@@ -27,16 +27,17 @@ async def collect(request):
             return events
 
 
-def make(architecture='llama', eos=None):
+def make(architecture='llama', eos=None, rowwise=False):
     model, tokenizer, torch = components(architecture=architecture, eos=eos)
-    return LocalModelExecutor(model, tokenizer, torch, SerialWorker(), tensor_batching=True)
+    return LocalModelExecutor(model, tokenizer, torch, SerialWorker(), tensor_batching=True, rowwise_decode=rowwise)
 
 
 @pytest.mark.parametrize('architecture', ['llama', 'qwen2'])
 @pytest.mark.parametrize('budget', [1, 5, 16, 32])
 @pytest.mark.parametrize('policy', ['round_robin', 'decode_first'])
-async def test_ragged_continuous_batches_match_individual_generate(architecture, budget, policy):
-    executor = make(architecture)
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_ragged_continuous_batches_match_individual_generate(architecture, budget, policy, rowwise):
+    executor = make(architecture, rowwise=rowwise)
     prompts = {'short': (1, 4), 'middle': (1, 3, 4, 5, 8), 'late': (1, 4, 9, 8, 7, 6, 5, 4, 2)}
     executor.tokenizer.apply_chat_template = lambda messages, **kw: prompts[messages[-1]['content']]
     expected = []
@@ -69,8 +70,9 @@ async def test_ragged_continuous_batches_match_individual_generate(architecture,
 
 
 @pytest.mark.parametrize('architecture', ['llama', 'qwen2'])
-async def test_padding_gaps_removed_and_each_row_owns_only_its_tensors(architecture):
-    executor = make(architecture)
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_padding_gaps_removed_and_each_row_owns_only_its_tensors(architecture, rowwise):
+    executor = make(architecture, rowwise=rowwise)
     requests = [InferenceRequest('a', 4), InferenceRequest('b', 4)]
     requests[0].prompt_token_ids = (1, 4, 5, 6, 7)
     requests[1].prompt_token_ids = (1, 3, 6, 4)
@@ -101,8 +103,9 @@ async def test_padding_gaps_removed_and_each_row_owns_only_its_tensors(architect
 
 
 @pytest.mark.parametrize('architecture', ['llama', 'qwen2'])
-async def test_ragged_decode_rows_share_a_forward_and_match_reference(architecture):
-    executor = make(architecture)
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_ragged_decode_rows_share_a_forward_and_match_reference(architecture, rowwise):
+    executor = make(architecture, rowwise=rowwise)
     requests = [InferenceRequest('a', 1), InferenceRequest('b', 5), InferenceRequest('c', 7)]
     for r, ids in zip(requests, [(1, 4), (1, 5, 4, 8, 3), (1, 7, 8, 9, 3, 4, 5, 6)]):
         r.prompt_token_ids = ids
@@ -138,8 +141,9 @@ async def test_ragged_decode_rows_share_a_forward_and_match_reference(architectu
 
 
 @pytest.mark.parametrize('architecture', ['llama', 'qwen2'])
-async def test_new_prefill_row_can_join_a_partially_cached_prefill(architecture):
-    executor = make(architecture)
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_new_prefill_row_can_join_a_partially_cached_prefill(architecture, rowwise):
+    executor = make(architecture, rowwise=rowwise)
     a, b = InferenceRequest('a', 4), InferenceRequest('b', 4)
     a.prompt_token_ids, b.prompt_token_ids = (1, 4, 5, 6, 7, 8), (1, 3, 8)
     expected = []
@@ -177,8 +181,9 @@ async def test_unsupported_batching_configuration_fails_explicitly(case):
         await worker.aclose()
 
 
-async def test_finished_rows_are_excluded_from_decode_forward():
-    executor = make(eos=0)
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_finished_rows_are_excluded_from_decode_forward(rowwise):
+    executor = make(eos=0, rowwise=rowwise)
     executor.eos_ids = {0, 2}
     requests = [InferenceRequest('eos', 8), InferenceRequest('cap', 1), InferenceRequest('live', 4)]
     for r in requests:
@@ -197,8 +202,9 @@ async def test_finished_rows_are_excluded_from_decode_forward():
         await executor.aclose()
 
 
-async def test_batch_failure_does_not_retain_tensor_frames_and_executor_recovers():
-    executor = make()
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_batch_failure_does_not_retain_tensor_frames_and_executor_recovers(rowwise):
+    executor = make(rowwise=rowwise)
     original = executor.model.forward
     refs = []
     def fail(**kwargs):
@@ -225,13 +231,15 @@ async def test_batch_failure_does_not_retain_tensor_frames_and_executor_recovers
 
 @pytest.mark.parametrize('shutdown', [False, True])
 @pytest.mark.parametrize('attention', ['eager', 'sdpa'])
-async def test_cancellation_and_repeated_shutdown_wait_for_shared_forward(shutdown, attention):
-    executor = make()
+@pytest.mark.parametrize('rowwise', [False, True])
+async def test_cancellation_and_repeated_shutdown_wait_for_shared_forward(shutdown, attention, rowwise):
+    executor = make(rowwise=rowwise)
     executor.model.set_attn_implementation(attention)
     original = executor.model.forward
     started, release = threading.Event(), threading.Event()
     def block(**kwargs):
-        if kwargs['input_ids'].shape[0] == 2 and not started.is_set():
+        shape = kwargs['input_ids'].shape
+        if shape[0] == 2 and (not rowwise or shape[1] == 1) and not started.is_set():
             started.set(); release.wait()
         return original(**kwargs)
     executor.model.forward = block

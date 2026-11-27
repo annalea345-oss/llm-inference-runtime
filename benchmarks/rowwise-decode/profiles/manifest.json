@@ -1,0 +1,15 @@
+{
+  "started_at": "2026-11-27T12:25:57.588108+00:00",
+  "scope": "fixed pair, budget-32 prefill, four warmup rounds; CPU worker diagnostic, not HTTP",
+  "surrounding_scope": "cache pack/split, token decoding, input assembly and counters; not an isolated cache timing",
+  "threads": 2,
+  "dtype": "float32",
+  "repetitions": 3,
+  "source_sha256": {
+    "scripts/profile_rowwise_decode.py": "7261fb50efb1116ac5834c8e6746eecc48e1a48ec529b68dff833991ff7c0159",
+    "scripts/investigate_cpu_inference.py": "5b265d3d14468494efcf2beca9056120e13e748b92dbccb1567e30312ef34871",
+    "src/llm_runtime/local_executor.py": "6ac94e3469712bf12fa52644b72e8c2d0bf07eb6ee18347921ad4564bd69557a",
+    "src/llm_runtime/cpu_linear.py": "ecb3cabab69e591e83bef64b1979c553b1c108c6e81af2320ae14761a24db661"
+  },
+  "finished_at": "2026-11-27T12:27:48.181638+00:00"
+}

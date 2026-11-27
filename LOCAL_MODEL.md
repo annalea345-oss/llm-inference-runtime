@@ -54,6 +54,11 @@ the default remains `eager`. See [CPU profiling and attention tuning](CPU_TUNING
 for activation, reference checks, and the measured tradeoffs. Torch threads stay
 at two for both choices.
 
+With tensor batching enabled, `LLM_ROWWISE_DECODE=1` can additionally select the
+[experimental two-row CPU projection path](ROWWISE_DECODE.md). It reuses the
+existing weights and keeps shared attention/cache updates. It is off by default;
+see its separate measurements before choosing it for a workload.
+
 Open **http://127.0.0.1:8000/** for the [browser client](BROWSER_CLIENT.md),
 or use the API from another terminal:
 
